@@ -7,6 +7,12 @@ Kotlin DSL for [GitHub GraphQL API (GitHub API v4)](https://docs.github.com/en/f
 
 Current version: based on the [schema 2020-10-12](https://docs.github.com/en/free-pro-team@latest/graphql/overview/changelog#schema-changes-for-2020-10-12).
 
+## About
+
+With the power of Kotlin DSL, you can easily write type-safe queries for the GitHub GraphQL API.
+
+![image](./image.gif)
+
 ## Installation
 
 ```groovy
