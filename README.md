@@ -1,11 +1,23 @@
 kraphql-github
 ====
 
+[ ![Download](https://api.bintray.com/packages/lusingander/maven/kraphql-github/images/download.svg) ](https://bintray.com/lusingander/maven/kraphql-github/_latestVersion)
+
 Kotlin DSL for [GitHub GraphQL API (GitHub API v4)](https://docs.github.com/en/free-pro-team@latest/graphql)
 
 Current version: based on the [schema 2020-10-12](https://docs.github.com/en/free-pro-team@latest/graphql/overview/changelog#schema-changes-for-2020-10-12).
 
 ## Installation
+
+```groovy
+repositories {
+    jcenter()
+}
+
+dependencies {
+    implementation 'com.github.lusingander:kraphql-github:0.0.1'
+}
+```
 
 ## Usage
 
