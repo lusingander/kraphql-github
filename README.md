@@ -52,6 +52,7 @@ fun main() {
         }
     }
     println(q.toString())
+
     // Output: (it doesn't actually include line breaks)
     //
     // query {
@@ -78,6 +79,8 @@ fun main() {
     // }
 }
 ```
+
+For more details, see [examples.md](./examples.md).
 
 ## Related projects
 
