@@ -85,6 +85,7 @@ enum class CheckConclusionState {
     NEUTRAL,
     SKIPPED,
     STALE,
+    STARTUP_FAILURE,
     SUCCESS,
     TIMED_OUT,
     ;
@@ -163,6 +164,7 @@ enum class DeploymentState {
     IN_PROGRESS,
     PENDING,
     QUEUED,
+    WAITING,
     ;
 }
 
@@ -351,6 +353,11 @@ enum class IpAllowListEnabledSettingValue {
 enum class IpAllowListEntryOrderField {
     ALLOW_LIST_VALUE,
     CREATED_AT,
+    ;
+}
+
+enum class IssueCommentOrderField {
+    UPDATED_AT,
     ;
 }
 
@@ -880,6 +887,21 @@ enum class RepositoryContributionType {
     PULL_REQUEST,
     PULL_REQUEST_REVIEW,
     REPOSITORY,
+    ;
+}
+
+enum class RepositoryInteractionLimit {
+    COLLABORATORS_ONLY,
+    CONTRIBUTORS_ONLY,
+    EXISTING_USERS,
+    NO_LIMIT,
+    ;
+}
+
+enum class RepositoryInteractionLimitOrigin {
+    ORGANIZATION,
+    REPOSITORY,
+    USER,
     ;
 }
 
@@ -3905,8 +3927,8 @@ class Issue(__name: String = "Issue"): ObjectNode(__name) {
         ScalarNode("closed").also { doInit(it) }
     val closedAt get() =
         ScalarNode("closedAt").also { doInit(it) }
-    fun comments(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, init: IssueCommentConnection.() -> Unit) =
-        IssueCommentConnection("comments").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.also { doInit(it, init) }
+    fun comments(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, orderBy: IssueCommentOrder? = null, init: IssueCommentConnection.() -> Unit) =
+        IssueCommentConnection("comments").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.also { doInit(it, init) }
     val createdAt get() =
         ScalarNode("createdAt").also { doInit(it) }
     val createdViaEmail get() =
@@ -6297,12 +6319,18 @@ class Organization(__name: String = "Organization"): ObjectNode(__name) {
         ScalarNode("descriptionHTML").also { doInit(it) }
     val email get() =
         ScalarNode("email").also { doInit(it) }
+    val hasSponsorsListing get() =
+        ScalarNode("hasSponsorsListing").also { doInit(it) }
     val id get() =
         ScalarNode("id").also { doInit(it) }
+    fun interactionAbility(init: RepositoryInteractionAbility.() -> Unit) =
+        RepositoryInteractionAbility("interactionAbility").also { doInit(it, init) }
     val ipAllowListEnabledSetting get() =
         ScalarNode("ipAllowListEnabledSetting").also { doInit(it) }
     fun ipAllowListEntries(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, orderBy: IpAllowListEntryOrder? = null, init: IpAllowListEntryConnection.() -> Unit) =
         IpAllowListEntryConnection("ipAllowListEntries").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.also { doInit(it, init) }
+    val isSponsoringViewer get() =
+        ScalarNode("isSponsoringViewer").also { doInit(it) }
     val isVerified get() =
         ScalarNode("isVerified").also { doInit(it) }
     fun itemShowcase(init: ProfileItemShowcase.() -> Unit) =
@@ -6381,8 +6409,12 @@ class Organization(__name: String = "Organization"): ObjectNode(__name) {
         ScalarNode("viewerCanCreateRepositories").also { doInit(it) }
     val viewerCanCreateTeams get() =
         ScalarNode("viewerCanCreateTeams").also { doInit(it) }
+    val viewerCanSponsor get() =
+        ScalarNode("viewerCanSponsor").also { doInit(it) }
     val viewerIsAMember get() =
         ScalarNode("viewerIsAMember").also { doInit(it) }
+    val viewerIsSponsoring get() =
+        ScalarNode("viewerIsSponsoring").also { doInit(it) }
     val websiteUrl get() =
         ScalarNode("websiteUrl").also { doInit(it) }
 }
@@ -7099,8 +7131,8 @@ class PullRequest(__name: String = "PullRequest"): ObjectNode(__name) {
         ScalarNode("closed").also { doInit(it) }
     val closedAt get() =
         ScalarNode("closedAt").also { doInit(it) }
-    fun comments(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, init: IssueCommentConnection.() -> Unit) =
-        IssueCommentConnection("comments").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.also { doInit(it, init) }
+    fun comments(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, orderBy: IssueCommentOrder? = null, init: IssueCommentConnection.() -> Unit) =
+        IssueCommentConnection("comments").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.also { doInit(it, init) }
     fun commits(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, init: PullRequestCommitConnection.() -> Unit) =
         PullRequestCommitConnection("commits").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.also { doInit(it, init) }
     val createdAt get() =
@@ -9114,6 +9146,8 @@ class Repository(__name: String = "Repository"): ObjectNode(__name) {
         ScalarNode("homepageUrl").also { doInit(it) }
     val id get() =
         ScalarNode("id").also { doInit(it) }
+    fun interactionAbility(init: RepositoryInteractionAbility.() -> Unit) =
+        RepositoryInteractionAbility("interactionAbility").also { doInit(it, init) }
     val isArchived get() =
         ScalarNode("isArchived").also { doInit(it) }
     val isBlankIssuesEnabled get() =
@@ -9313,6 +9347,15 @@ class RepositoryEdge(__name: String = "RepositoryEdge"): ObjectNode(__name) {
         ScalarNode("cursor").also { doInit(it) }
     fun node(init: Repository.() -> Unit) =
         Repository("node").also { doInit(it, init) }
+}
+
+class RepositoryInteractionAbility(__name: String = "RepositoryInteractionAbility"): ObjectNode(__name) {
+    val expiresAt get() =
+        ScalarNode("expiresAt").also { doInit(it) }
+    val limit get() =
+        ScalarNode("limit").also { doInit(it) }
+    val origin get() =
+        ScalarNode("origin").also { doInit(it) }
 }
 
 class RepositoryInvitation(__name: String = "RepositoryInvitation"): ObjectNode(__name) {
@@ -11338,10 +11381,14 @@ class User(__name: String = "User"): ObjectNode(__name) {
         GistCommentConnection("gistComments").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.also { doInit(it, init) }
     fun gists(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, orderBy: GistOrder? = null, privacy: GistPrivacy? = null, init: GistConnection.() -> Unit) =
         GistConnection("gists").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.apply { addArgs("privacy", privacy) }.also { doInit(it, init) }
+    val hasSponsorsListing get() =
+        ScalarNode("hasSponsorsListing").also { doInit(it) }
     fun hovercard(primarySubjectId: ID? = null, init: Hovercard.() -> Unit) =
         Hovercard("hovercard").apply { addArgs("primarySubjectId", primarySubjectId) }.also { doInit(it, init) }
     val id get() =
         ScalarNode("id").also { doInit(it) }
+    fun interactionAbility(init: RepositoryInteractionAbility.() -> Unit) =
+        RepositoryInteractionAbility("interactionAbility").also { doInit(it, init) }
     val isBountyHunter get() =
         ScalarNode("isBountyHunter").also { doInit(it) }
     val isCampusExpert get() =
@@ -11354,10 +11401,12 @@ class User(__name: String = "User"): ObjectNode(__name) {
         ScalarNode("isHireable").also { doInit(it) }
     val isSiteAdmin get() =
         ScalarNode("isSiteAdmin").also { doInit(it) }
+    val isSponsoringViewer get() =
+        ScalarNode("isSponsoringViewer").also { doInit(it) }
     val isViewer get() =
         ScalarNode("isViewer").also { doInit(it) }
-    fun issueComments(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, init: IssueCommentConnection.() -> Unit) =
-        IssueCommentConnection("issueComments").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.also { doInit(it, init) }
+    fun issueComments(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, orderBy: IssueCommentOrder? = null, init: IssueCommentConnection.() -> Unit) =
+        IssueCommentConnection("issueComments").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.also { doInit(it, init) }
     fun issues(after: String? = null, before: String? = null, filterBy: IssueFilters? = null, first: Int? = null, labels: String? = null, last: Int? = null, orderBy: IssueOrder? = null, states: IssueState? = null, init: IssueConnection.() -> Unit) =
         IssueConnection("issues").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("filterBy", filterBy) }.apply { addArgs("first", first) }.apply { addArgs("labels", labels) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.apply { addArgs("states", states) }.also { doInit(it, init) }
     fun itemShowcase(init: ProfileItemShowcase.() -> Unit) =
@@ -11428,8 +11477,12 @@ class User(__name: String = "User"): ObjectNode(__name) {
         ScalarNode("viewerCanCreateProjects").also { doInit(it) }
     val viewerCanFollow get() =
         ScalarNode("viewerCanFollow").also { doInit(it) }
+    val viewerCanSponsor get() =
+        ScalarNode("viewerCanSponsor").also { doInit(it) }
     val viewerIsFollowing get() =
         ScalarNode("viewerIsFollowing").also { doInit(it) }
+    val viewerIsSponsoring get() =
+        ScalarNode("viewerIsSponsoring").also { doInit(it) }
     fun watching(affiliations: RepositoryAffiliation? = null, after: String? = null, before: String? = null, first: Int? = null, isLocked: Boolean? = null, last: Int? = null, orderBy: RepositoryOrder? = null, ownerAffiliations: RepositoryAffiliation? = null, privacy: RepositoryPrivacy? = null, init: RepositoryConnection.() -> Unit) =
         RepositoryConnection("watching").apply { addArgs("affiliations", affiliations) }.apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("isLocked", isLocked) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.apply { addArgs("ownerAffiliations", ownerAffiliations) }.apply { addArgs("privacy", privacy) }.also { doInit(it, init) }
     val websiteUrl get() =
@@ -12774,12 +12827,20 @@ class RepositoryOwner(__name: String = "RepositoryOwner"): ObjectNode(__name) {
 }
 
 class Sponsorable(__name: String = "Sponsorable"): ObjectNode(__name) {
+    val hasSponsorsListing get() =
+        ScalarNode("hasSponsorsListing").also { doInit(it) }
+    val isSponsoringViewer get() =
+        ScalarNode("isSponsoringViewer").also { doInit(it) }
     fun sponsorsListing(init: SponsorsListing.() -> Unit) =
         SponsorsListing("sponsorsListing").also { doInit(it, init) }
     fun sponsorshipsAsMaintainer(after: String? = null, before: String? = null, first: Int? = null, includePrivate: Boolean? = null, last: Int? = null, orderBy: SponsorshipOrder? = null, init: SponsorshipConnection.() -> Unit) =
         SponsorshipConnection("sponsorshipsAsMaintainer").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("includePrivate", includePrivate) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.also { doInit(it, init) }
     fun sponsorshipsAsSponsor(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, orderBy: SponsorshipOrder? = null, init: SponsorshipConnection.() -> Unit) =
         SponsorshipConnection("sponsorshipsAsSponsor").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.also { doInit(it, init) }
+    val viewerCanSponsor get() =
+        ScalarNode("viewerCanSponsor").also { doInit(it) }
+    val viewerIsSponsoring get() =
+        ScalarNode("viewerIsSponsoring").also { doInit(it) }
     fun `on Organization`(init: Organization.() -> Unit) =
         Organization("...on Organization").also { doInit(it, init) }
     fun `on User`(init: User.() -> Unit) =
@@ -13849,6 +13910,10 @@ class InviteEnterpriseAdminInput(val clientMutationId: String? = null, val email
 }
 
 class IpAllowListEntryOrder(val direction: OrderDirection, val field: IpAllowListEntryOrderField) {
+    override fun toString() = "{ direction: $direction, field: $field }"
+}
+
+class IssueCommentOrder(val direction: OrderDirection, val field: IssueCommentOrderField) {
     override fun toString() = "{ direction: $direction, field: $field }"
 }
 
