@@ -21,7 +21,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.github.lusingander:kraphql-github:0.0.2'
+    implementation 'com.github.lusingander:kraphql-github:0.0.3'
 }
 ```
 
