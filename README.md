@@ -52,6 +52,7 @@ fun main() {
         }
     }
     println(q.toString())
+    // println(q.toEscapedString())
 
     // Output: (it doesn't actually include line breaks)
     //

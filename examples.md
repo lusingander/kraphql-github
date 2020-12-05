@@ -20,11 +20,14 @@ val q = query {
         }
     }
 }
+
 println(q.toString())
+println(q.toEscapedString())
 ```
 
 - specifies the route type value (`query`) and calls the required fields
 - `query` can be converted to String by calling `toString`
+- `query` can be converted to escaped String to pass to the request by calling `toEscapedString`
 - specify arguments as would in Kotlin if want to set arguments
 
 ## Enum / Input types
