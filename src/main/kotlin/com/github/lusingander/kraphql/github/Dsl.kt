@@ -900,6 +900,15 @@ enum class RepositoryInteractionLimit {
     ;
 }
 
+enum class RepositoryInteractionLimitExpiry {
+    ONE_DAY,
+    ONE_MONTH,
+    ONE_WEEK,
+    SIX_MONTHS,
+    THREE_DAYS,
+    ;
+}
+
 enum class RepositoryInteractionLimitOrigin {
     ORGANIZATION,
     REPOSITORY,
@@ -4430,6 +4439,8 @@ class MarketplaceListing(__name: String = "MarketplaceListing"): ObjectNode(__na
         ScalarNode("hasPublishedFreeTrialPlans").also { doInit(it) }
     val hasTermsOfService get() =
         ScalarNode("hasTermsOfService").also { doInit(it) }
+    val hasVerifiedOwner get() =
+        ScalarNode("hasVerifiedOwner").also { doInit(it) }
     val howItWorks get() =
         ScalarNode("howItWorks").also { doInit(it) }
     val howItWorksHTML get() =
@@ -4996,6 +5007,12 @@ class Mutation(__name: String = "mutation"): ObjectNode(__name) {
         ResolveReviewThreadPayload("resolveReviewThread").apply { addArgs("input", input) }.also { doInit(it, init) }
     fun setEnterpriseIdentityProvider(input: SetEnterpriseIdentityProviderInput, init: SetEnterpriseIdentityProviderPayload.() -> Unit) =
         SetEnterpriseIdentityProviderPayload("setEnterpriseIdentityProvider").apply { addArgs("input", input) }.also { doInit(it, init) }
+    fun setOrganizationInteractionLimit(input: SetOrganizationInteractionLimitInput, init: SetOrganizationInteractionLimitPayload.() -> Unit) =
+        SetOrganizationInteractionLimitPayload("setOrganizationInteractionLimit").apply { addArgs("input", input) }.also { doInit(it, init) }
+    fun setRepositoryInteractionLimit(input: SetRepositoryInteractionLimitInput, init: SetRepositoryInteractionLimitPayload.() -> Unit) =
+        SetRepositoryInteractionLimitPayload("setRepositoryInteractionLimit").apply { addArgs("input", input) }.also { doInit(it, init) }
+    fun setUserInteractionLimit(input: SetUserInteractionLimitInput, init: SetUserInteractionLimitPayload.() -> Unit) =
+        SetUserInteractionLimitPayload("setUserInteractionLimit").apply { addArgs("input", input) }.also { doInit(it, init) }
     fun submitPullRequestReview(input: SubmitPullRequestReviewInput, init: SubmitPullRequestReviewPayload.() -> Unit) =
         SubmitPullRequestReviewPayload("submitPullRequestReview").apply { addArgs("input", input) }.also { doInit(it, init) }
     fun transferIssue(input: TransferIssueInput, init: TransferIssuePayload.() -> Unit) =
@@ -9889,6 +9906,27 @@ class SetEnterpriseIdentityProviderPayload(__name: String = "SetEnterpriseIdenti
         EnterpriseIdentityProvider("identityProvider").also { doInit(it, init) }
 }
 
+class SetOrganizationInteractionLimitPayload(__name: String = "SetOrganizationInteractionLimitPayload"): ObjectNode(__name) {
+    val clientMutationId get() =
+        ScalarNode("clientMutationId").also { doInit(it) }
+    fun organization(init: Organization.() -> Unit) =
+        Organization("organization").also { doInit(it, init) }
+}
+
+class SetRepositoryInteractionLimitPayload(__name: String = "SetRepositoryInteractionLimitPayload"): ObjectNode(__name) {
+    val clientMutationId get() =
+        ScalarNode("clientMutationId").also { doInit(it) }
+    fun repository(init: Repository.() -> Unit) =
+        Repository("repository").also { doInit(it, init) }
+}
+
+class SetUserInteractionLimitPayload(__name: String = "SetUserInteractionLimitPayload"): ObjectNode(__name) {
+    val clientMutationId get() =
+        ScalarNode("clientMutationId").also { doInit(it) }
+    fun user(init: User.() -> Unit) =
+        User("user").also { doInit(it, init) }
+}
+
 class SmimeSignature(__name: String = "SmimeSignature"): ObjectNode(__name) {
     val email get() =
         ScalarNode("email").also { doInit(it) }
@@ -14109,6 +14147,18 @@ class SecurityVulnerabilityOrder(val direction: OrderDirection, val field: Secur
 
 class SetEnterpriseIdentityProviderInput(val clientMutationId: String? = null, val digestMethod: SamlDigestAlgorithm, val enterpriseId: ID, val idpCertificate: String, val issuer: String? = null, val signatureMethod: SamlSignatureAlgorithm, val ssoUrl: URI) {
     override fun toString() = "{ clientMutationId: \"$clientMutationId\", digestMethod: $digestMethod, enterpriseId: \"$enterpriseId\", idpCertificate: \"$idpCertificate\", issuer: \"$issuer\", signatureMethod: $signatureMethod, ssoUrl: \"$ssoUrl\" }"
+}
+
+class SetOrganizationInteractionLimitInput(val clientMutationId: String? = null, val expiry: RepositoryInteractionLimitExpiry? = null, val limit: RepositoryInteractionLimit, val organizationId: ID) {
+    override fun toString() = "{ clientMutationId: \"$clientMutationId\", expiry: $expiry, limit: $limit, organizationId: \"$organizationId\" }"
+}
+
+class SetRepositoryInteractionLimitInput(val clientMutationId: String? = null, val expiry: RepositoryInteractionLimitExpiry? = null, val limit: RepositoryInteractionLimit, val repositoryId: ID) {
+    override fun toString() = "{ clientMutationId: \"$clientMutationId\", expiry: $expiry, limit: $limit, repositoryId: \"$repositoryId\" }"
+}
+
+class SetUserInteractionLimitInput(val clientMutationId: String? = null, val expiry: RepositoryInteractionLimitExpiry? = null, val limit: RepositoryInteractionLimit, val userId: ID) {
+    override fun toString() = "{ clientMutationId: \"$clientMutationId\", expiry: $expiry, limit: $limit, userId: \"$userId\" }"
 }
 
 class SponsorsTierOrder(val direction: OrderDirection, val field: SponsorsTierOrderField) {
