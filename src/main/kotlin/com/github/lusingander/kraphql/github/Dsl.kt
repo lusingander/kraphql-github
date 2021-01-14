@@ -106,6 +106,7 @@ enum class CheckStatusState {
     IN_PROGRESS,
     QUEUED,
     REQUESTED,
+    WAITING,
     ;
 }
 
@@ -734,6 +735,10 @@ enum class PullRequestTimelineItemsItemType {
     ASSIGNED_EVENT,
     AUTOMATIC_BASE_CHANGE_FAILED_EVENT,
     AUTOMATIC_BASE_CHANGE_SUCCEEDED_EVENT,
+    AUTO_MERGE_DISABLED_EVENT,
+    AUTO_MERGE_ENABLED_EVENT,
+    AUTO_REBASE_ENABLED_EVENT,
+    AUTO_SQUASH_ENABLED_EVENT,
     BASE_REF_CHANGED_EVENT,
     BASE_REF_DELETED_EVENT,
     BASE_REF_FORCE_PUSHED_EVENT,
@@ -967,6 +972,7 @@ enum class RequestableCheckStatusState {
     COMPLETED,
     IN_PROGRESS,
     QUEUED,
+    WAITING,
     ;
 }
 
@@ -1203,6 +1209,13 @@ class AddCommentPayload(__name: String = "AddCommentPayload"): ObjectNode(__name
         IssueTimelineItemEdge("timelineEdge").also { doInit(it, init) }
 }
 
+class AddEnterpriseSupportEntitlementPayload(__name: String = "AddEnterpriseSupportEntitlementPayload"): ObjectNode(__name) {
+    val clientMutationId get() =
+        ScalarNode("clientMutationId").also { doInit(it) }
+    val message get() =
+        ScalarNode("message").also { doInit(it) }
+}
+
 class AddLabelsToLabelablePayload(__name: String = "AddLabelsToLabelablePayload"): ObjectNode(__name) {
     val clientMutationId get() =
         ScalarNode("clientMutationId").also { doInit(it) }
@@ -1332,6 +1345,62 @@ class AssignedEvent(__name: String = "AssignedEvent"): ObjectNode(__name) {
     @Deprecated("Assignees can now be mannequins. Use the `assignee` field instead. Removal on 2020-01-01 UTC.")
     fun user(init: User.() -> Unit) =
         User("user").also { doInit(it, init) }
+}
+
+class AutoMergeDisabledEvent(__name: String = "AutoMergeDisabledEvent"): ObjectNode(__name) {
+    fun actor(init: Actor.() -> Unit) =
+        Actor("actor").also { doInit(it, init) }
+    val createdAt get() =
+        ScalarNode("createdAt").also { doInit(it) }
+    fun disabler(init: User.() -> Unit) =
+        User("disabler").also { doInit(it, init) }
+    val id get() =
+        ScalarNode("id").also { doInit(it) }
+    fun pullRequest(init: PullRequest.() -> Unit) =
+        PullRequest("pullRequest").also { doInit(it, init) }
+    val reason get() =
+        ScalarNode("reason").also { doInit(it) }
+    val reasonCode get() =
+        ScalarNode("reasonCode").also { doInit(it) }
+}
+
+class AutoMergeEnabledEvent(__name: String = "AutoMergeEnabledEvent"): ObjectNode(__name) {
+    fun actor(init: Actor.() -> Unit) =
+        Actor("actor").also { doInit(it, init) }
+    val createdAt get() =
+        ScalarNode("createdAt").also { doInit(it) }
+    fun enabler(init: User.() -> Unit) =
+        User("enabler").also { doInit(it, init) }
+    val id get() =
+        ScalarNode("id").also { doInit(it) }
+    fun pullRequest(init: PullRequest.() -> Unit) =
+        PullRequest("pullRequest").also { doInit(it, init) }
+}
+
+class AutoRebaseEnabledEvent(__name: String = "AutoRebaseEnabledEvent"): ObjectNode(__name) {
+    fun actor(init: Actor.() -> Unit) =
+        Actor("actor").also { doInit(it, init) }
+    val createdAt get() =
+        ScalarNode("createdAt").also { doInit(it) }
+    fun enabler(init: User.() -> Unit) =
+        User("enabler").also { doInit(it, init) }
+    val id get() =
+        ScalarNode("id").also { doInit(it) }
+    fun pullRequest(init: PullRequest.() -> Unit) =
+        PullRequest("pullRequest").also { doInit(it, init) }
+}
+
+class AutoSquashEnabledEvent(__name: String = "AutoSquashEnabledEvent"): ObjectNode(__name) {
+    fun actor(init: Actor.() -> Unit) =
+        Actor("actor").also { doInit(it, init) }
+    val createdAt get() =
+        ScalarNode("createdAt").also { doInit(it) }
+    fun enabler(init: User.() -> Unit) =
+        User("enabler").also { doInit(it, init) }
+    val id get() =
+        ScalarNode("id").also { doInit(it) }
+    fun pullRequest(init: PullRequest.() -> Unit) =
+        PullRequest("pullRequest").also { doInit(it, init) }
 }
 
 class AutomaticBaseChangeFailedEvent(__name: String = "AutomaticBaseChangeFailedEvent"): ObjectNode(__name) {
@@ -3228,6 +3297,8 @@ class EnterpriseOwnerInfo(__name: String = "EnterpriseOwnerInfo"): ObjectNode(__
         EnterpriseIdentityProvider("samlIdentityProvider").also { doInit(it, init) }
     fun samlIdentityProviderSettingOrganizations(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, orderBy: OrganizationOrder? = null, value: IdentityProviderConfigurationState, init: OrganizationConnection.() -> Unit) =
         OrganizationConnection("samlIdentityProviderSettingOrganizations").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.apply { addArgs("value", value) }.also { doInit(it, init) }
+    fun supportEntitlements(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, orderBy: EnterpriseMemberOrder? = null, init: EnterpriseMemberConnection.() -> Unit) =
+        EnterpriseMemberConnection("supportEntitlements").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.also { doInit(it, init) }
     val teamDiscussionsSetting get() =
         ScalarNode("teamDiscussionsSetting").also { doInit(it) }
     fun teamDiscussionsSettingOrganizations(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, orderBy: OrganizationOrder? = null, value: Boolean, init: OrganizationConnection.() -> Unit) =
@@ -4853,6 +4924,8 @@ class Mutation(__name: String = "mutation"): ObjectNode(__name) {
         AddAssigneesToAssignablePayload("addAssigneesToAssignable").apply { addArgs("input", input) }.also { doInit(it, init) }
     fun addComment(input: AddCommentInput, init: AddCommentPayload.() -> Unit) =
         AddCommentPayload("addComment").apply { addArgs("input", input) }.also { doInit(it, init) }
+    fun addEnterpriseSupportEntitlement(input: AddEnterpriseSupportEntitlementInput, init: AddEnterpriseSupportEntitlementPayload.() -> Unit) =
+        AddEnterpriseSupportEntitlementPayload("addEnterpriseSupportEntitlement").apply { addArgs("input", input) }.also { doInit(it, init) }
     fun addLabelsToLabelable(input: AddLabelsToLabelableInput, init: AddLabelsToLabelablePayload.() -> Unit) =
         AddLabelsToLabelablePayload("addLabelsToLabelable").apply { addArgs("input", input) }.also { doInit(it, init) }
     fun addProjectCard(input: AddProjectCardInput, init: AddProjectCardPayload.() -> Unit) =
@@ -4989,6 +5062,8 @@ class Mutation(__name: String = "mutation"): ObjectNode(__name) {
         RemoveEnterpriseIdentityProviderPayload("removeEnterpriseIdentityProvider").apply { addArgs("input", input) }.also { doInit(it, init) }
     fun removeEnterpriseOrganization(input: RemoveEnterpriseOrganizationInput, init: RemoveEnterpriseOrganizationPayload.() -> Unit) =
         RemoveEnterpriseOrganizationPayload("removeEnterpriseOrganization").apply { addArgs("input", input) }.also { doInit(it, init) }
+    fun removeEnterpriseSupportEntitlement(input: RemoveEnterpriseSupportEntitlementInput, init: RemoveEnterpriseSupportEntitlementPayload.() -> Unit) =
+        RemoveEnterpriseSupportEntitlementPayload("removeEnterpriseSupportEntitlement").apply { addArgs("input", input) }.also { doInit(it, init) }
     fun removeLabelsFromLabelable(input: RemoveLabelsFromLabelableInput, init: RemoveLabelsFromLabelablePayload.() -> Unit) =
         RemoveLabelsFromLabelablePayload("removeLabelsFromLabelable").apply { addArgs("input", input) }.also { doInit(it, init) }
     fun removeOutsideCollaborator(input: RemoveOutsideCollaboratorInput, init: RemoveOutsideCollaboratorPayload.() -> Unit) =
@@ -8110,6 +8185,13 @@ class RemoveEnterpriseOrganizationPayload(__name: String = "RemoveEnterpriseOrga
         Organization("organization").also { doInit(it, init) }
     fun viewer(init: User.() -> Unit) =
         User("viewer").also { doInit(it, init) }
+}
+
+class RemoveEnterpriseSupportEntitlementPayload(__name: String = "RemoveEnterpriseSupportEntitlementPayload"): ObjectNode(__name) {
+    val clientMutationId get() =
+        ScalarNode("clientMutationId").also { doInit(it) }
+    val message get() =
+        ScalarNode("message").also { doInit(it) }
 }
 
 class RemoveLabelsFromLabelablePayload(__name: String = "RemoveLabelsFromLabelablePayload"): ObjectNode(__name) {
@@ -12090,6 +12172,14 @@ class Node(__name: String = "Node"): ObjectNode(__name) {
         App("...on App").also { doInit(it, init) }
     fun `on AssignedEvent`(init: AssignedEvent.() -> Unit) =
         AssignedEvent("...on AssignedEvent").also { doInit(it, init) }
+    fun `on AutoMergeDisabledEvent`(init: AutoMergeDisabledEvent.() -> Unit) =
+        AutoMergeDisabledEvent("...on AutoMergeDisabledEvent").also { doInit(it, init) }
+    fun `on AutoMergeEnabledEvent`(init: AutoMergeEnabledEvent.() -> Unit) =
+        AutoMergeEnabledEvent("...on AutoMergeEnabledEvent").also { doInit(it, init) }
+    fun `on AutoRebaseEnabledEvent`(init: AutoRebaseEnabledEvent.() -> Unit) =
+        AutoRebaseEnabledEvent("...on AutoRebaseEnabledEvent").also { doInit(it, init) }
+    fun `on AutoSquashEnabledEvent`(init: AutoSquashEnabledEvent.() -> Unit) =
+        AutoSquashEnabledEvent("...on AutoSquashEnabledEvent").also { doInit(it, init) }
     fun `on AutomaticBaseChangeFailedEvent`(init: AutomaticBaseChangeFailedEvent.() -> Unit) =
         AutomaticBaseChangeFailedEvent("...on AutomaticBaseChangeFailedEvent").also { doInit(it, init) }
     fun `on AutomaticBaseChangeSucceededEvent`(init: AutomaticBaseChangeSucceededEvent.() -> Unit) =
@@ -13465,6 +13555,14 @@ class PullRequestTimelineItems(__name: String = "PullRequestTimelineItems"): Obj
         AddedToProjectEvent("...on AddedToProjectEvent").also { doInit(it, init) }
     fun `on AssignedEvent`(init: AssignedEvent.() -> Unit) =
         AssignedEvent("...on AssignedEvent").also { doInit(it, init) }
+    fun `on AutoMergeDisabledEvent`(init: AutoMergeDisabledEvent.() -> Unit) =
+        AutoMergeDisabledEvent("...on AutoMergeDisabledEvent").also { doInit(it, init) }
+    fun `on AutoMergeEnabledEvent`(init: AutoMergeEnabledEvent.() -> Unit) =
+        AutoMergeEnabledEvent("...on AutoMergeEnabledEvent").also { doInit(it, init) }
+    fun `on AutoRebaseEnabledEvent`(init: AutoRebaseEnabledEvent.() -> Unit) =
+        AutoRebaseEnabledEvent("...on AutoRebaseEnabledEvent").also { doInit(it, init) }
+    fun `on AutoSquashEnabledEvent`(init: AutoSquashEnabledEvent.() -> Unit) =
+        AutoSquashEnabledEvent("...on AutoSquashEnabledEvent").also { doInit(it, init) }
     fun `on AutomaticBaseChangeFailedEvent`(init: AutomaticBaseChangeFailedEvent.() -> Unit) =
         AutomaticBaseChangeFailedEvent("...on AutomaticBaseChangeFailedEvent").also { doInit(it, init) }
     fun `on AutomaticBaseChangeSucceededEvent`(init: AutomaticBaseChangeSucceededEvent.() -> Unit) =
@@ -13649,6 +13747,10 @@ class AddAssigneesToAssignableInput(val assignableId: ID, val assigneeIds: ID, v
 
 class AddCommentInput(val body: String, val clientMutationId: String? = null, val subjectId: ID) {
     override fun toString() = "{ body: \"$body\", clientMutationId: \"$clientMutationId\", subjectId: \"$subjectId\" }"
+}
+
+class AddEnterpriseSupportEntitlementInput(val clientMutationId: String? = null, val enterpriseId: ID, val login: String) {
+    override fun toString() = "{ clientMutationId: \"$clientMutationId\", enterpriseId: \"$enterpriseId\", login: \"$login\" }"
 }
 
 class AddLabelsToLabelableInput(val clientMutationId: String? = null, val labelIds: ID, val labelableId: ID) {
@@ -14085,6 +14187,10 @@ class RemoveEnterpriseIdentityProviderInput(val clientMutationId: String? = null
 
 class RemoveEnterpriseOrganizationInput(val clientMutationId: String? = null, val enterpriseId: ID, val organizationId: ID) {
     override fun toString() = "{ clientMutationId: \"$clientMutationId\", enterpriseId: \"$enterpriseId\", organizationId: \"$organizationId\" }"
+}
+
+class RemoveEnterpriseSupportEntitlementInput(val clientMutationId: String? = null, val enterpriseId: ID, val login: String) {
+    override fun toString() = "{ clientMutationId: \"$clientMutationId\", enterpriseId: \"$enterpriseId\", login: \"$login\" }"
 }
 
 class RemoveLabelsFromLabelableInput(val clientMutationId: String? = null, val labelIds: ID, val labelableId: ID) {
