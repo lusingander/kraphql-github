@@ -146,6 +146,15 @@ enum class CommitContributionOrderField {
     ;
 }
 
+enum class ContributionLevel {
+    FIRST_QUARTILE,
+    FOURTH_QUARTILE,
+    NONE,
+    SECOND_QUARTILE,
+    THIRD_QUARTILE,
+    ;
+}
+
 enum class DefaultRepositoryPermissionField {
     ADMIN,
     NONE,
@@ -181,6 +190,7 @@ enum class DeploymentStatusState {
     PENDING,
     QUEUED,
     SUCCESS,
+    WAITING,
     ;
 }
 
@@ -1161,6 +1171,11 @@ enum class UserStatusOrderField {
     ;
 }
 
+enum class VerifiableDomainOrderField {
+    DOMAIN,
+    ;
+}
+
 
 class AcceptEnterpriseAdministratorInvitationPayload(__name: String = "AcceptEnterpriseAdministratorInvitationPayload"): ObjectNode(__name) {
     val clientMutationId get() =
@@ -1280,6 +1295,13 @@ class AddStarPayload(__name: String = "AddStarPayload"): ObjectNode(__name) {
         ScalarNode("clientMutationId").also { doInit(it) }
     fun starrable(init: Starrable.() -> Unit) =
         Starrable("starrable").also { doInit(it, init) }
+}
+
+class AddVerifiableDomainPayload(__name: String = "AddVerifiableDomainPayload"): ObjectNode(__name) {
+    val clientMutationId get() =
+        ScalarNode("clientMutationId").also { doInit(it) }
+    fun domain(init: VerifiableDomain.() -> Unit) =
+        VerifiableDomain("domain").also { doInit(it, init) }
 }
 
 class AddedToProjectEvent(__name: String = "AddedToProjectEvent"): ObjectNode(__name) {
@@ -2175,6 +2197,8 @@ class ContributionCalendarDay(__name: String = "ContributionCalendarDay"): Objec
         ScalarNode("color").also { doInit(it) }
     val contributionCount get() =
         ScalarNode("contributionCount").also { doInit(it) }
+    val contributionLevel get() =
+        ScalarNode("contributionLevel").also { doInit(it) }
     val date get() =
         ScalarNode("date").also { doInit(it) }
     val weekday get() =
@@ -2739,6 +2763,13 @@ class DeleteTeamDiscussionPayload(__name: String = "DeleteTeamDiscussionPayload"
         ScalarNode("clientMutationId").also { doInit(it) }
 }
 
+class DeleteVerifiableDomainPayload(__name: String = "DeleteVerifiableDomainPayload"): ObjectNode(__name) {
+    val clientMutationId get() =
+        ScalarNode("clientMutationId").also { doInit(it) }
+    fun owner(init: VerifiableDomainOwner.() -> Unit) =
+        VerifiableDomainOwner("owner").also { doInit(it, init) }
+}
+
 class DemilestonedEvent(__name: String = "DemilestonedEvent"): ObjectNode(__name) {
     fun actor(init: Actor.() -> Unit) =
         Actor("actor").also { doInit(it, init) }
@@ -3228,6 +3259,8 @@ class EnterpriseOwnerInfo(__name: String = "EnterpriseOwnerInfo"): ObjectNode(__
         ScalarNode("defaultRepositoryPermissionSetting").also { doInit(it) }
     fun defaultRepositoryPermissionSettingOrganizations(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, orderBy: OrganizationOrder? = null, value: DefaultRepositoryPermissionField, init: OrganizationConnection.() -> Unit) =
         OrganizationConnection("defaultRepositoryPermissionSettingOrganizations").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.apply { addArgs("value", value) }.also { doInit(it, init) }
+    fun domains(after: String? = null, before: String? = null, first: Int? = null, isVerified: Boolean? = null, last: Int? = null, orderBy: VerifiableDomainOrder? = null, init: VerifiableDomainConnection.() -> Unit) =
+        VerifiableDomainConnection("domains").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("isVerified", isVerified) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.also { doInit(it, init) }
     fun enterpriseServerInstallations(after: String? = null, before: String? = null, connectedOnly: Boolean? = null, first: Int? = null, last: Int? = null, orderBy: EnterpriseServerInstallationOrder? = null, init: EnterpriseServerInstallationConnection.() -> Unit) =
         EnterpriseServerInstallationConnection("enterpriseServerInstallations").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("connectedOnly", connectedOnly) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.also { doInit(it, init) }
     val ipAllowListEnabledSetting get() =
@@ -4942,6 +4975,8 @@ class Mutation(__name: String = "mutation"): ObjectNode(__name) {
         AddReactionPayload("addReaction").apply { addArgs("input", input) }.also { doInit(it, init) }
     fun addStar(input: AddStarInput, init: AddStarPayload.() -> Unit) =
         AddStarPayload("addStar").apply { addArgs("input", input) }.also { doInit(it, init) }
+    fun addVerifiableDomain(input: AddVerifiableDomainInput, init: AddVerifiableDomainPayload.() -> Unit) =
+        AddVerifiableDomainPayload("addVerifiableDomain").apply { addArgs("input", input) }.also { doInit(it, init) }
     fun archiveRepository(input: ArchiveRepositoryInput, init: ArchiveRepositoryPayload.() -> Unit) =
         ArchiveRepositoryPayload("archiveRepository").apply { addArgs("input", input) }.also { doInit(it, init) }
     fun cancelEnterpriseAdminInvitation(input: CancelEnterpriseAdminInvitationInput, init: CancelEnterpriseAdminInvitationPayload.() -> Unit) =
@@ -5024,6 +5059,8 @@ class Mutation(__name: String = "mutation"): ObjectNode(__name) {
         DeleteTeamDiscussionPayload("deleteTeamDiscussion").apply { addArgs("input", input) }.also { doInit(it, init) }
     fun deleteTeamDiscussionComment(input: DeleteTeamDiscussionCommentInput, init: DeleteTeamDiscussionCommentPayload.() -> Unit) =
         DeleteTeamDiscussionCommentPayload("deleteTeamDiscussionComment").apply { addArgs("input", input) }.also { doInit(it, init) }
+    fun deleteVerifiableDomain(input: DeleteVerifiableDomainInput, init: DeleteVerifiableDomainPayload.() -> Unit) =
+        DeleteVerifiableDomainPayload("deleteVerifiableDomain").apply { addArgs("input", input) }.also { doInit(it, init) }
     fun dismissPullRequestReview(input: DismissPullRequestReviewInput, init: DismissPullRequestReviewPayload.() -> Unit) =
         DismissPullRequestReviewPayload("dismissPullRequestReview").apply { addArgs("input", input) }.also { doInit(it, init) }
     fun followUser(input: FollowUserInput, init: FollowUserPayload.() -> Unit) =
@@ -5054,6 +5091,8 @@ class Mutation(__name: String = "mutation"): ObjectNode(__name) {
         PinIssuePayload("pinIssue").apply { addArgs("input", input) }.also { doInit(it, init) }
     fun regenerateEnterpriseIdentityProviderRecoveryCodes(input: RegenerateEnterpriseIdentityProviderRecoveryCodesInput, init: RegenerateEnterpriseIdentityProviderRecoveryCodesPayload.() -> Unit) =
         RegenerateEnterpriseIdentityProviderRecoveryCodesPayload("regenerateEnterpriseIdentityProviderRecoveryCodes").apply { addArgs("input", input) }.also { doInit(it, init) }
+    fun regenerateVerifiableDomainToken(input: RegenerateVerifiableDomainTokenInput, init: RegenerateVerifiableDomainTokenPayload.() -> Unit) =
+        RegenerateVerifiableDomainTokenPayload("regenerateVerifiableDomainToken").apply { addArgs("input", input) }.also { doInit(it, init) }
     fun removeAssigneesFromAssignable(input: RemoveAssigneesFromAssignableInput, init: RemoveAssigneesFromAssignablePayload.() -> Unit) =
         RemoveAssigneesFromAssignablePayload("removeAssigneesFromAssignable").apply { addArgs("input", input) }.also { doInit(it, init) }
     fun removeEnterpriseAdmin(input: RemoveEnterpriseAdminInput, init: RemoveEnterpriseAdminPayload.() -> Unit) =
@@ -5188,6 +5227,8 @@ class Mutation(__name: String = "mutation"): ObjectNode(__name) {
         UpdateTeamReviewAssignmentPayload("updateTeamReviewAssignment").apply { addArgs("input", input) }.also { doInit(it, init) }
     fun updateTopics(input: UpdateTopicsInput, init: UpdateTopicsPayload.() -> Unit) =
         UpdateTopicsPayload("updateTopics").apply { addArgs("input", input) }.also { doInit(it, init) }
+    fun verifyVerifiableDomain(input: VerifyVerifiableDomainInput, init: VerifyVerifiableDomainPayload.() -> Unit) =
+        VerifyVerifiableDomainPayload("verifyVerifiableDomain").apply { addArgs("input", input) }.also { doInit(it, init) }
 }
 
 class OauthApplicationCreateAuditEntry(__name: String = "OauthApplicationCreateAuditEntry"): ObjectNode(__name) {
@@ -6413,6 +6454,8 @@ class Organization(__name: String = "Organization"): ObjectNode(__name) {
         ScalarNode("description").also { doInit(it) }
     val descriptionHTML get() =
         ScalarNode("descriptionHTML").also { doInit(it) }
+    fun domains(after: String? = null, before: String? = null, first: Int? = null, isVerified: Boolean? = null, last: Int? = null, orderBy: VerifiableDomainOrder? = null, init: VerifiableDomainConnection.() -> Unit) =
+        VerifiableDomainConnection("domains").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("isVerified", isVerified) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.also { doInit(it, init) }
     val email get() =
         ScalarNode("email").also { doInit(it) }
     val hasSponsorsListing get() =
@@ -8051,6 +8094,13 @@ class RegenerateEnterpriseIdentityProviderRecoveryCodesPayload(__name: String = 
         EnterpriseIdentityProvider("identityProvider").also { doInit(it, init) }
 }
 
+class RegenerateVerifiableDomainTokenPayload(__name: String = "RegenerateVerifiableDomainTokenPayload"): ObjectNode(__name) {
+    val clientMutationId get() =
+        ScalarNode("clientMutationId").also { doInit(it) }
+    val verificationToken get() =
+        ScalarNode("verificationToken").also { doInit(it) }
+}
+
 class Release(__name: String = "Release"): ObjectNode(__name) {
     fun author(init: User.() -> Unit) =
         User("author").also { doInit(it, init) }
@@ -8064,6 +8114,8 @@ class Release(__name: String = "Release"): ObjectNode(__name) {
         ScalarNode("id").also { doInit(it) }
     val isDraft get() =
         ScalarNode("isDraft").also { doInit(it) }
+    val isLatest get() =
+        ScalarNode("isLatest").also { doInit(it) }
     val isPrerelease get() =
         ScalarNode("isPrerelease").also { doInit(it) }
     val name get() =
@@ -9289,6 +9341,8 @@ class Repository(__name: String = "Repository"): ObjectNode(__name) {
         LabelConnection("labels").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.apply { addArgs("query", query) }.also { doInit(it, init) }
     fun languages(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, orderBy: LanguageOrder? = null, init: LanguageConnection.() -> Unit) =
         LanguageConnection("languages").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.also { doInit(it, init) }
+    fun latestRelease(init: Release.() -> Unit) =
+        Release("latestRelease").also { doInit(it, init) }
     fun licenseInfo(init: License.() -> Unit) =
         License("licenseInfo").also { doInit(it, init) }
     val lockReason get() =
@@ -11731,6 +11785,58 @@ class UserStatusEdge(__name: String = "UserStatusEdge"): ObjectNode(__name) {
         UserStatus("node").also { doInit(it, init) }
 }
 
+class VerifiableDomain(__name: String = "VerifiableDomain"): ObjectNode(__name) {
+    val databaseId get() =
+        ScalarNode("databaseId").also { doInit(it) }
+    val dnsHostName get() =
+        ScalarNode("dnsHostName").also { doInit(it) }
+    val domain get() =
+        ScalarNode("domain").also { doInit(it) }
+    val hasFoundHostName get() =
+        ScalarNode("hasFoundHostName").also { doInit(it) }
+    val hasFoundVerificationToken get() =
+        ScalarNode("hasFoundVerificationToken").also { doInit(it) }
+    val id get() =
+        ScalarNode("id").also { doInit(it) }
+    val isRequiredForPolicyEnforcement get() =
+        ScalarNode("isRequiredForPolicyEnforcement").also { doInit(it) }
+    val isVerified get() =
+        ScalarNode("isVerified").also { doInit(it) }
+    fun owner(init: VerifiableDomainOwner.() -> Unit) =
+        VerifiableDomainOwner("owner").also { doInit(it, init) }
+    val punycodeEncodedDomain get() =
+        ScalarNode("punycodeEncodedDomain").also { doInit(it) }
+    val tokenExpirationTime get() =
+        ScalarNode("tokenExpirationTime").also { doInit(it) }
+    val verificationToken get() =
+        ScalarNode("verificationToken").also { doInit(it) }
+}
+
+class VerifiableDomainConnection(__name: String = "VerifiableDomainConnection"): ObjectNode(__name) {
+    fun edges(init: VerifiableDomainEdge.() -> Unit) =
+        VerifiableDomainEdge("edges").also { doInit(it, init) }
+    fun nodes(init: VerifiableDomain.() -> Unit) =
+        VerifiableDomain("nodes").also { doInit(it, init) }
+    fun pageInfo(init: PageInfo.() -> Unit) =
+        PageInfo("pageInfo").also { doInit(it, init) }
+    val totalCount get() =
+        ScalarNode("totalCount").also { doInit(it) }
+}
+
+class VerifiableDomainEdge(__name: String = "VerifiableDomainEdge"): ObjectNode(__name) {
+    val cursor get() =
+        ScalarNode("cursor").also { doInit(it) }
+    fun node(init: VerifiableDomain.() -> Unit) =
+        VerifiableDomain("node").also { doInit(it, init) }
+}
+
+class VerifyVerifiableDomainPayload(__name: String = "VerifyVerifiableDomainPayload"): ObjectNode(__name) {
+    val clientMutationId get() =
+        ScalarNode("clientMutationId").also { doInit(it) }
+    fun domain(init: VerifiableDomain.() -> Unit) =
+        VerifiableDomain("domain").also { doInit(it, init) }
+}
+
 class ViewerHovercardContext(__name: String = "ViewerHovercardContext"): ObjectNode(__name) {
     val message get() =
         ScalarNode("message").also { doInit(it) }
@@ -12546,6 +12652,8 @@ class Node(__name: String = "Node"): ObjectNode(__name) {
         UserContentEdit("...on UserContentEdit").also { doInit(it, init) }
     fun `on UserStatus`(init: UserStatus.() -> Unit) =
         UserStatus("...on UserStatus").also { doInit(it, init) }
+    fun `on VerifiableDomain`(init: VerifiableDomain.() -> Unit) =
+        VerifiableDomain("...on VerifiableDomain").also { doInit(it, init) }
 }
 
 class OauthApplicationAuditEntryData(__name: String = "OauthApplicationAuditEntryData"): ObjectNode(__name) {
@@ -13733,6 +13841,13 @@ class StatusCheckRollupContext(__name: String = "StatusCheckRollupContext"): Obj
         StatusContext("...on StatusContext").also { doInit(it, init) }
 }
 
+class VerifiableDomainOwner(__name: String = "VerifiableDomainOwner"): ObjectNode(__name) {
+    fun `on Enterprise`(init: Enterprise.() -> Unit) =
+        Enterprise("...on Enterprise").also { doInit(it, init) }
+    fun `on Organization`(init: Organization.() -> Unit) =
+        Organization("...on Organization").also { doInit(it, init) }
+}
+
 class AcceptEnterpriseAdministratorInvitationInput(val clientMutationId: String? = null, val invitationId: ID) {
     override fun toString() = "{ clientMutationId: \"$clientMutationId\", invitationId: \"$invitationId\" }"
 }
@@ -13783,6 +13898,10 @@ class AddReactionInput(val clientMutationId: String? = null, val content: Reacti
 
 class AddStarInput(val clientMutationId: String? = null, val starrableId: ID) {
     override fun toString() = "{ clientMutationId: \"$clientMutationId\", starrableId: \"$starrableId\" }"
+}
+
+class AddVerifiableDomainInput(val clientMutationId: String? = null, val domain: URI, val ownerId: ID) {
+    override fun toString() = "{ clientMutationId: \"$clientMutationId\", domain: \"$domain\", ownerId: \"$ownerId\" }"
 }
 
 class ArchiveRepositoryInput(val clientMutationId: String? = null, val repositoryId: ID) {
@@ -13997,6 +14116,10 @@ class DeleteTeamDiscussionInput(val clientMutationId: String? = null, val id: ID
     override fun toString() = "{ clientMutationId: \"$clientMutationId\", id: \"$id\" }"
 }
 
+class DeleteVerifiableDomainInput(val clientMutationId: String? = null, val id: ID) {
+    override fun toString() = "{ clientMutationId: \"$clientMutationId\", id: \"$id\" }"
+}
+
 class DeploymentOrder(val direction: OrderDirection, val field: DeploymentOrderField) {
     override fun toString() = "{ direction: $direction, field: $field }"
 }
@@ -14167,6 +14290,10 @@ class RefUpdate(val afterOid: GitObjectID, val beforeOid: GitObjectID? = null, v
 
 class RegenerateEnterpriseIdentityProviderRecoveryCodesInput(val clientMutationId: String? = null, val enterpriseId: ID) {
     override fun toString() = "{ clientMutationId: \"$clientMutationId\", enterpriseId: \"$enterpriseId\" }"
+}
+
+class RegenerateVerifiableDomainTokenInput(val clientMutationId: String? = null, val id: ID) {
+    override fun toString() = "{ clientMutationId: \"$clientMutationId\", id: \"$id\" }"
 }
 
 class ReleaseOrder(val direction: OrderDirection, val field: ReleaseOrderField) {
@@ -14499,4 +14626,12 @@ class UpdateTopicsInput(val clientMutationId: String? = null, val repositoryId: 
 
 class UserStatusOrder(val direction: OrderDirection, val field: UserStatusOrderField) {
     override fun toString() = "{ direction: $direction, field: $field }"
+}
+
+class VerifiableDomainOrder(val direction: OrderDirection, val field: VerifiableDomainOrderField) {
+    override fun toString() = "{ direction: $direction, field: $field }"
+}
+
+class VerifyVerifiableDomainInput(val clientMutationId: String? = null, val id: ID) {
+    override fun toString() = "{ clientMutationId: \"$clientMutationId\", id: \"$id\" }"
 }
