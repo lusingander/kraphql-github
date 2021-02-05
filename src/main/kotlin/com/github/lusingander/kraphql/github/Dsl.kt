@@ -475,6 +475,12 @@ enum class MilestoneState {
     ;
 }
 
+enum class NotificationRestrictionSettingValue {
+    DISABLED,
+    ENABLED,
+    ;
+}
+
 enum class OauthApplicationCreateAuditEntryState {
     ACTIVE,
     PENDING_DELETION,
@@ -1049,6 +1055,11 @@ enum class SecurityVulnerabilityOrderField {
     ;
 }
 
+enum class SponsorableOrderField {
+    LOGIN,
+    ;
+}
+
 enum class SponsorsTierOrderField {
     CREATED_AT,
     MONTHLY_PRICE_IN_CENTS,
@@ -1395,6 +1406,23 @@ class AutoMergeEnabledEvent(__name: String = "AutoMergeEnabledEvent"): ObjectNod
         User("enabler").also { doInit(it, init) }
     val id get() =
         ScalarNode("id").also { doInit(it) }
+    fun pullRequest(init: PullRequest.() -> Unit) =
+        PullRequest("pullRequest").also { doInit(it, init) }
+}
+
+class AutoMergeRequest(__name: String = "AutoMergeRequest"): ObjectNode(__name) {
+    val authorEmail get() =
+        ScalarNode("authorEmail").also { doInit(it) }
+    val commitBody get() =
+        ScalarNode("commitBody").also { doInit(it) }
+    val commitHeadline get() =
+        ScalarNode("commitHeadline").also { doInit(it) }
+    val enabledAt get() =
+        ScalarNode("enabledAt").also { doInit(it) }
+    fun enabledBy(init: Actor.() -> Unit) =
+        Actor("enabledBy").also { doInit(it, init) }
+    val mergeMethod get() =
+        ScalarNode("mergeMethod").also { doInit(it) }
     fun pullRequest(init: PullRequest.() -> Unit) =
         PullRequest("pullRequest").also { doInit(it, init) }
 }
@@ -3012,6 +3040,15 @@ class DeploymentStatusEdge(__name: String = "DeploymentStatusEdge"): ObjectNode(
         DeploymentStatus("node").also { doInit(it, init) }
 }
 
+class DisablePullRequestAutoMergePayload(__name: String = "DisablePullRequestAutoMergePayload"): ObjectNode(__name) {
+    fun actor(init: Actor.() -> Unit) =
+        Actor("actor").also { doInit(it, init) }
+    val clientMutationId get() =
+        ScalarNode("clientMutationId").also { doInit(it) }
+    fun pullRequest(init: PullRequest.() -> Unit) =
+        PullRequest("pullRequest").also { doInit(it, init) }
+}
+
 class DisconnectedEvent(__name: String = "DisconnectedEvent"): ObjectNode(__name) {
     fun actor(init: Actor.() -> Unit) =
         Actor("actor").also { doInit(it, init) }
@@ -3032,6 +3069,15 @@ class DismissPullRequestReviewPayload(__name: String = "DismissPullRequestReview
         ScalarNode("clientMutationId").also { doInit(it) }
     fun pullRequestReview(init: PullRequestReview.() -> Unit) =
         PullRequestReview("pullRequestReview").also { doInit(it, init) }
+}
+
+class EnablePullRequestAutoMergePayload(__name: String = "EnablePullRequestAutoMergePayload"): ObjectNode(__name) {
+    fun actor(init: Actor.() -> Unit) =
+        Actor("actor").also { doInit(it, init) }
+    val clientMutationId get() =
+        ScalarNode("clientMutationId").also { doInit(it) }
+    fun pullRequest(init: PullRequest.() -> Unit) =
+        PullRequest("pullRequest").also { doInit(it, init) }
 }
 
 class Enterprise(__name: String = "Enterprise"): ObjectNode(__name) {
@@ -3307,6 +3353,8 @@ class EnterpriseOwnerInfo(__name: String = "EnterpriseOwnerInfo"): ObjectNode(__
         ScalarNode("membersCanViewDependencyInsightsSetting").also { doInit(it) }
     fun membersCanViewDependencyInsightsSettingOrganizations(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, orderBy: OrganizationOrder? = null, value: Boolean, init: OrganizationConnection.() -> Unit) =
         OrganizationConnection("membersCanViewDependencyInsightsSettingOrganizations").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.apply { addArgs("value", value) }.also { doInit(it, init) }
+    val notificationDeliveryRestrictionEnabledSetting get() =
+        ScalarNode("notificationDeliveryRestrictionEnabledSetting").also { doInit(it) }
     val organizationProjectsSetting get() =
         ScalarNode("organizationProjectsSetting").also { doInit(it) }
     fun organizationProjectsSettingOrganizations(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, orderBy: OrganizationOrder? = null, value: Boolean, init: OrganizationConnection.() -> Unit) =
@@ -5061,8 +5109,12 @@ class Mutation(__name: String = "mutation"): ObjectNode(__name) {
         DeleteTeamDiscussionCommentPayload("deleteTeamDiscussionComment").apply { addArgs("input", input) }.also { doInit(it, init) }
     fun deleteVerifiableDomain(input: DeleteVerifiableDomainInput, init: DeleteVerifiableDomainPayload.() -> Unit) =
         DeleteVerifiableDomainPayload("deleteVerifiableDomain").apply { addArgs("input", input) }.also { doInit(it, init) }
+    fun disablePullRequestAutoMerge(input: DisablePullRequestAutoMergeInput, init: DisablePullRequestAutoMergePayload.() -> Unit) =
+        DisablePullRequestAutoMergePayload("disablePullRequestAutoMerge").apply { addArgs("input", input) }.also { doInit(it, init) }
     fun dismissPullRequestReview(input: DismissPullRequestReviewInput, init: DismissPullRequestReviewPayload.() -> Unit) =
         DismissPullRequestReviewPayload("dismissPullRequestReview").apply { addArgs("input", input) }.also { doInit(it, init) }
+    fun enablePullRequestAutoMerge(input: EnablePullRequestAutoMergeInput, init: EnablePullRequestAutoMergePayload.() -> Unit) =
+        EnablePullRequestAutoMergePayload("enablePullRequestAutoMerge").apply { addArgs("input", input) }.also { doInit(it, init) }
     fun followUser(input: FollowUserInput, init: FollowUserPayload.() -> Unit) =
         FollowUserPayload("followUser").apply { addArgs("input", input) }.also { doInit(it, init) }
     fun importProject(input: ImportProjectInput, init: ImportProjectPayload.() -> Unit) =
@@ -5199,6 +5251,8 @@ class Mutation(__name: String = "mutation"): ObjectNode(__name) {
         UpdateIssueCommentPayload("updateIssueComment").apply { addArgs("input", input) }.also { doInit(it, init) }
     fun updateLabel(input: UpdateLabelInput, init: UpdateLabelPayload.() -> Unit) =
         UpdateLabelPayload("updateLabel").apply { addArgs("input", input) }.also { doInit(it, init) }
+    fun updateNotificationRestrictionSetting(input: UpdateNotificationRestrictionSettingInput, init: UpdateNotificationRestrictionSettingPayload.() -> Unit) =
+        UpdateNotificationRestrictionSettingPayload("updateNotificationRestrictionSetting").apply { addArgs("input", input) }.also { doInit(it, init) }
     fun updateProject(input: UpdateProjectInput, init: UpdateProjectPayload.() -> Unit) =
         UpdateProjectPayload("updateProject").apply { addArgs("input", input) }.also { doInit(it, init) }
     fun updateProjectCard(input: UpdateProjectCardInput, init: UpdateProjectCardPayload.() -> Unit) =
@@ -6468,6 +6522,8 @@ class Organization(__name: String = "Organization"): ObjectNode(__name) {
         ScalarNode("ipAllowListEnabledSetting").also { doInit(it) }
     fun ipAllowListEntries(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, orderBy: IpAllowListEntryOrder? = null, init: IpAllowListEntryConnection.() -> Unit) =
         IpAllowListEntryConnection("ipAllowListEntries").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.also { doInit(it, init) }
+    fun isSponsoredBy(accountLogin: String) =
+        ScalarWithArgsNode("isSponsoredBy", mapOf("accountLogin" to accountLogin)).also { doInit(it) }
     val isSponsoringViewer get() =
         ScalarNode("isSponsoringViewer").also { doInit(it) }
     val isVerified get() =
@@ -6488,6 +6544,8 @@ class Organization(__name: String = "Organization"): ObjectNode(__name) {
         ScalarNode("newTeamResourcePath").also { doInit(it) }
     val newTeamUrl get() =
         ScalarNode("newTeamUrl").also { doInit(it) }
+    val notificationDeliveryRestrictionEnabledSetting get() =
+        ScalarNode("notificationDeliveryRestrictionEnabledSetting").also { doInit(it) }
     val organizationBillingEmail get() =
         ScalarNode("organizationBillingEmail").also { doInit(it) }
     fun packages(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, names: String? = null, orderBy: PackageOrder? = null, packageType: PackageType? = null, repositoryId: ID? = null, init: PackageConnection.() -> Unit) =
@@ -6520,6 +6578,8 @@ class Organization(__name: String = "Organization"): ObjectNode(__name) {
         OrganizationIdentityProvider("samlIdentityProvider").also { doInit(it, init) }
     fun sponsorsListing(init: SponsorsListing.() -> Unit) =
         SponsorsListing("sponsorsListing").also { doInit(it, init) }
+    fun sponsorshipForViewerAsSponsor(init: Sponsorship.() -> Unit) =
+        Sponsorship("sponsorshipForViewerAsSponsor").also { doInit(it, init) }
     fun sponsorshipsAsMaintainer(after: String? = null, before: String? = null, first: Int? = null, includePrivate: Boolean? = null, last: Int? = null, orderBy: SponsorshipOrder? = null, init: SponsorshipConnection.() -> Unit) =
         SponsorshipConnection("sponsorshipsAsMaintainer").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("includePrivate", includePrivate) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.also { doInit(it, init) }
     fun sponsorshipsAsSponsor(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, orderBy: SponsorshipOrder? = null, init: SponsorshipConnection.() -> Unit) =
@@ -7244,6 +7304,8 @@ class PullRequest(__name: String = "PullRequest"): ObjectNode(__name) {
         Actor("author").also { doInit(it, init) }
     val authorAssociation get() =
         ScalarNode("authorAssociation").also { doInit(it) }
+    fun autoMergeRequest(init: AutoMergeRequest.() -> Unit) =
+        AutoMergeRequest("autoMergeRequest").also { doInit(it, init) }
     fun baseRef(init: Ref.() -> Unit) =
         Ref("baseRef").also { doInit(it, init) }
     val baseRefName get() =
@@ -7387,6 +7449,10 @@ class PullRequest(__name: String = "PullRequest"): ObjectNode(__name) {
         ScalarNode("viewerCanApplySuggestion").also { doInit(it) }
     val viewerCanDeleteHeadRef get() =
         ScalarNode("viewerCanDeleteHeadRef").also { doInit(it) }
+    val viewerCanDisableAutoMerge get() =
+        ScalarNode("viewerCanDisableAutoMerge").also { doInit(it) }
+    val viewerCanEnableAutoMerge get() =
+        ScalarNode("viewerCanEnableAutoMerge").also { doInit(it) }
     val viewerCanReact get() =
         ScalarNode("viewerCanReact").also { doInit(it) }
     val viewerCanSubscribe get() =
@@ -7903,6 +7969,8 @@ class Query(__name: String = "query"): ObjectNode(__name) {
         SecurityAdvisory("securityAdvisory").apply { addArgs("ghsaId", ghsaId) }.also { doInit(it, init) }
     fun securityVulnerabilities(after: String? = null, before: String? = null, ecosystem: SecurityAdvisoryEcosystem? = null, first: Int? = null, last: Int? = null, orderBy: SecurityVulnerabilityOrder? = null, `package`: String? = null, severities: SecurityAdvisorySeverity? = null, init: SecurityVulnerabilityConnection.() -> Unit) =
         SecurityVulnerabilityConnection("securityVulnerabilities").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("ecosystem", ecosystem) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.apply { addArgs("package", `package`) }.apply { addArgs("severities", severities) }.also { doInit(it, init) }
+    fun sponsorables(after: String? = null, before: String? = null, dependencyEcosystem: SecurityAdvisoryEcosystem? = null, first: Int? = null, last: Int? = null, onlyDependencies: Boolean? = null, orderBy: SponsorableOrder? = null, orgLoginForDependencies: String? = null, init: SponsorableItemConnection.() -> Unit) =
+        SponsorableItemConnection("sponsorables").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("dependencyEcosystem", dependencyEcosystem) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("onlyDependencies", onlyDependencies) }.apply { addArgs("orderBy", orderBy) }.apply { addArgs("orgLoginForDependencies", orgLoginForDependencies) }.also { doInit(it, init) }
     @Deprecated("`Query.sponsorsListing` will be removed. Use `Sponsorable.sponsorsListing` instead. Removal on 2020-04-01 UTC.")
     fun sponsorsListing(slug: String, init: SponsorsListing.() -> Unit) =
         SponsorsListing("sponsorsListing").apply { addArgs("slug", slug) }.also { doInit(it, init) }
@@ -9942,6 +10010,8 @@ class SecurityAdvisory(__name: String = "SecurityAdvisory"): ObjectNode(__name) 
         ScalarNode("id").also { doInit(it) }
     fun identifiers(init: SecurityAdvisoryIdentifier.() -> Unit) =
         SecurityAdvisoryIdentifier("identifiers").also { doInit(it, init) }
+    val notificationsPermalink get() =
+        ScalarNode("notificationsPermalink").also { doInit(it) }
     val origin get() =
         ScalarNode("origin").also { doInit(it) }
     val permalink get() =
@@ -10080,6 +10150,24 @@ class SmimeSignature(__name: String = "SmimeSignature"): ObjectNode(__name) {
         ScalarNode("state").also { doInit(it) }
     val wasSignedByGitHub get() =
         ScalarNode("wasSignedByGitHub").also { doInit(it) }
+}
+
+class SponsorableItemConnection(__name: String = "SponsorableItemConnection"): ObjectNode(__name) {
+    fun edges(init: SponsorableItemEdge.() -> Unit) =
+        SponsorableItemEdge("edges").also { doInit(it, init) }
+    fun nodes(init: SponsorableItem.() -> Unit) =
+        SponsorableItem("nodes").also { doInit(it, init) }
+    fun pageInfo(init: PageInfo.() -> Unit) =
+        PageInfo("pageInfo").also { doInit(it, init) }
+    val totalCount get() =
+        ScalarNode("totalCount").also { doInit(it) }
+}
+
+class SponsorableItemEdge(__name: String = "SponsorableItemEdge"): ObjectNode(__name) {
+    val cursor get() =
+        ScalarNode("cursor").also { doInit(it) }
+    fun node(init: SponsorableItem.() -> Unit) =
+        SponsorableItem("node").also { doInit(it, init) }
 }
 
 class SponsorsListing(__name: String = "SponsorsListing"): ObjectNode(__name) {
@@ -11422,6 +11510,13 @@ class UpdateLabelPayload(__name: String = "UpdateLabelPayload"): ObjectNode(__na
         Label("label").also { doInit(it, init) }
 }
 
+class UpdateNotificationRestrictionSettingPayload(__name: String = "UpdateNotificationRestrictionSettingPayload"): ObjectNode(__name) {
+    val clientMutationId get() =
+        ScalarNode("clientMutationId").also { doInit(it) }
+    fun owner(init: VerifiableDomainOwner.() -> Unit) =
+        VerifiableDomainOwner("owner").also { doInit(it, init) }
+}
+
 class UpdateProjectCardPayload(__name: String = "UpdateProjectCardPayload"): ObjectNode(__name) {
     val clientMutationId get() =
         ScalarNode("clientMutationId").also { doInit(it) }
@@ -11579,6 +11674,8 @@ class User(__name: String = "User"): ObjectNode(__name) {
         ScalarNode("isHireable").also { doInit(it) }
     val isSiteAdmin get() =
         ScalarNode("isSiteAdmin").also { doInit(it) }
+    fun isSponsoredBy(accountLogin: String) =
+        ScalarWithArgsNode("isSponsoredBy", mapOf("accountLogin" to accountLogin)).also { doInit(it) }
     val isSponsoringViewer get() =
         ScalarNode("isSponsoringViewer").also { doInit(it) }
     val isViewer get() =
@@ -11633,6 +11730,8 @@ class User(__name: String = "User"): ObjectNode(__name) {
         SavedReplyConnection("savedReplies").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.also { doInit(it, init) }
     fun sponsorsListing(init: SponsorsListing.() -> Unit) =
         SponsorsListing("sponsorsListing").also { doInit(it, init) }
+    fun sponsorshipForViewerAsSponsor(init: Sponsorship.() -> Unit) =
+        Sponsorship("sponsorshipForViewerAsSponsor").also { doInit(it, init) }
     fun sponsorshipsAsMaintainer(after: String? = null, before: String? = null, first: Int? = null, includePrivate: Boolean? = null, last: Int? = null, orderBy: SponsorshipOrder? = null, init: SponsorshipConnection.() -> Unit) =
         SponsorshipConnection("sponsorshipsAsMaintainer").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("includePrivate", includePrivate) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.also { doInit(it, init) }
     fun sponsorshipsAsSponsor(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, orderBy: SponsorshipOrder? = null, init: SponsorshipConnection.() -> Unit) =
@@ -13069,10 +13168,14 @@ class RepositoryOwner(__name: String = "RepositoryOwner"): ObjectNode(__name) {
 class Sponsorable(__name: String = "Sponsorable"): ObjectNode(__name) {
     val hasSponsorsListing get() =
         ScalarNode("hasSponsorsListing").also { doInit(it) }
+    fun isSponsoredBy(accountLogin: String) =
+        ScalarWithArgsNode("isSponsoredBy", mapOf("accountLogin" to accountLogin)).also { doInit(it) }
     val isSponsoringViewer get() =
         ScalarNode("isSponsoringViewer").also { doInit(it) }
     fun sponsorsListing(init: SponsorsListing.() -> Unit) =
         SponsorsListing("sponsorsListing").also { doInit(it, init) }
+    fun sponsorshipForViewerAsSponsor(init: Sponsorship.() -> Unit) =
+        Sponsorship("sponsorshipForViewerAsSponsor").also { doInit(it, init) }
     fun sponsorshipsAsMaintainer(after: String? = null, before: String? = null, first: Int? = null, includePrivate: Boolean? = null, last: Int? = null, orderBy: SponsorshipOrder? = null, init: SponsorshipConnection.() -> Unit) =
         SponsorshipConnection("sponsorshipsAsMaintainer").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("includePrivate", includePrivate) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.also { doInit(it, init) }
     fun sponsorshipsAsSponsor(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, orderBy: SponsorshipOrder? = null, init: SponsorshipConnection.() -> Unit) =
@@ -13834,6 +13937,13 @@ class Sponsor(__name: String = "Sponsor"): ObjectNode(__name) {
         User("...on User").also { doInit(it, init) }
 }
 
+class SponsorableItem(__name: String = "SponsorableItem"): ObjectNode(__name) {
+    fun `on Organization`(init: Organization.() -> Unit) =
+        Organization("...on Organization").also { doInit(it, init) }
+    fun `on User`(init: User.() -> Unit) =
+        User("...on User").also { doInit(it, init) }
+}
+
 class StatusCheckRollupContext(__name: String = "StatusCheckRollupContext"): ObjectNode(__name) {
     fun `on CheckRun`(init: CheckRun.() -> Unit) =
         CheckRun("...on CheckRun").also { doInit(it, init) }
@@ -14124,6 +14234,10 @@ class DeploymentOrder(val direction: OrderDirection, val field: DeploymentOrderF
     override fun toString() = "{ direction: $direction, field: $field }"
 }
 
+class DisablePullRequestAutoMergeInput(val clientMutationId: String? = null, val pullRequestId: ID) {
+    override fun toString() = "{ clientMutationId: \"$clientMutationId\", pullRequestId: \"$pullRequestId\" }"
+}
+
 class DismissPullRequestReviewInput(val clientMutationId: String? = null, val message: String, val pullRequestReviewId: ID) {
     override fun toString() = "{ clientMutationId: \"$clientMutationId\", message: \"$message\", pullRequestReviewId: \"$pullRequestReviewId\" }"
 }
@@ -14134,6 +14248,10 @@ class DraftPullRequestReviewComment(val body: String, val path: String, val posi
 
 class DraftPullRequestReviewThread(val body: String, val line: Int, val path: String, val side: DiffSide? = null, val startLine: Int? = null, val startSide: DiffSide? = null) {
     override fun toString() = "{ body: \"$body\", line: $line, path: \"$path\", side: $side, startLine: $startLine, startSide: $startSide }"
+}
+
+class EnablePullRequestAutoMergeInput(val authorEmail: String? = null, val clientMutationId: String? = null, val commitBody: String? = null, val commitHeadline: String? = null, val mergeMethod: PullRequestMergeMethod? = null, val pullRequestId: ID) {
+    override fun toString() = "{ authorEmail: \"$authorEmail\", clientMutationId: \"$clientMutationId\", commitBody: \"$commitBody\", commitHeadline: \"$commitHeadline\", mergeMethod: $mergeMethod, pullRequestId: \"$pullRequestId\" }"
 }
 
 class EnterpriseAdministratorInvitationOrder(val direction: OrderDirection, val field: EnterpriseAdministratorInvitationOrderField) {
@@ -14396,6 +14514,10 @@ class SetUserInteractionLimitInput(val clientMutationId: String? = null, val exp
     override fun toString() = "{ clientMutationId: \"$clientMutationId\", expiry: $expiry, limit: $limit, userId: \"$userId\" }"
 }
 
+class SponsorableOrder(val direction: OrderDirection, val field: SponsorableOrderField) {
+    override fun toString() = "{ direction: $direction, field: $field }"
+}
+
 class SponsorsTierOrder(val direction: OrderDirection, val field: SponsorsTierOrderField) {
     override fun toString() = "{ direction: $direction, field: $field }"
 }
@@ -14566,6 +14688,10 @@ class UpdateIssueInput(val assigneeIds: ID? = null, val body: String? = null, va
 
 class UpdateLabelInput(val clientMutationId: String? = null, val color: String? = null, val description: String? = null, val id: ID, val name: String? = null) {
     override fun toString() = "{ clientMutationId: \"$clientMutationId\", color: \"$color\", description: \"$description\", id: \"$id\", name: \"$name\" }"
+}
+
+class UpdateNotificationRestrictionSettingInput(val clientMutationId: String? = null, val ownerId: ID, val settingValue: NotificationRestrictionSettingValue) {
+    override fun toString() = "{ clientMutationId: \"$clientMutationId\", ownerId: \"$ownerId\", settingValue: $settingValue }"
 }
 
 class UpdateProjectCardInput(val clientMutationId: String? = null, val isArchived: Boolean? = null, val note: String? = null, val projectCardId: ID) {
