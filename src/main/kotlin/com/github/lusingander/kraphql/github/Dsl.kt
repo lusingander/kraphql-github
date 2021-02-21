@@ -1060,6 +1060,12 @@ enum class SponsorableOrderField {
     ;
 }
 
+enum class SponsorsGoalKind {
+    MONTHLY_SPONSORSHIP_AMOUNT,
+    TOTAL_SPONSORS_COUNT,
+    ;
+}
+
 enum class SponsorsTierOrderField {
     CREATED_AT,
     MONTHLY_PRICE_IN_CENTS,
@@ -1682,6 +1688,42 @@ class BranchProtectionRuleEdge(__name: String = "BranchProtectionRuleEdge"): Obj
         ScalarNode("cursor").also { doInit(it) }
     fun node(init: BranchProtectionRule.() -> Unit) =
         BranchProtectionRule("node").also { doInit(it, init) }
+}
+
+class CVSS(__name: String = "CVSS"): ObjectNode(__name) {
+    val score get() =
+        ScalarNode("score").also { doInit(it) }
+    val vectorString get() =
+        ScalarNode("vectorString").also { doInit(it) }
+}
+
+class CWE(__name: String = "CWE"): ObjectNode(__name) {
+    val cweId get() =
+        ScalarNode("cweId").also { doInit(it) }
+    val description get() =
+        ScalarNode("description").also { doInit(it) }
+    val id get() =
+        ScalarNode("id").also { doInit(it) }
+    val name get() =
+        ScalarNode("name").also { doInit(it) }
+}
+
+class CWEConnection(__name: String = "CWEConnection"): ObjectNode(__name) {
+    fun edges(init: CWEEdge.() -> Unit) =
+        CWEEdge("edges").also { doInit(it, init) }
+    fun nodes(init: CWE.() -> Unit) =
+        CWE("nodes").also { doInit(it, init) }
+    fun pageInfo(init: PageInfo.() -> Unit) =
+        PageInfo("pageInfo").also { doInit(it, init) }
+    val totalCount get() =
+        ScalarNode("totalCount").also { doInit(it) }
+}
+
+class CWEEdge(__name: String = "CWEEdge"): ObjectNode(__name) {
+    val cursor get() =
+        ScalarNode("cursor").also { doInit(it) }
+    fun node(init: CWE.() -> Unit) =
+        CWE("node").also { doInit(it, init) }
 }
 
 class CancelEnterpriseAdminInvitationPayload(__name: String = "CancelEnterpriseAdminInvitationPayload"): ObjectNode(__name) {
@@ -8192,6 +8234,8 @@ class Release(__name: String = "Release"): ObjectNode(__name) {
         ScalarNode("publishedAt").also { doInit(it) }
     fun releaseAssets(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, name: String? = null, init: ReleaseAssetConnection.() -> Unit) =
         ReleaseAssetConnection("releaseAssets").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("name", name) }.also { doInit(it, init) }
+    fun repository(init: Repository.() -> Unit) =
+        Repository("repository").also { doInit(it, init) }
     val resourcePath get() =
         ScalarNode("resourcePath").also { doInit(it) }
     fun shortDescriptionHTML(limit: Int? = null) =
@@ -10000,6 +10044,10 @@ class SearchResultItemEdge(__name: String = "SearchResultItemEdge"): ObjectNode(
 }
 
 class SecurityAdvisory(__name: String = "SecurityAdvisory"): ObjectNode(__name) {
+    fun cvss(init: CVSS.() -> Unit) =
+        CVSS("cvss").also { doInit(it, init) }
+    fun cwes(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, init: CWEConnection.() -> Unit) =
+        CWEConnection("cwes").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.also { doInit(it, init) }
     val databaseId get() =
         ScalarNode("databaseId").also { doInit(it) }
     val description get() =
@@ -10170,7 +10218,22 @@ class SponsorableItemEdge(__name: String = "SponsorableItemEdge"): ObjectNode(__
         SponsorableItem("node").also { doInit(it, init) }
 }
 
+class SponsorsGoal(__name: String = "SponsorsGoal"): ObjectNode(__name) {
+    val description get() =
+        ScalarNode("description").also { doInit(it) }
+    val kind get() =
+        ScalarNode("kind").also { doInit(it) }
+    val percentComplete get() =
+        ScalarNode("percentComplete").also { doInit(it) }
+    val targetValue get() =
+        ScalarNode("targetValue").also { doInit(it) }
+    val title get() =
+        ScalarNode("title").also { doInit(it) }
+}
+
 class SponsorsListing(__name: String = "SponsorsListing"): ObjectNode(__name) {
+    fun activeGoal(init: SponsorsGoal.() -> Unit) =
+        SponsorsGoal("activeGoal").also { doInit(it, init) }
     val createdAt get() =
         ScalarNode("createdAt").also { doInit(it) }
     val fullDescription get() =
@@ -12401,6 +12464,8 @@ class Node(__name: String = "Node"): ObjectNode(__name) {
         Bot("...on Bot").also { doInit(it, init) }
     fun `on BranchProtectionRule`(init: BranchProtectionRule.() -> Unit) =
         BranchProtectionRule("...on BranchProtectionRule").also { doInit(it, init) }
+    fun `on CWE`(init: CWE.() -> Unit) =
+        CWE("...on CWE").also { doInit(it, init) }
     fun `on CheckRun`(init: CheckRun.() -> Unit) =
         CheckRun("...on CheckRun").also { doInit(it, init) }
     fun `on CheckSuite`(init: CheckSuite.() -> Unit) =
