@@ -1363,6 +1363,13 @@ class App(__name: String = "App"): ObjectNode(__name) {
         ScalarNode("url").also { doInit(it) }
 }
 
+class ApproveVerifiableDomainPayload(__name: String = "ApproveVerifiableDomainPayload"): ObjectNode(__name) {
+    val clientMutationId get() =
+        ScalarNode("clientMutationId").also { doInit(it) }
+    fun domain(init: VerifiableDomain.() -> Unit) =
+        VerifiableDomain("domain").also { doInit(it, init) }
+}
+
 class ArchiveRepositoryPayload(__name: String = "ArchiveRepositoryPayload"): ObjectNode(__name) {
     val clientMutationId get() =
         ScalarNode("clientMutationId").also { doInit(it) }
@@ -5067,6 +5074,8 @@ class Mutation(__name: String = "mutation"): ObjectNode(__name) {
         AddStarPayload("addStar").apply { addArgs("input", input) }.also { doInit(it, init) }
     fun addVerifiableDomain(input: AddVerifiableDomainInput, init: AddVerifiableDomainPayload.() -> Unit) =
         AddVerifiableDomainPayload("addVerifiableDomain").apply { addArgs("input", input) }.also { doInit(it, init) }
+    fun approveVerifiableDomain(input: ApproveVerifiableDomainInput, init: ApproveVerifiableDomainPayload.() -> Unit) =
+        ApproveVerifiableDomainPayload("approveVerifiableDomain").apply { addArgs("input", input) }.also { doInit(it, init) }
     fun archiveRepository(input: ArchiveRepositoryInput, init: ArchiveRepositoryPayload.() -> Unit) =
         ArchiveRepositoryPayload("archiveRepository").apply { addArgs("input", input) }.also { doInit(it, init) }
     fun cancelEnterpriseAdminInvitation(input: CancelEnterpriseAdminInvitationInput, init: CancelEnterpriseAdminInvitationPayload.() -> Unit) =
@@ -14077,6 +14086,10 @@ class AddStarInput(val clientMutationId: String? = null, val starrableId: ID) {
 
 class AddVerifiableDomainInput(val clientMutationId: String? = null, val domain: URI, val ownerId: ID) {
     override fun toString() = "{ clientMutationId: \"$clientMutationId\", domain: \"$domain\", ownerId: \"$ownerId\" }"
+}
+
+class ApproveVerifiableDomainInput(val clientMutationId: String? = null, val id: ID) {
+    override fun toString() = "{ clientMutationId: \"$clientMutationId\", id: \"$id\" }"
 }
 
 class ArchiveRepositoryInput(val clientMutationId: String? = null, val repositoryId: ID) {
