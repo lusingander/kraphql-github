@@ -1189,6 +1189,7 @@ enum class UserStatusOrderField {
 }
 
 enum class VerifiableDomainOrderField {
+    CREATED_AT,
     DOMAIN,
     ;
 }
@@ -4157,6 +4158,8 @@ class Issue(__name: String = "Issue"): ObjectNode(__name) {
         ScalarNode("id").also { doInit(it) }
     val includesCreatedEdit get() =
         ScalarNode("includesCreatedEdit").also { doInit(it) }
+    val isPinned get() =
+        ScalarNode("isPinned").also { doInit(it) }
     val isReadByViewer get() =
         ScalarNode("isReadByViewer").also { doInit(it) }
     fun labels(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, orderBy: LabelOrder? = null, init: LabelConnection.() -> Unit) =
@@ -8253,6 +8256,8 @@ class Release(__name: String = "Release"): ObjectNode(__name) {
         ScalarNode("shortDescriptionHTML").also { doInit(it) }
     fun tag(init: Ref.() -> Unit) =
         Ref("tag").also { doInit(it, init) }
+    fun tagCommit(init: Commit.() -> Unit) =
+        Commit("tagCommit").also { doInit(it, init) }
     val tagName get() =
         ScalarNode("tagName").also { doInit(it) }
     val updatedAt get() =
@@ -11742,6 +11747,8 @@ class User(__name: String = "User"): ObjectNode(__name) {
         ScalarNode("isDeveloperProgramMember").also { doInit(it) }
     val isEmployee get() =
         ScalarNode("isEmployee").also { doInit(it) }
+    val isGitHubStar get() =
+        ScalarNode("isGitHubStar").also { doInit(it) }
     val isHireable get() =
         ScalarNode("isHireable").also { doInit(it) }
     val isSiteAdmin get() =
@@ -11957,6 +11964,8 @@ class UserStatusEdge(__name: String = "UserStatusEdge"): ObjectNode(__name) {
 }
 
 class VerifiableDomain(__name: String = "VerifiableDomain"): ObjectNode(__name) {
+    val createdAt get() =
+        ScalarNode("createdAt").also { doInit(it) }
     val databaseId get() =
         ScalarNode("databaseId").also { doInit(it) }
     val dnsHostName get() =
@@ -11979,6 +11988,8 @@ class VerifiableDomain(__name: String = "VerifiableDomain"): ObjectNode(__name) 
         ScalarNode("punycodeEncodedDomain").also { doInit(it) }
     val tokenExpirationTime get() =
         ScalarNode("tokenExpirationTime").also { doInit(it) }
+    val updatedAt get() =
+        ScalarNode("updatedAt").also { doInit(it) }
     val verificationToken get() =
         ScalarNode("verificationToken").also { doInit(it) }
 }
