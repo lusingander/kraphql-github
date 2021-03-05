@@ -1,7 +1,7 @@
 kraphql-github
 ====
 
-[ ![Download](https://api.bintray.com/packages/lusingander/maven/kraphql-github/images/download.svg) ](https://bintray.com/lusingander/maven/kraphql-github/_latestVersion)
+[![Release](https://jitpack.io/v/lusingander/kraphql-github.svg)](https://jitpack.io/#lusingander/kraphql-github)
 
 Kotlin DSL for [GitHub GraphQL API (GitHub API v4)](https://docs.github.com/en/free-pro-team@latest/graphql)
 
@@ -17,11 +17,11 @@ With the power of Kotlin DSL, you can easily write type-safe queries for the Git
 
 ```groovy
 repositories {
-    jcenter()
+    maven { url 'https://jitpack.io' }
 }
 
 dependencies {
-    implementation 'com.github.lusingander:kraphql-github:0.0.10'
+    implementation 'com.github.lusingander:kraphql-github:v0.0.10'
 }
 ```
 
