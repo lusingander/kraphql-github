@@ -1818,6 +1818,10 @@ class CheckRun(__name: String = "CheckRun"): ObjectNode(__name) {
         ScalarNode("externalId").also { doInit(it) }
     val id get() =
         ScalarNode("id").also { doInit(it) }
+    fun isRequired(pullRequestId: ID? = null, pullRequestNumber: Int? = null) =
+        ScalarWithArgsNode("isRequired", mapOf("pullRequestId" to pullRequestId, "pullRequestNumber" to pullRequestNumber)).also { doInit(it) }
+    val isRequired get() =
+        ScalarNode("isRequired").also { doInit(it) }
     val name get() =
         ScalarNode("name").also { doInit(it) }
     val permalink get() =
@@ -7517,6 +7521,10 @@ class PullRequest(__name: String = "PullRequest"): ObjectNode(__name) {
         ScalarNode("viewerCannotUpdateReasons").also { doInit(it) }
     val viewerDidAuthor get() =
         ScalarNode("viewerDidAuthor").also { doInit(it) }
+    fun viewerLatestReview(init: PullRequestReview.() -> Unit) =
+        PullRequestReview("viewerLatestReview").also { doInit(it, init) }
+    fun viewerLatestReviewRequest(init: ReviewRequest.() -> Unit) =
+        ReviewRequest("viewerLatestReviewRequest").also { doInit(it, init) }
     fun viewerMergeBodyText(mergeType: PullRequestMergeMethod? = null) =
         ScalarWithArgsNode("viewerMergeBodyText", mapOf("mergeType" to mergeType)).also { doInit(it) }
     val viewerMergeBodyText get() =
@@ -8182,10 +8190,14 @@ class RefUpdateRule(__name: String = "RefUpdateRule"): ObjectNode(__name) {
         ScalarNode("requiredApprovingReviewCount").also { doInit(it) }
     val requiredStatusCheckContexts get() =
         ScalarNode("requiredStatusCheckContexts").also { doInit(it) }
+    val requiresCodeOwnerReviews get() =
+        ScalarNode("requiresCodeOwnerReviews").also { doInit(it) }
     val requiresLinearHistory get() =
         ScalarNode("requiresLinearHistory").also { doInit(it) }
     val requiresSignatures get() =
         ScalarNode("requiresSignatures").also { doInit(it) }
+    val viewerAllowedToDismissReviews get() =
+        ScalarNode("viewerAllowedToDismissReviews").also { doInit(it) }
     val viewerCanPush get() =
         ScalarNode("viewerCanPush").also { doInit(it) }
 }
@@ -10454,6 +10466,10 @@ class StatusContext(__name: String = "StatusContext"): ObjectNode(__name) {
         ScalarNode("description").also { doInit(it) }
     val id get() =
         ScalarNode("id").also { doInit(it) }
+    fun isRequired(pullRequestId: ID? = null, pullRequestNumber: Int? = null) =
+        ScalarWithArgsNode("isRequired", mapOf("pullRequestId" to pullRequestId, "pullRequestNumber" to pullRequestNumber)).also { doInit(it) }
+    val isRequired get() =
+        ScalarNode("isRequired").also { doInit(it) }
     val state get() =
         ScalarNode("state").also { doInit(it) }
     val targetUrl get() =
@@ -13248,6 +13264,17 @@ class RepositoryOwner(__name: String = "RepositoryOwner"): ObjectNode(__name) {
         Organization("...on Organization").also { doInit(it, init) }
     fun `on User`(init: User.() -> Unit) =
         User("...on User").also { doInit(it, init) }
+}
+
+class RequirableByPullRequest(__name: String = "RequirableByPullRequest"): ObjectNode(__name) {
+    fun isRequired(pullRequestId: ID? = null, pullRequestNumber: Int? = null) =
+        ScalarWithArgsNode("isRequired", mapOf("pullRequestId" to pullRequestId, "pullRequestNumber" to pullRequestNumber)).also { doInit(it) }
+    val isRequired get() =
+        ScalarNode("isRequired").also { doInit(it) }
+    fun `on CheckRun`(init: CheckRun.() -> Unit) =
+        CheckRun("...on CheckRun").also { doInit(it, init) }
+    fun `on StatusContext`(init: StatusContext.() -> Unit) =
+        StatusContext("...on StatusContext").also { doInit(it, init) }
 }
 
 class Sponsorable(__name: String = "Sponsorable"): ObjectNode(__name) {
