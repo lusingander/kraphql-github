@@ -10351,6 +10351,8 @@ class Sponsorship(__name: String = "Sponsorship"): ObjectNode(__name) {
         Sponsorable("sponsorable").also { doInit(it, init) }
     fun tier(init: SponsorsTier.() -> Unit) =
         SponsorsTier("tier").also { doInit(it, init) }
+    val tierSelectedAt get() =
+        ScalarNode("tierSelectedAt").also { doInit(it) }
 }
 
 class SponsorshipConnection(__name: String = "SponsorshipConnection"): ObjectNode(__name) {
