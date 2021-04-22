@@ -2401,6 +2401,13 @@ class ConvertProjectCardNoteToIssuePayload(__name: String = "ConvertProjectCardN
         ProjectCard("projectCard").also { doInit(it, init) }
 }
 
+class ConvertPullRequestToDraftPayload(__name: String = "ConvertPullRequestToDraftPayload"): ObjectNode(__name) {
+    val clientMutationId get() =
+        ScalarNode("clientMutationId").also { doInit(it) }
+    fun pullRequest(init: PullRequest.() -> Unit) =
+        PullRequest("pullRequest").also { doInit(it, init) }
+}
+
 class ConvertToDraftEvent(__name: String = "ConvertToDraftEvent"): ObjectNode(__name) {
     fun actor(init: Actor.() -> Unit) =
         Actor("actor").also { doInit(it, init) }
@@ -5101,6 +5108,8 @@ class Mutation(__name: String = "mutation"): ObjectNode(__name) {
         ClosePullRequestPayload("closePullRequest").apply { addArgs("input", input) }.also { doInit(it, init) }
     fun convertProjectCardNoteToIssue(input: ConvertProjectCardNoteToIssueInput, init: ConvertProjectCardNoteToIssuePayload.() -> Unit) =
         ConvertProjectCardNoteToIssuePayload("convertProjectCardNoteToIssue").apply { addArgs("input", input) }.also { doInit(it, init) }
+    fun convertPullRequestToDraft(input: ConvertPullRequestToDraftInput, init: ConvertPullRequestToDraftPayload.() -> Unit) =
+        ConvertPullRequestToDraftPayload("convertPullRequestToDraft").apply { addArgs("input", input) }.also { doInit(it, init) }
     fun createBranchProtectionRule(input: CreateBranchProtectionRuleInput, init: CreateBranchProtectionRulePayload.() -> Unit) =
         CreateBranchProtectionRulePayload("createBranchProtectionRule").apply { addArgs("input", input) }.also { doInit(it, init) }
     fun createCheckRun(input: CreateCheckRunInput, init: CreateCheckRunPayload.() -> Unit) =
@@ -14222,6 +14231,10 @@ class ContributionOrder(val direction: OrderDirection) {
 
 class ConvertProjectCardNoteToIssueInput(val body: String? = null, val clientMutationId: String? = null, val projectCardId: ID, val repositoryId: ID, val title: String? = null) {
     override fun toString() = "{ body: \"$body\", clientMutationId: \"$clientMutationId\", projectCardId: \"$projectCardId\", repositoryId: \"$repositoryId\", title: \"$title\" }"
+}
+
+class ConvertPullRequestToDraftInput(val clientMutationId: String? = null, val pullRequestId: ID) {
+    override fun toString() = "{ clientMutationId: \"$clientMutationId\", pullRequestId: \"$pullRequestId\" }"
 }
 
 class CreateBranchProtectionRuleInput(val allowsDeletions: Boolean? = null, val allowsForcePushes: Boolean? = null, val clientMutationId: String? = null, val dismissesStaleReviews: Boolean? = null, val isAdminEnforced: Boolean? = null, val pattern: String, val pushActorIds: ID? = null, val repositoryId: ID, val requiredApprovingReviewCount: Int? = null, val requiredStatusCheckContexts: String? = null, val requiresApprovingReviews: Boolean? = null, val requiresCodeOwnerReviews: Boolean? = null, val requiresCommitSignatures: Boolean? = null, val requiresLinearHistory: Boolean? = null, val requiresStatusChecks: Boolean? = null, val requiresStrictStatusChecks: Boolean? = null, val restrictsPushes: Boolean? = null, val restrictsReviewDismissals: Boolean? = null, val reviewDismissalActorIds: ID? = null) {
