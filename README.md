@@ -5,7 +5,7 @@ kraphql-github
 
 Kotlin DSL for [GitHub GraphQL API (GitHub API v4)](https://docs.github.com/en/free-pro-team@latest/graphql)
 
-Current version: based on the [schema 2021-04-20](https://docs.github.com/en/free-pro-team@latest/graphql/overview/changelog#schema-changes-for-2021-04-20).
+Current version: based on the [schema 2021-05-04](https://docs.github.com/en/free-pro-team@latest/graphql/overview/changelog#schema-changes-for-2021-05-04).
 
 ## About
 

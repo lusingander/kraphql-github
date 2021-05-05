@@ -7907,6 +7907,15 @@ class PullRequestRevisionMarker(__name: String = "PullRequestRevisionMarker"): O
         PullRequest("pullRequest").also { doInit(it, init) }
 }
 
+class PullRequestTemplate(__name: String = "PullRequestTemplate"): ObjectNode(__name) {
+    val body get() =
+        ScalarNode("body").also { doInit(it) }
+    val filename get() =
+        ScalarNode("filename").also { doInit(it) }
+    fun repository(init: Repository.() -> Unit) =
+        Repository("repository").also { doInit(it, init) }
+}
+
 class PullRequestTimelineConnection(__name: String = "PullRequestTimelineConnection"): ObjectNode(__name) {
     fun edges(init: PullRequestTimelineItemEdge.() -> Unit) =
         PullRequestTimelineItemEdge("edges").also { doInit(it, init) }
@@ -9532,6 +9541,8 @@ class Repository(__name: String = "Repository"): ObjectNode(__name) {
         ScalarNode("projectsUrl").also { doInit(it) }
     fun pullRequest(number: Int, init: PullRequest.() -> Unit) =
         PullRequest("pullRequest").apply { addArgs("number", number) }.also { doInit(it, init) }
+    fun pullRequestTemplates(init: PullRequestTemplate.() -> Unit) =
+        PullRequestTemplate("pullRequestTemplates").also { doInit(it, init) }
     fun pullRequests(after: String? = null, baseRefName: String? = null, before: String? = null, first: Int? = null, headRefName: String? = null, labels: String? = null, last: Int? = null, orderBy: IssueOrder? = null, states: PullRequestState? = null, init: PullRequestConnection.() -> Unit) =
         PullRequestConnection("pullRequests").apply { addArgs("after", after) }.apply { addArgs("baseRefName", baseRefName) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("headRefName", headRefName) }.apply { addArgs("labels", labels) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.apply { addArgs("states", states) }.also { doInit(it, init) }
     val pushedAt get() =
