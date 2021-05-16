@@ -4565,6 +4565,8 @@ class Mannequin(__name: String = "Mannequin"): ObjectNode(__name) {
         ScalarWithArgsNode("avatarUrl", mapOf("size" to size)).also { doInit(it) }
     val avatarUrl get() =
         ScalarNode("avatarUrl").also { doInit(it) }
+    fun claimant(init: User.() -> Unit) =
+        User("claimant").also { doInit(it, init) }
     val createdAt get() =
         ScalarNode("createdAt").also { doInit(it) }
     val databaseId get() =
