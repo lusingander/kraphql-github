@@ -3366,8 +3366,8 @@ class EnterpriseOwnerInfo(__name: String = "EnterpriseOwnerInfo"): ObjectNode(__
         ScalarNode("defaultRepositoryPermissionSetting").also { doInit(it) }
     fun defaultRepositoryPermissionSettingOrganizations(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, orderBy: OrganizationOrder? = null, value: DefaultRepositoryPermissionField, init: OrganizationConnection.() -> Unit) =
         OrganizationConnection("defaultRepositoryPermissionSettingOrganizations").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.apply { addArgs("value", value) }.also { doInit(it, init) }
-    fun domains(after: String? = null, before: String? = null, first: Int? = null, isVerified: Boolean? = null, last: Int? = null, orderBy: VerifiableDomainOrder? = null, init: VerifiableDomainConnection.() -> Unit) =
-        VerifiableDomainConnection("domains").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("isVerified", isVerified) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.also { doInit(it, init) }
+    fun domains(after: String? = null, before: String? = null, first: Int? = null, isApproved: Boolean? = null, isVerified: Boolean? = null, last: Int? = null, orderBy: VerifiableDomainOrder? = null, init: VerifiableDomainConnection.() -> Unit) =
+        VerifiableDomainConnection("domains").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("isApproved", isApproved) }.apply { addArgs("isVerified", isVerified) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.also { doInit(it, init) }
     fun enterpriseServerInstallations(after: String? = null, before: String? = null, connectedOnly: Boolean? = null, first: Int? = null, last: Int? = null, orderBy: EnterpriseServerInstallationOrder? = null, init: EnterpriseServerInstallationConnection.() -> Unit) =
         EnterpriseServerInstallationConnection("enterpriseServerInstallations").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("connectedOnly", connectedOnly) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.also { doInit(it, init) }
     val ipAllowListEnabledSetting get() =
@@ -6577,8 +6577,8 @@ class Organization(__name: String = "Organization"): ObjectNode(__name) {
         ScalarNode("description").also { doInit(it) }
     val descriptionHTML get() =
         ScalarNode("descriptionHTML").also { doInit(it) }
-    fun domains(after: String? = null, before: String? = null, first: Int? = null, isVerified: Boolean? = null, last: Int? = null, orderBy: VerifiableDomainOrder? = null, init: VerifiableDomainConnection.() -> Unit) =
-        VerifiableDomainConnection("domains").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("isVerified", isVerified) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.also { doInit(it, init) }
+    fun domains(after: String? = null, before: String? = null, first: Int? = null, isApproved: Boolean? = null, isVerified: Boolean? = null, last: Int? = null, orderBy: VerifiableDomainOrder? = null, init: VerifiableDomainConnection.() -> Unit) =
+        VerifiableDomainConnection("domains").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("isApproved", isApproved) }.apply { addArgs("isVerified", isVerified) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.also { doInit(it, init) }
     val email get() =
         ScalarNode("email").also { doInit(it) }
     val hasSponsorsListing get() =
@@ -11755,6 +11755,8 @@ class User(__name: String = "User"): ObjectNode(__name) {
         ScalarNode("bio").also { doInit(it) }
     val bioHTML get() =
         ScalarNode("bioHTML").also { doInit(it) }
+    fun canReceiveOrganizationEmailsWhenNotificationsRestricted(login: String) =
+        ScalarWithArgsNode("canReceiveOrganizationEmailsWhenNotificationsRestricted", mapOf("login" to login)).also { doInit(it) }
     fun commitComments(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, init: CommitCommentConnection.() -> Unit) =
         CommitCommentConnection("commitComments").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.also { doInit(it, init) }
     val company get() =
@@ -12026,6 +12028,8 @@ class VerifiableDomain(__name: String = "VerifiableDomain"): ObjectNode(__name) 
         ScalarNode("hasFoundVerificationToken").also { doInit(it) }
     val id get() =
         ScalarNode("id").also { doInit(it) }
+    val isApproved get() =
+        ScalarNode("isApproved").also { doInit(it) }
     val isRequiredForPolicyEnforcement get() =
         ScalarNode("isRequiredForPolicyEnforcement").also { doInit(it) }
     val isVerified get() =
