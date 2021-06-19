@@ -390,6 +390,12 @@ enum class IpAllowListEntryOrderField {
     ;
 }
 
+enum class IpAllowListForInstalledAppsEnabledSettingValue {
+    DISABLED,
+    ENABLED,
+    ;
+}
+
 enum class IssueCommentOrderField {
     UPDATED_AT,
     ;
@@ -1701,6 +1707,8 @@ class BranchProtectionRule(__name: String = "BranchProtectionRule"): ObjectNode(
         ScalarNode("requiresCodeOwnerReviews").also { doInit(it) }
     val requiresCommitSignatures get() =
         ScalarNode("requiresCommitSignatures").also { doInit(it) }
+    val requiresConversationResolution get() =
+        ScalarNode("requiresConversationResolution").also { doInit(it) }
     val requiresLinearHistory get() =
         ScalarNode("requiresLinearHistory").also { doInit(it) }
     val requiresStatusChecks get() =
@@ -3862,6 +3870,8 @@ class EnterpriseOwnerInfo(__name: String = "EnterpriseOwnerInfo"): ObjectNode(__
         ScalarNode("ipAllowListEnabledSetting").also { doInit(it) }
     fun ipAllowListEntries(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, orderBy: IpAllowListEntryOrder? = null, init: IpAllowListEntryConnection.() -> Unit) =
         IpAllowListEntryConnection("ipAllowListEntries").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.also { doInit(it, init) }
+    val ipAllowListForInstalledAppsEnabledSetting get() =
+        ScalarNode("ipAllowListForInstalledAppsEnabledSetting").also { doInit(it) }
     val isUpdatingDefaultRepositoryPermission get() =
         ScalarNode("isUpdatingDefaultRepositoryPermission").also { doInit(it) }
     val isUpdatingTwoFactorRequirement get() =
@@ -4723,6 +4733,8 @@ class Issue(__name: String = "Issue"): ObjectNode(__name) {
         IssueTimelineItemsConnection("timelineItems").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("itemTypes", itemTypes) }.apply { addArgs("last", last) }.apply { addArgs("since", since) }.apply { addArgs("skip", skip) }.also { doInit(it, init) }
     val title get() =
         ScalarNode("title").also { doInit(it) }
+    val titleHTML get() =
+        ScalarNode("titleHTML").also { doInit(it) }
     val updatedAt get() =
         ScalarNode("updatedAt").also { doInit(it) }
     val url get() =
@@ -5868,6 +5880,8 @@ class Mutation(__name: String = "mutation"): ObjectNode(__name) {
         UpdateIpAllowListEnabledSettingPayload("updateIpAllowListEnabledSetting").apply { addArgs("input", input) }.also { doInit(it, init) }
     fun updateIpAllowListEntry(input: UpdateIpAllowListEntryInput, init: UpdateIpAllowListEntryPayload.() -> Unit) =
         UpdateIpAllowListEntryPayload("updateIpAllowListEntry").apply { addArgs("input", input) }.also { doInit(it, init) }
+    fun updateIpAllowListForInstalledAppsEnabledSetting(input: UpdateIpAllowListForInstalledAppsEnabledSettingInput, init: UpdateIpAllowListForInstalledAppsEnabledSettingPayload.() -> Unit) =
+        UpdateIpAllowListForInstalledAppsEnabledSettingPayload("updateIpAllowListForInstalledAppsEnabledSetting").apply { addArgs("input", input) }.also { doInit(it, init) }
     fun updateIssue(input: UpdateIssueInput, init: UpdateIssuePayload.() -> Unit) =
         UpdateIssuePayload("updateIssue").apply { addArgs("input", input) }.also { doInit(it, init) }
     fun updateIssueComment(input: UpdateIssueCommentInput, init: UpdateIssueCommentPayload.() -> Unit) =
@@ -7145,6 +7159,8 @@ class Organization(__name: String = "Organization"): ObjectNode(__name) {
         ScalarNode("ipAllowListEnabledSetting").also { doInit(it) }
     fun ipAllowListEntries(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, orderBy: IpAllowListEntryOrder? = null, init: IpAllowListEntryConnection.() -> Unit) =
         IpAllowListEntryConnection("ipAllowListEntries").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.also { doInit(it, init) }
+    val ipAllowListForInstalledAppsEnabledSetting get() =
+        ScalarNode("ipAllowListForInstalledAppsEnabledSetting").also { doInit(it) }
     fun isSponsoredBy(accountLogin: String) =
         ScalarWithArgsNode("isSponsoredBy", mapOf("accountLogin" to accountLogin)).also { doInit(it) }
     val isSponsoringViewer get() =
@@ -8109,6 +8125,8 @@ class PullRequest(__name: String = "PullRequest"): ObjectNode(__name) {
         PullRequestTimelineItemsConnection("timelineItems").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("itemTypes", itemTypes) }.apply { addArgs("last", last) }.apply { addArgs("since", since) }.apply { addArgs("skip", skip) }.also { doInit(it, init) }
     val title get() =
         ScalarNode("title").also { doInit(it) }
+    val titleHTML get() =
+        ScalarNode("titleHTML").also { doInit(it) }
     val updatedAt get() =
         ScalarNode("updatedAt").also { doInit(it) }
     val url get() =
@@ -8813,6 +8831,8 @@ class RefUpdateRule(__name: String = "RefUpdateRule"): ObjectNode(__name) {
         ScalarNode("requiredStatusCheckContexts").also { doInit(it) }
     val requiresCodeOwnerReviews get() =
         ScalarNode("requiresCodeOwnerReviews").also { doInit(it) }
+    val requiresConversationResolution get() =
+        ScalarNode("requiresConversationResolution").also { doInit(it) }
     val requiresLinearHistory get() =
         ScalarNode("requiresLinearHistory").also { doInit(it) }
     val requiresSignatures get() =
@@ -12281,6 +12301,13 @@ class UpdateIpAllowListEntryPayload(__name: String = "UpdateIpAllowListEntryPayl
         IpAllowListEntry("ipAllowListEntry").also { doInit(it, init) }
 }
 
+class UpdateIpAllowListForInstalledAppsEnabledSettingPayload(__name: String = "UpdateIpAllowListForInstalledAppsEnabledSettingPayload"): ObjectNode(__name) {
+    val clientMutationId get() =
+        ScalarNode("clientMutationId").also { doInit(it) }
+    fun owner(init: IpAllowListOwner.() -> Unit) =
+        IpAllowListOwner("owner").also { doInit(it, init) }
+}
+
 class UpdateIssueCommentPayload(__name: String = "UpdateIssueCommentPayload"): ObjectNode(__name) {
     val clientMutationId get() =
         ScalarNode("clientMutationId").also { doInit(it) }
@@ -15069,8 +15096,8 @@ class ConvertPullRequestToDraftInput(val clientMutationId: String? = null, val p
     override fun toString() = "{ clientMutationId: \"$clientMutationId\", pullRequestId: \"$pullRequestId\" }"
 }
 
-class CreateBranchProtectionRuleInput(val allowsDeletions: Boolean? = null, val allowsForcePushes: Boolean? = null, val clientMutationId: String? = null, val dismissesStaleReviews: Boolean? = null, val isAdminEnforced: Boolean? = null, val pattern: String, val pushActorIds: ID? = null, val repositoryId: ID, val requiredApprovingReviewCount: Int? = null, val requiredStatusCheckContexts: String? = null, val requiresApprovingReviews: Boolean? = null, val requiresCodeOwnerReviews: Boolean? = null, val requiresCommitSignatures: Boolean? = null, val requiresLinearHistory: Boolean? = null, val requiresStatusChecks: Boolean? = null, val requiresStrictStatusChecks: Boolean? = null, val restrictsPushes: Boolean? = null, val restrictsReviewDismissals: Boolean? = null, val reviewDismissalActorIds: ID? = null) {
-    override fun toString() = "{ allowsDeletions: $allowsDeletions, allowsForcePushes: $allowsForcePushes, clientMutationId: \"$clientMutationId\", dismissesStaleReviews: $dismissesStaleReviews, isAdminEnforced: $isAdminEnforced, pattern: \"$pattern\", pushActorIds: \"$pushActorIds\", repositoryId: \"$repositoryId\", requiredApprovingReviewCount: $requiredApprovingReviewCount, requiredStatusCheckContexts: \"$requiredStatusCheckContexts\", requiresApprovingReviews: $requiresApprovingReviews, requiresCodeOwnerReviews: $requiresCodeOwnerReviews, requiresCommitSignatures: $requiresCommitSignatures, requiresLinearHistory: $requiresLinearHistory, requiresStatusChecks: $requiresStatusChecks, requiresStrictStatusChecks: $requiresStrictStatusChecks, restrictsPushes: $restrictsPushes, restrictsReviewDismissals: $restrictsReviewDismissals, reviewDismissalActorIds: \"$reviewDismissalActorIds\" }"
+class CreateBranchProtectionRuleInput(val allowsDeletions: Boolean? = null, val allowsForcePushes: Boolean? = null, val clientMutationId: String? = null, val dismissesStaleReviews: Boolean? = null, val isAdminEnforced: Boolean? = null, val pattern: String, val pushActorIds: ID? = null, val repositoryId: ID, val requiredApprovingReviewCount: Int? = null, val requiredStatusCheckContexts: String? = null, val requiresApprovingReviews: Boolean? = null, val requiresCodeOwnerReviews: Boolean? = null, val requiresCommitSignatures: Boolean? = null, val requiresConversationResolution: Boolean? = null, val requiresLinearHistory: Boolean? = null, val requiresStatusChecks: Boolean? = null, val requiresStrictStatusChecks: Boolean? = null, val restrictsPushes: Boolean? = null, val restrictsReviewDismissals: Boolean? = null, val reviewDismissalActorIds: ID? = null) {
+    override fun toString() = "{ allowsDeletions: $allowsDeletions, allowsForcePushes: $allowsForcePushes, clientMutationId: \"$clientMutationId\", dismissesStaleReviews: $dismissesStaleReviews, isAdminEnforced: $isAdminEnforced, pattern: \"$pattern\", pushActorIds: \"$pushActorIds\", repositoryId: \"$repositoryId\", requiredApprovingReviewCount: $requiredApprovingReviewCount, requiredStatusCheckContexts: \"$requiredStatusCheckContexts\", requiresApprovingReviews: $requiresApprovingReviews, requiresCodeOwnerReviews: $requiresCodeOwnerReviews, requiresCommitSignatures: $requiresCommitSignatures, requiresConversationResolution: $requiresConversationResolution, requiresLinearHistory: $requiresLinearHistory, requiresStatusChecks: $requiresStatusChecks, requiresStrictStatusChecks: $requiresStrictStatusChecks, restrictsPushes: $restrictsPushes, restrictsReviewDismissals: $restrictsReviewDismissals, reviewDismissalActorIds: \"$reviewDismissalActorIds\" }"
 }
 
 class CreateCheckRunInput(val actions: CheckRunAction? = null, val clientMutationId: String? = null, val completedAt: DateTime? = null, val conclusion: CheckConclusionState? = null, val detailsUrl: URI? = null, val externalId: String? = null, val headSha: GitObjectID, val name: String, val output: CheckRunOutput? = null, val repositoryId: ID, val startedAt: DateTime? = null, val status: RequestableCheckStatusState? = null) {
@@ -15605,8 +15632,8 @@ class UnresolveReviewThreadInput(val clientMutationId: String? = null, val threa
     override fun toString() = "{ clientMutationId: \"$clientMutationId\", threadId: \"$threadId\" }"
 }
 
-class UpdateBranchProtectionRuleInput(val allowsDeletions: Boolean? = null, val allowsForcePushes: Boolean? = null, val branchProtectionRuleId: ID, val clientMutationId: String? = null, val dismissesStaleReviews: Boolean? = null, val isAdminEnforced: Boolean? = null, val pattern: String? = null, val pushActorIds: ID? = null, val requiredApprovingReviewCount: Int? = null, val requiredStatusCheckContexts: String? = null, val requiresApprovingReviews: Boolean? = null, val requiresCodeOwnerReviews: Boolean? = null, val requiresCommitSignatures: Boolean? = null, val requiresLinearHistory: Boolean? = null, val requiresStatusChecks: Boolean? = null, val requiresStrictStatusChecks: Boolean? = null, val restrictsPushes: Boolean? = null, val restrictsReviewDismissals: Boolean? = null, val reviewDismissalActorIds: ID? = null) {
-    override fun toString() = "{ allowsDeletions: $allowsDeletions, allowsForcePushes: $allowsForcePushes, branchProtectionRuleId: \"$branchProtectionRuleId\", clientMutationId: \"$clientMutationId\", dismissesStaleReviews: $dismissesStaleReviews, isAdminEnforced: $isAdminEnforced, pattern: \"$pattern\", pushActorIds: \"$pushActorIds\", requiredApprovingReviewCount: $requiredApprovingReviewCount, requiredStatusCheckContexts: \"$requiredStatusCheckContexts\", requiresApprovingReviews: $requiresApprovingReviews, requiresCodeOwnerReviews: $requiresCodeOwnerReviews, requiresCommitSignatures: $requiresCommitSignatures, requiresLinearHistory: $requiresLinearHistory, requiresStatusChecks: $requiresStatusChecks, requiresStrictStatusChecks: $requiresStrictStatusChecks, restrictsPushes: $restrictsPushes, restrictsReviewDismissals: $restrictsReviewDismissals, reviewDismissalActorIds: \"$reviewDismissalActorIds\" }"
+class UpdateBranchProtectionRuleInput(val allowsDeletions: Boolean? = null, val allowsForcePushes: Boolean? = null, val branchProtectionRuleId: ID, val clientMutationId: String? = null, val dismissesStaleReviews: Boolean? = null, val isAdminEnforced: Boolean? = null, val pattern: String? = null, val pushActorIds: ID? = null, val requiredApprovingReviewCount: Int? = null, val requiredStatusCheckContexts: String? = null, val requiresApprovingReviews: Boolean? = null, val requiresCodeOwnerReviews: Boolean? = null, val requiresCommitSignatures: Boolean? = null, val requiresConversationResolution: Boolean? = null, val requiresLinearHistory: Boolean? = null, val requiresStatusChecks: Boolean? = null, val requiresStrictStatusChecks: Boolean? = null, val restrictsPushes: Boolean? = null, val restrictsReviewDismissals: Boolean? = null, val reviewDismissalActorIds: ID? = null) {
+    override fun toString() = "{ allowsDeletions: $allowsDeletions, allowsForcePushes: $allowsForcePushes, branchProtectionRuleId: \"$branchProtectionRuleId\", clientMutationId: \"$clientMutationId\", dismissesStaleReviews: $dismissesStaleReviews, isAdminEnforced: $isAdminEnforced, pattern: \"$pattern\", pushActorIds: \"$pushActorIds\", requiredApprovingReviewCount: $requiredApprovingReviewCount, requiredStatusCheckContexts: \"$requiredStatusCheckContexts\", requiresApprovingReviews: $requiresApprovingReviews, requiresCodeOwnerReviews: $requiresCodeOwnerReviews, requiresCommitSignatures: $requiresCommitSignatures, requiresConversationResolution: $requiresConversationResolution, requiresLinearHistory: $requiresLinearHistory, requiresStatusChecks: $requiresStatusChecks, requiresStrictStatusChecks: $requiresStrictStatusChecks, restrictsPushes: $restrictsPushes, restrictsReviewDismissals: $restrictsReviewDismissals, reviewDismissalActorIds: \"$reviewDismissalActorIds\" }"
 }
 
 class UpdateCheckRunInput(val actions: CheckRunAction? = null, val checkRunId: ID, val clientMutationId: String? = null, val completedAt: DateTime? = null, val conclusion: CheckConclusionState? = null, val detailsUrl: URI? = null, val externalId: String? = null, val name: String? = null, val output: CheckRunOutput? = null, val repositoryId: ID, val startedAt: DateTime? = null, val status: RequestableCheckStatusState? = null) {
@@ -15699,6 +15726,10 @@ class UpdateIpAllowListEnabledSettingInput(val clientMutationId: String? = null,
 
 class UpdateIpAllowListEntryInput(val allowListValue: String, val clientMutationId: String? = null, val ipAllowListEntryId: ID, val isActive: Boolean, val name: String? = null) {
     override fun toString() = "{ allowListValue: \"$allowListValue\", clientMutationId: \"$clientMutationId\", ipAllowListEntryId: \"$ipAllowListEntryId\", isActive: $isActive, name: \"$name\" }"
+}
+
+class UpdateIpAllowListForInstalledAppsEnabledSettingInput(val clientMutationId: String? = null, val ownerId: ID, val settingValue: IpAllowListForInstalledAppsEnabledSettingValue) {
+    override fun toString() = "{ clientMutationId: \"$clientMutationId\", ownerId: \"$ownerId\", settingValue: $settingValue }"
 }
 
 class UpdateIssueCommentInput(val body: String, val clientMutationId: String? = null, val id: ID) {
