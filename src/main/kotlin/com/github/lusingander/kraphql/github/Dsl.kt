@@ -8758,12 +8758,35 @@ class ReactionGroup(__name: String = "ReactionGroup"): ObjectNode(__name) {
         ScalarNode("content").also { doInit(it) }
     val createdAt get() =
         ScalarNode("createdAt").also { doInit(it) }
+    fun reactors(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, init: ReactorConnection.() -> Unit) =
+        ReactorConnection("reactors").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.also { doInit(it, init) }
     fun subject(init: Reactable.() -> Unit) =
         Reactable("subject").also { doInit(it, init) }
+    @Deprecated("Reactors can now be mannequins, bots, and organizations. Use the `reactors` field instead. Removal on 2021-10-01 UTC.")
     fun users(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, init: ReactingUserConnection.() -> Unit) =
         ReactingUserConnection("users").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.also { doInit(it, init) }
     val viewerHasReacted get() =
         ScalarNode("viewerHasReacted").also { doInit(it) }
+}
+
+class ReactorConnection(__name: String = "ReactorConnection"): ObjectNode(__name) {
+    fun edges(init: ReactorEdge.() -> Unit) =
+        ReactorEdge("edges").also { doInit(it, init) }
+    fun nodes(init: Reactor.() -> Unit) =
+        Reactor("nodes").also { doInit(it, init) }
+    fun pageInfo(init: PageInfo.() -> Unit) =
+        PageInfo("pageInfo").also { doInit(it, init) }
+    val totalCount get() =
+        ScalarNode("totalCount").also { doInit(it) }
+}
+
+class ReactorEdge(__name: String = "ReactorEdge"): ObjectNode(__name) {
+    val cursor get() =
+        ScalarNode("cursor").also { doInit(it) }
+    fun node(init: Reactor.() -> Unit) =
+        Reactor("node").also { doInit(it, init) }
+    val reactedAt get() =
+        ScalarNode("reactedAt").also { doInit(it) }
 }
 
 class ReadyForReviewEvent(__name: String = "ReadyForReviewEvent"): ObjectNode(__name) {
@@ -14855,6 +14878,17 @@ class PushAllowanceActor(__name: String = "PushAllowanceActor"): ObjectNode(__na
         App("...on App").also { doInit(it, init) }
     fun `on Team`(init: Team.() -> Unit) =
         Team("...on Team").also { doInit(it, init) }
+    fun `on User`(init: User.() -> Unit) =
+        User("...on User").also { doInit(it, init) }
+}
+
+class Reactor(__name: String = "Reactor"): ObjectNode(__name) {
+    fun `on Bot`(init: Bot.() -> Unit) =
+        Bot("...on Bot").also { doInit(it, init) }
+    fun `on Mannequin`(init: Mannequin.() -> Unit) =
+        Mannequin("...on Mannequin").also { doInit(it, init) }
+    fun `on Organization`(init: Organization.() -> Unit) =
+        Organization("...on Organization").also { doInit(it, init) }
     fun `on User`(init: User.() -> Unit) =
         User("...on User").also { doInit(it, init) }
 }
