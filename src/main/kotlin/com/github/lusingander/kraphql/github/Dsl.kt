@@ -1409,6 +1409,8 @@ class App(__name: String = "App"): ObjectNode(__name) {
         ScalarNode("description").also { doInit(it) }
     val id get() =
         ScalarNode("id").also { doInit(it) }
+    fun ipAllowListEntries(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, orderBy: IpAllowListEntryOrder? = null, init: IpAllowListEntryConnection.() -> Unit) =
+        IpAllowListEntryConnection("ipAllowListEntries").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.also { doInit(it, init) }
     val logoBackgroundColor get() =
         ScalarNode("logoBackgroundColor").also { doInit(it) }
     fun logoUrl(size: Int? = null) =
@@ -3025,6 +3027,8 @@ class DemilestonedEvent(__name: String = "DemilestonedEvent"): ObjectNode(__name
 class DependencyGraphDependency(__name: String = "DependencyGraphDependency"): ObjectNode(__name) {
     val hasDependencies get() =
         ScalarNode("hasDependencies").also { doInit(it) }
+    val packageLabel get() =
+        ScalarNode("packageLabel").also { doInit(it) }
     val packageManager get() =
         ScalarNode("packageManager").also { doInit(it) }
     val packageName get() =
@@ -14416,6 +14420,8 @@ class EnterpriseMember(__name: String = "EnterpriseMember"): ObjectNode(__name) 
 }
 
 class IpAllowListOwner(__name: String = "IpAllowListOwner"): ObjectNode(__name) {
+    fun `on App`(init: App.() -> Unit) =
+        App("...on App").also { doInit(it, init) }
     fun `on Enterprise`(init: Enterprise.() -> Unit) =
         Enterprise("...on Enterprise").also { doInit(it, init) }
     fun `on Organization`(init: Organization.() -> Unit) =
