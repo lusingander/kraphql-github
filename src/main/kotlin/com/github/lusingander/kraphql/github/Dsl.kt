@@ -1072,6 +1072,7 @@ enum class SecurityAdvisoryEcosystem {
     MAVEN,
     NPM,
     NUGET,
+    OTHER,
     PIP,
     RUBYGEMS,
     ;
@@ -1104,6 +1105,29 @@ enum class SecurityVulnerabilityOrderField {
 
 enum class SponsorableOrderField {
     LOGIN,
+    ;
+}
+
+enum class SponsorsActivityAction {
+    CANCELLED_SPONSORSHIP,
+    NEW_SPONSORSHIP,
+    PENDING_CHANGE,
+    REFUND,
+    SPONSOR_MATCH_DISABLED,
+    TIER_CHANGE,
+    ;
+}
+
+enum class SponsorsActivityOrderField {
+    TIMESTAMP,
+    ;
+}
+
+enum class SponsorsActivityPeriod {
+    ALL,
+    DAY,
+    MONTH,
+    WEEK,
     ;
 }
 
@@ -7223,6 +7247,8 @@ class Organization(__name: String = "Organization"): ObjectNode(__name) {
         ScalarNode("resourcePath").also { doInit(it) }
     fun samlIdentityProvider(init: OrganizationIdentityProvider.() -> Unit) =
         OrganizationIdentityProvider("samlIdentityProvider").also { doInit(it, init) }
+    fun sponsorsActivities(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, orderBy: SponsorsActivityOrder? = null, period: SponsorsActivityPeriod? = null, init: SponsorsActivityConnection.() -> Unit) =
+        SponsorsActivityConnection("sponsorsActivities").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.apply { addArgs("period", period) }.also { doInit(it, init) }
     fun sponsorsListing(init: SponsorsListing.() -> Unit) =
         SponsorsListing("sponsorsListing").also { doInit(it, init) }
     fun sponsorshipForViewerAsSponsor(init: Sponsorship.() -> Unit) =
@@ -10950,6 +10976,41 @@ class SponsorableItemEdge(__name: String = "SponsorableItemEdge"): ObjectNode(__
         SponsorableItem("node").also { doInit(it, init) }
 }
 
+class SponsorsActivity(__name: String = "SponsorsActivity"): ObjectNode(__name) {
+    val action get() =
+        ScalarNode("action").also { doInit(it) }
+    val id get() =
+        ScalarNode("id").also { doInit(it) }
+    fun previousSponsorsTier(init: SponsorsTier.() -> Unit) =
+        SponsorsTier("previousSponsorsTier").also { doInit(it, init) }
+    fun sponsor(init: Sponsor.() -> Unit) =
+        Sponsor("sponsor").also { doInit(it, init) }
+    fun sponsorable(init: Sponsorable.() -> Unit) =
+        Sponsorable("sponsorable").also { doInit(it, init) }
+    fun sponsorsTier(init: SponsorsTier.() -> Unit) =
+        SponsorsTier("sponsorsTier").also { doInit(it, init) }
+    val timestamp get() =
+        ScalarNode("timestamp").also { doInit(it) }
+}
+
+class SponsorsActivityConnection(__name: String = "SponsorsActivityConnection"): ObjectNode(__name) {
+    fun edges(init: SponsorsActivityEdge.() -> Unit) =
+        SponsorsActivityEdge("edges").also { doInit(it, init) }
+    fun nodes(init: SponsorsActivity.() -> Unit) =
+        SponsorsActivity("nodes").also { doInit(it, init) }
+    fun pageInfo(init: PageInfo.() -> Unit) =
+        PageInfo("pageInfo").also { doInit(it, init) }
+    val totalCount get() =
+        ScalarNode("totalCount").also { doInit(it) }
+}
+
+class SponsorsActivityEdge(__name: String = "SponsorsActivityEdge"): ObjectNode(__name) {
+    val cursor get() =
+        ScalarNode("cursor").also { doInit(it) }
+    fun node(init: SponsorsActivity.() -> Unit) =
+        SponsorsActivity("node").also { doInit(it, init) }
+}
+
 class SponsorsGoal(__name: String = "SponsorsGoal"): ObjectNode(__name) {
     val description get() =
         ScalarNode("description").also { doInit(it) }
@@ -12584,6 +12645,8 @@ class User(__name: String = "User"): ObjectNode(__name) {
         ScalarNode("resourcePath").also { doInit(it) }
     fun savedReplies(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, orderBy: SavedReplyOrder? = null, init: SavedReplyConnection.() -> Unit) =
         SavedReplyConnection("savedReplies").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.also { doInit(it, init) }
+    fun sponsorsActivities(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, orderBy: SponsorsActivityOrder? = null, period: SponsorsActivityPeriod? = null, init: SponsorsActivityConnection.() -> Unit) =
+        SponsorsActivityConnection("sponsorsActivities").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.apply { addArgs("period", period) }.also { doInit(it, init) }
     fun sponsorsListing(init: SponsorsListing.() -> Unit) =
         SponsorsListing("sponsorsListing").also { doInit(it, init) }
     fun sponsorshipForViewerAsSponsor(init: Sponsorship.() -> Unit) =
@@ -13623,6 +13686,8 @@ class Node(__name: String = "Node"): ObjectNode(__name) {
         SavedReply("...on SavedReply").also { doInit(it, init) }
     fun `on SecurityAdvisory`(init: SecurityAdvisory.() -> Unit) =
         SecurityAdvisory("...on SecurityAdvisory").also { doInit(it, init) }
+    fun `on SponsorsActivity`(init: SponsorsActivity.() -> Unit) =
+        SponsorsActivity("...on SponsorsActivity").also { doInit(it, init) }
     fun `on SponsorsListing`(init: SponsorsListing.() -> Unit) =
         SponsorsListing("...on SponsorsListing").also { doInit(it, init) }
     fun `on SponsorsTier`(init: SponsorsTier.() -> Unit) =
@@ -14147,6 +14212,8 @@ class Sponsorable(__name: String = "Sponsorable"): ObjectNode(__name) {
         ScalarWithArgsNode("isSponsoredBy", mapOf("accountLogin" to accountLogin)).also { doInit(it) }
     val isSponsoringViewer get() =
         ScalarNode("isSponsoringViewer").also { doInit(it) }
+    fun sponsorsActivities(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, orderBy: SponsorsActivityOrder? = null, period: SponsorsActivityPeriod? = null, init: SponsorsActivityConnection.() -> Unit) =
+        SponsorsActivityConnection("sponsorsActivities").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.apply { addArgs("period", period) }.also { doInit(it, init) }
     fun sponsorsListing(init: SponsorsListing.() -> Unit) =
         SponsorsListing("sponsorsListing").also { doInit(it, init) }
     fun sponsorshipForViewerAsSponsor(init: Sponsorship.() -> Unit) =
@@ -15589,6 +15656,10 @@ class SetUserInteractionLimitInput(val clientMutationId: String? = null, val exp
 }
 
 class SponsorableOrder(val direction: OrderDirection, val field: SponsorableOrderField) {
+    override fun toString() = "{ direction: $direction, field: $field }"
+}
+
+class SponsorsActivityOrder(val direction: OrderDirection, val field: SponsorsActivityOrderField) {
     override fun toString() = "{ direction: $direction, field: $field }"
 }
 
