@@ -3795,8 +3795,8 @@ class EnterpriseIdentityProvider(__name: String = "EnterpriseIdentityProvider"):
         ScalarNode("digestMethod").also { doInit(it) }
     fun enterprise(init: Enterprise.() -> Unit) =
         Enterprise("enterprise").also { doInit(it, init) }
-    fun externalIdentities(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, init: ExternalIdentityConnection.() -> Unit) =
-        ExternalIdentityConnection("externalIdentities").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.also { doInit(it, init) }
+    fun externalIdentities(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, membersOnly: Boolean? = null, init: ExternalIdentityConnection.() -> Unit) =
+        ExternalIdentityConnection("externalIdentities").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("membersOnly", membersOnly) }.also { doInit(it, init) }
     val id get() =
         ScalarNode("id").also { doInit(it) }
     val idpCertificate get() =
@@ -7330,8 +7330,8 @@ class OrganizationEdge(__name: String = "OrganizationEdge"): ObjectNode(__name) 
 class OrganizationIdentityProvider(__name: String = "OrganizationIdentityProvider"): ObjectNode(__name) {
     val digestMethod get() =
         ScalarNode("digestMethod").also { doInit(it) }
-    fun externalIdentities(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, init: ExternalIdentityConnection.() -> Unit) =
-        ExternalIdentityConnection("externalIdentities").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.also { doInit(it, init) }
+    fun externalIdentities(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, membersOnly: Boolean? = null, init: ExternalIdentityConnection.() -> Unit) =
+        ExternalIdentityConnection("externalIdentities").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("membersOnly", membersOnly) }.also { doInit(it, init) }
     val id get() =
         ScalarNode("id").also { doInit(it) }
     val idpCertificate get() =
@@ -8955,6 +8955,8 @@ class Release(__name: String = "Release"): ObjectNode(__name) {
         ScalarNode("isLatest").also { doInit(it) }
     val isPrerelease get() =
         ScalarNode("isPrerelease").also { doInit(it) }
+    fun mentions(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, init: UserConnection.() -> Unit) =
+        UserConnection("mentions").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.also { doInit(it, init) }
     val name get() =
         ScalarNode("name").also { doInit(it) }
     val publishedAt get() =
@@ -11035,12 +11037,18 @@ class SponsorsListing(__name: String = "SponsorsListing"): ObjectNode(__name) {
         ScalarNode("fullDescriptionHTML").also { doInit(it) }
     val id get() =
         ScalarNode("id").also { doInit(it) }
+    val isPublic get() =
+        ScalarNode("isPublic").also { doInit(it) }
     val name get() =
         ScalarNode("name").also { doInit(it) }
+    val nextPayoutDate get() =
+        ScalarNode("nextPayoutDate").also { doInit(it) }
     val shortDescription get() =
         ScalarNode("shortDescription").also { doInit(it) }
     val slug get() =
         ScalarNode("slug").also { doInit(it) }
+    fun sponsorable(init: Sponsorable.() -> Unit) =
+        Sponsorable("sponsorable").also { doInit(it, init) }
     fun tiers(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, orderBy: SponsorsTierOrder? = null, init: SponsorsTierConnection.() -> Unit) =
         SponsorsTierConnection("tiers").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.also { doInit(it, init) }
 }
