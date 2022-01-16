@@ -1,7 +1,7 @@
 plugins {
     id 'org.jetbrains.kotlin.jvm' version '1.3.72'
     id 'maven-publish'
-    id "com.github.lusingander.kraphql-plugin" version "0.0.2"
+    id "com.github.lusingander.kraphql-plugin" version "0.0.3"
 }
 
 group 'com.github.lusingander'
