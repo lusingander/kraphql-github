@@ -338,6 +338,7 @@ enum class FundingPlatform {
     GITHUB,
     ISSUEHUNT,
     KO_FI,
+    LFX_CROWDFUNDING,
     LIBERAPAY,
     OPEN_COLLECTIVE,
     OTECHIE,
@@ -558,6 +559,11 @@ enum class OrgCreateAuditEntryBillingPlan {
     FREE,
     TIERED_PER_SEAT,
     UNLIMITED,
+    ;
+}
+
+enum class OrgEnterpriseOwnerOrderField {
+    LOGIN,
     ;
 }
 
@@ -816,6 +822,7 @@ enum class PullRequestState {
 }
 
 enum class PullRequestTimelineItemsItemType {
+    ADDED_TO_MERGE_QUEUE_EVENT,
     ADDED_TO_PROJECT_EVENT,
     ASSIGNED_EVENT,
     AUTOMATIC_BASE_CHANGE_FAILED_EVENT,
@@ -857,6 +864,7 @@ enum class PullRequestTimelineItemsItemType {
     PULL_REQUEST_REVISION_MARKER,
     READY_FOR_REVIEW_EVENT,
     REFERENCED_EVENT,
+    REMOVED_FROM_MERGE_QUEUE_EVENT,
     REMOVED_FROM_PROJECT_EVENT,
     RENAMED_TITLE_EVENT,
     REOPENED_EVENT,
@@ -7342,6 +7350,8 @@ class Organization(__name: String = "Organization"): ObjectNode(__name) {
         VerifiableDomainConnection("domains").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("isApproved", isApproved) }.apply { addArgs("isVerified", isVerified) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.also { doInit(it, init) }
     val email get() =
         ScalarNode("email").also { doInit(it) }
+    fun enterpriseOwners(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, orderBy: OrgEnterpriseOwnerOrder? = null, organizationRole: RoleInOrganization? = null, query: String? = null, init: OrganizationEnterpriseOwnerConnection.() -> Unit) =
+        OrganizationEnterpriseOwnerConnection("enterpriseOwners").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.apply { addArgs("organizationRole", organizationRole) }.apply { addArgs("query", query) }.also { doInit(it, init) }
     val estimatedNextSponsorsPayoutInCents get() =
         ScalarNode("estimatedNextSponsorsPayoutInCents").also { doInit(it) }
     val hasSponsorsListing get() =
@@ -7508,6 +7518,26 @@ class OrganizationEdge(__name: String = "OrganizationEdge"): ObjectNode(__name) 
         ScalarNode("cursor").also { doInit(it) }
     fun node(init: Organization.() -> Unit) =
         Organization("node").also { doInit(it, init) }
+}
+
+class OrganizationEnterpriseOwnerConnection(__name: String = "OrganizationEnterpriseOwnerConnection"): ObjectNode(__name) {
+    fun edges(init: OrganizationEnterpriseOwnerEdge.() -> Unit) =
+        OrganizationEnterpriseOwnerEdge("edges").also { doInit(it, init) }
+    fun nodes(init: User.() -> Unit) =
+        User("nodes").also { doInit(it, init) }
+    fun pageInfo(init: PageInfo.() -> Unit) =
+        PageInfo("pageInfo").also { doInit(it, init) }
+    val totalCount get() =
+        ScalarNode("totalCount").also { doInit(it) }
+}
+
+class OrganizationEnterpriseOwnerEdge(__name: String = "OrganizationEnterpriseOwnerEdge"): ObjectNode(__name) {
+    val cursor get() =
+        ScalarNode("cursor").also { doInit(it) }
+    fun node(init: User.() -> Unit) =
+        User("node").also { doInit(it, init) }
+    val organizationRole get() =
+        ScalarNode("organizationRole").also { doInit(it) }
 }
 
 class OrganizationIdentityProvider(__name: String = "OrganizationIdentityProvider"): ObjectNode(__name) {
@@ -16070,6 +16100,10 @@ class MoveProjectCardInput(val afterCardId: ID? = null, val cardId: ID, val clie
 
 class MoveProjectColumnInput(val afterColumnId: ID? = null, val clientMutationId: String? = null, val columnId: ID) {
     override fun toString() = "{ afterColumnId: \"$afterColumnId\", clientMutationId: \"$clientMutationId\", columnId: \"$columnId\" }"
+}
+
+class OrgEnterpriseOwnerOrder(val direction: OrderDirection, val field: OrgEnterpriseOwnerOrderField) {
+    override fun toString() = "{ direction: $direction, field: $field }"
 }
 
 class OrganizationOrder(val direction: OrderDirection, val field: OrganizationOrderField) {
