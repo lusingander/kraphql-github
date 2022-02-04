@@ -71,6 +71,12 @@ open class ScalarWithArgsNode(__name: String, private val args: Map<String, Any?
     }
 }
 
+enum class ActorType {
+    TEAM,
+    USER,
+    ;
+}
+
 enum class AuditLogOrderField {
     CREATED_AT,
     ;
@@ -495,6 +501,24 @@ enum class MergeableState {
     CONFLICTING,
     MERGEABLE,
     UNKNOWN,
+    ;
+}
+
+enum class MigrationSourceType {
+    AZURE_DEVOPS,
+    BITBUCKET_SERVER,
+    GITHUB,
+    GITHUB_ARCHIVE,
+    GITLAB,
+    ;
+}
+
+enum class MigrationState {
+    FAILED,
+    IN_PROGRESS,
+    NOT_STARTED,
+    QUEUED,
+    SUCCEEDED,
     ;
 }
 
@@ -1031,6 +1055,17 @@ enum class RepositoryLockReason {
     ;
 }
 
+enum class RepositoryMigrationOrderDirection {
+    ASC,
+    DESC,
+    ;
+}
+
+enum class RepositoryMigrationOrderField {
+    CREATED_AT,
+    ;
+}
+
 enum class RepositoryOrderField {
     CREATED_AT,
     NAME,
@@ -1317,6 +1352,13 @@ enum class VerifiableDomainOrderField {
     ;
 }
 
+
+class AbortQueuedMigrationsPayload(__name: String = "AbortQueuedMigrationsPayload"): ObjectNode(__name) {
+    val clientMutationId get() =
+        ScalarNode("clientMutationId").also { doInit(it) }
+    val success get() =
+        ScalarNode("success").also { doInit(it) }
+}
 
 class AcceptEnterpriseAdministratorInvitationPayload(__name: String = "AcceptEnterpriseAdministratorInvitationPayload"): ObjectNode(__name) {
     val clientMutationId get() =
@@ -2788,6 +2830,13 @@ class CreateLabelPayload(__name: String = "CreateLabelPayload"): ObjectNode(__na
         Label("label").also { doInit(it, init) }
 }
 
+class CreateMigrationSourcePayload(__name: String = "CreateMigrationSourcePayload"): ObjectNode(__name) {
+    val clientMutationId get() =
+        ScalarNode("clientMutationId").also { doInit(it) }
+    fun migrationSource(init: MigrationSource.() -> Unit) =
+        MigrationSource("migrationSource").also { doInit(it, init) }
+}
+
 class CreateProjectPayload(__name: String = "CreateProjectPayload"): ObjectNode(__name) {
     val clientMutationId get() =
         ScalarNode("clientMutationId").also { doInit(it) }
@@ -3931,8 +3980,8 @@ class EnterpriseIdentityProvider(__name: String = "EnterpriseIdentityProvider"):
         ScalarNode("digestMethod").also { doInit(it) }
     fun enterprise(init: Enterprise.() -> Unit) =
         Enterprise("enterprise").also { doInit(it, init) }
-    fun externalIdentities(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, membersOnly: Boolean? = null, init: ExternalIdentityConnection.() -> Unit) =
-        ExternalIdentityConnection("externalIdentities").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("membersOnly", membersOnly) }.also { doInit(it, init) }
+    fun externalIdentities(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, login: String? = null, membersOnly: Boolean? = null, userName: String? = null, init: ExternalIdentityConnection.() -> Unit) =
+        ExternalIdentityConnection("externalIdentities").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("login", login) }.apply { addArgs("membersOnly", membersOnly) }.apply { addArgs("userName", userName) }.also { doInit(it, init) }
     val id get() =
         ScalarNode("id").also { doInit(it) }
     val idpCertificate get() =
@@ -4726,6 +4775,20 @@ class GpgSignature(__name: String = "GpgSignature"): ObjectNode(__name) {
         ScalarNode("wasSignedByGitHub").also { doInit(it) }
 }
 
+class GrantEnterpriseOrganizationsMigratorRolePayload(__name: String = "GrantEnterpriseOrganizationsMigratorRolePayload"): ObjectNode(__name) {
+    val clientMutationId get() =
+        ScalarNode("clientMutationId").also { doInit(it) }
+    fun organizations(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, init: OrganizationConnection.() -> Unit) =
+        OrganizationConnection("organizations").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.also { doInit(it, init) }
+}
+
+class GrantMigratorRolePayload(__name: String = "GrantMigratorRolePayload"): ObjectNode(__name) {
+    val clientMutationId get() =
+        ScalarNode("clientMutationId").also { doInit(it) }
+    val success get() =
+        ScalarNode("success").also { doInit(it) }
+}
+
 class HeadRefDeletedEvent(__name: String = "HeadRefDeletedEvent"): ObjectNode(__name) {
     fun actor(init: Actor.() -> Unit) =
         Actor("actor").also { doInit(it, init) }
@@ -4772,6 +4835,17 @@ class HeadRefRestoredEvent(__name: String = "HeadRefRestoredEvent"): ObjectNode(
 class Hovercard(__name: String = "Hovercard"): ObjectNode(__name) {
     fun contexts(init: HovercardContext.() -> Unit) =
         HovercardContext("contexts").also { doInit(it, init) }
+}
+
+class Import(__name: String = "Import"): ObjectNode(__name) {
+    val createdAt get() =
+        ScalarNode("createdAt").also { doInit(it) }
+    fun creator(init: Actor.() -> Unit) =
+        Actor("creator").also { doInit(it, init) }
+    val id get() =
+        ScalarNode("id").also { doInit(it) }
+    fun repositories(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, orderBy: RepositoryOrder? = null, init: RepositoryConnection.() -> Unit) =
+        RepositoryConnection("repositories").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.also { doInit(it, init) }
 }
 
 class ImportProjectPayload(__name: String = "ImportProjectPayload"): ObjectNode(__name) {
@@ -4882,6 +4956,8 @@ class Issue(__name: String = "Issue"): ObjectNode(__name) {
         ProjectCardConnection("projectCards").apply { addArgs("after", after) }.apply { addArgs("archivedStates", archivedStates) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.also { doInit(it, init) }
     fun projectNext(number: Int, init: ProjectNext.() -> Unit) =
         ProjectNext("projectNext").apply { addArgs("number", number) }.also { doInit(it, init) }
+    fun projectNextItems(after: String? = null, before: String? = null, first: Int? = null, includeArchived: Boolean? = null, last: Int? = null, init: ProjectNextItemConnection.() -> Unit) =
+        ProjectNextItemConnection("projectNextItems").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("includeArchived", includeArchived) }.apply { addArgs("last", last) }.also { doInit(it, init) }
     fun projectsNext(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, query: String? = null, sortBy: ProjectNextOrderField? = null, init: ProjectNextConnection.() -> Unit) =
         ProjectNextConnection("projectsNext").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("query", query) }.apply { addArgs("sortBy", sortBy) }.also { doInit(it, init) }
     val publishedAt get() =
@@ -5659,6 +5735,17 @@ class MergedEvent(__name: String = "MergedEvent"): ObjectNode(__name) {
         ScalarNode("url").also { doInit(it) }
 }
 
+class MigrationSource(__name: String = "MigrationSource"): ObjectNode(__name) {
+    val id get() =
+        ScalarNode("id").also { doInit(it) }
+    val name get() =
+        ScalarNode("name").also { doInit(it) }
+    val type get() =
+        ScalarNode("type").also { doInit(it) }
+    val url get() =
+        ScalarNode("url").also { doInit(it) }
+}
+
 class Milestone(__name: String = "Milestone"): ObjectNode(__name) {
     val closed get() =
         ScalarNode("closed").also { doInit(it) }
@@ -5768,6 +5855,8 @@ class MovedColumnsInProjectEvent(__name: String = "MovedColumnsInProjectEvent"):
 }
 
 class Mutation(__name: String = "mutation"): ObjectNode(__name) {
+    fun abortQueuedMigrations(input: AbortQueuedMigrationsInput, init: AbortQueuedMigrationsPayload.() -> Unit) =
+        AbortQueuedMigrationsPayload("abortQueuedMigrations").apply { addArgs("input", input) }.also { doInit(it, init) }
     fun acceptEnterpriseAdministratorInvitation(input: AcceptEnterpriseAdministratorInvitationInput, init: AcceptEnterpriseAdministratorInvitationPayload.() -> Unit) =
         AcceptEnterpriseAdministratorInvitationPayload("acceptEnterpriseAdministratorInvitation").apply { addArgs("input", input) }.also { doInit(it, init) }
     fun acceptTopicSuggestion(input: AcceptTopicSuggestionInput, init: AcceptTopicSuggestionPayload.() -> Unit) =
@@ -5852,6 +5941,8 @@ class Mutation(__name: String = "mutation"): ObjectNode(__name) {
         CreateIssuePayload("createIssue").apply { addArgs("input", input) }.also { doInit(it, init) }
     fun createLabel(input: CreateLabelInput, init: CreateLabelPayload.() -> Unit) =
         CreateLabelPayload("createLabel").apply { addArgs("input", input) }.also { doInit(it, init) }
+    fun createMigrationSource(input: CreateMigrationSourceInput, init: CreateMigrationSourcePayload.() -> Unit) =
+        CreateMigrationSourcePayload("createMigrationSource").apply { addArgs("input", input) }.also { doInit(it, init) }
     fun createProject(input: CreateProjectInput, init: CreateProjectPayload.() -> Unit) =
         CreateProjectPayload("createProject").apply { addArgs("input", input) }.also { doInit(it, init) }
     fun createPullRequest(input: CreatePullRequestInput, init: CreatePullRequestPayload.() -> Unit) =
@@ -5918,6 +6009,10 @@ class Mutation(__name: String = "mutation"): ObjectNode(__name) {
         EnablePullRequestAutoMergePayload("enablePullRequestAutoMerge").apply { addArgs("input", input) }.also { doInit(it, init) }
     fun followUser(input: FollowUserInput, init: FollowUserPayload.() -> Unit) =
         FollowUserPayload("followUser").apply { addArgs("input", input) }.also { doInit(it, init) }
+    fun grantEnterpriseOrganizationsMigratorRole(input: GrantEnterpriseOrganizationsMigratorRoleInput, init: GrantEnterpriseOrganizationsMigratorRolePayload.() -> Unit) =
+        GrantEnterpriseOrganizationsMigratorRolePayload("grantEnterpriseOrganizationsMigratorRole").apply { addArgs("input", input) }.also { doInit(it, init) }
+    fun grantMigratorRole(input: GrantMigratorRoleInput, init: GrantMigratorRolePayload.() -> Unit) =
+        GrantMigratorRolePayload("grantMigratorRole").apply { addArgs("input", input) }.also { doInit(it, init) }
     fun importProject(input: ImportProjectInput, init: ImportProjectPayload.() -> Unit) =
         ImportProjectPayload("importProject").apply { addArgs("input", input) }.also { doInit(it, init) }
     fun inviteEnterpriseAdmin(input: InviteEnterpriseAdminInput, init: InviteEnterpriseAdminPayload.() -> Unit) =
@@ -5980,6 +6075,10 @@ class Mutation(__name: String = "mutation"): ObjectNode(__name) {
         RerequestCheckSuitePayload("rerequestCheckSuite").apply { addArgs("input", input) }.also { doInit(it, init) }
     fun resolveReviewThread(input: ResolveReviewThreadInput, init: ResolveReviewThreadPayload.() -> Unit) =
         ResolveReviewThreadPayload("resolveReviewThread").apply { addArgs("input", input) }.also { doInit(it, init) }
+    fun revokeEnterpriseOrganizationsMigratorRole(input: RevokeEnterpriseOrganizationsMigratorRoleInput, init: RevokeEnterpriseOrganizationsMigratorRolePayload.() -> Unit) =
+        RevokeEnterpriseOrganizationsMigratorRolePayload("revokeEnterpriseOrganizationsMigratorRole").apply { addArgs("input", input) }.also { doInit(it, init) }
+    fun revokeMigratorRole(input: RevokeMigratorRoleInput, init: RevokeMigratorRolePayload.() -> Unit) =
+        RevokeMigratorRolePayload("revokeMigratorRole").apply { addArgs("input", input) }.also { doInit(it, init) }
     fun setEnterpriseIdentityProvider(input: SetEnterpriseIdentityProviderInput, init: SetEnterpriseIdentityProviderPayload.() -> Unit) =
         SetEnterpriseIdentityProviderPayload("setEnterpriseIdentityProvider").apply { addArgs("input", input) }.also { doInit(it, init) }
     fun setOrganizationInteractionLimit(input: SetOrganizationInteractionLimitInput, init: SetOrganizationInteractionLimitPayload.() -> Unit) =
@@ -5988,6 +6087,8 @@ class Mutation(__name: String = "mutation"): ObjectNode(__name) {
         SetRepositoryInteractionLimitPayload("setRepositoryInteractionLimit").apply { addArgs("input", input) }.also { doInit(it, init) }
     fun setUserInteractionLimit(input: SetUserInteractionLimitInput, init: SetUserInteractionLimitPayload.() -> Unit) =
         SetUserInteractionLimitPayload("setUserInteractionLimit").apply { addArgs("input", input) }.also { doInit(it, init) }
+    fun startRepositoryMigration(input: StartRepositoryMigrationInput, init: StartRepositoryMigrationPayload.() -> Unit) =
+        StartRepositoryMigrationPayload("startRepositoryMigration").apply { addArgs("input", input) }.also { doInit(it, init) }
     fun submitPullRequestReview(input: SubmitPullRequestReviewInput, init: SubmitPullRequestReviewPayload.() -> Unit) =
         SubmitPullRequestReviewPayload("submitPullRequestReview").apply { addArgs("input", input) }.also { doInit(it, init) }
     fun transferIssue(input: TransferIssueInput, init: TransferIssuePayload.() -> Unit) =
@@ -6046,6 +6147,8 @@ class Mutation(__name: String = "mutation"): ObjectNode(__name) {
         UpdateEnterpriseMembersCanViewDependencyInsightsSettingPayload("updateEnterpriseMembersCanViewDependencyInsightsSetting").apply { addArgs("input", input) }.also { doInit(it, init) }
     fun updateEnterpriseOrganizationProjectsSetting(input: UpdateEnterpriseOrganizationProjectsSettingInput, init: UpdateEnterpriseOrganizationProjectsSettingPayload.() -> Unit) =
         UpdateEnterpriseOrganizationProjectsSettingPayload("updateEnterpriseOrganizationProjectsSetting").apply { addArgs("input", input) }.also { doInit(it, init) }
+    fun updateEnterpriseOwnerOrganizationRole(input: UpdateEnterpriseOwnerOrganizationRoleInput, init: UpdateEnterpriseOwnerOrganizationRolePayload.() -> Unit) =
+        UpdateEnterpriseOwnerOrganizationRolePayload("updateEnterpriseOwnerOrganizationRole").apply { addArgs("input", input) }.also { doInit(it, init) }
     fun updateEnterpriseProfile(input: UpdateEnterpriseProfileInput, init: UpdateEnterpriseProfilePayload.() -> Unit) =
         UpdateEnterpriseProfilePayload("updateEnterpriseProfile").apply { addArgs("input", input) }.also { doInit(it, init) }
     fun updateEnterpriseRepositoryProjectsSetting(input: UpdateEnterpriseRepositoryProjectsSettingInput, init: UpdateEnterpriseRepositoryProjectsSettingPayload.() -> Unit) =
@@ -6113,8 +6216,8 @@ class Mutation(__name: String = "mutation"): ObjectNode(__name) {
 class OIDCProvider(__name: String = "OIDCProvider"): ObjectNode(__name) {
     fun enterprise(init: Enterprise.() -> Unit) =
         Enterprise("enterprise").also { doInit(it, init) }
-    fun externalIdentities(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, membersOnly: Boolean? = null, init: ExternalIdentityConnection.() -> Unit) =
-        ExternalIdentityConnection("externalIdentities").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("membersOnly", membersOnly) }.also { doInit(it, init) }
+    fun externalIdentities(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, login: String? = null, membersOnly: Boolean? = null, userName: String? = null, init: ExternalIdentityConnection.() -> Unit) =
+        ExternalIdentityConnection("externalIdentities").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("login", login) }.apply { addArgs("membersOnly", membersOnly) }.apply { addArgs("userName", userName) }.also { doInit(it, init) }
     val id get() =
         ScalarNode("id").also { doInit(it) }
     val providerType get() =
@@ -7426,6 +7529,8 @@ class Organization(__name: String = "Organization"): ObjectNode(__name) {
         DiscussionCommentConnection("repositoryDiscussionComments").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("onlyAnswers", onlyAnswers) }.apply { addArgs("repositoryId", repositoryId) }.also { doInit(it, init) }
     fun repositoryDiscussions(after: String? = null, answered: Boolean? = null, before: String? = null, first: Int? = null, last: Int? = null, orderBy: DiscussionOrder? = null, repositoryId: ID? = null, init: DiscussionConnection.() -> Unit) =
         DiscussionConnection("repositoryDiscussions").apply { addArgs("after", after) }.apply { addArgs("answered", answered) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.apply { addArgs("repositoryId", repositoryId) }.also { doInit(it, init) }
+    fun repositoryMigrations(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, orderBy: RepositoryMigrationOrder? = null, state: MigrationState? = null, init: RepositoryMigrationConnection.() -> Unit) =
+        RepositoryMigrationConnection("repositoryMigrations").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.apply { addArgs("state", state) }.also { doInit(it, init) }
     val requiresTwoFactorAuthentication get() =
         ScalarNode("requiresTwoFactorAuthentication").also { doInit(it) }
     val resourcePath get() =
@@ -7543,8 +7648,8 @@ class OrganizationEnterpriseOwnerEdge(__name: String = "OrganizationEnterpriseOw
 class OrganizationIdentityProvider(__name: String = "OrganizationIdentityProvider"): ObjectNode(__name) {
     val digestMethod get() =
         ScalarNode("digestMethod").also { doInit(it) }
-    fun externalIdentities(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, membersOnly: Boolean? = null, init: ExternalIdentityConnection.() -> Unit) =
-        ExternalIdentityConnection("externalIdentities").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("membersOnly", membersOnly) }.also { doInit(it, init) }
+    fun externalIdentities(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, login: String? = null, membersOnly: Boolean? = null, userName: String? = null, init: ExternalIdentityConnection.() -> Unit) =
+        ExternalIdentityConnection("externalIdentities").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("login", login) }.apply { addArgs("membersOnly", membersOnly) }.apply { addArgs("userName", userName) }.also { doInit(it, init) }
     val id get() =
         ScalarNode("id").also { doInit(it) }
     val idpCertificate get() =
@@ -8191,8 +8296,12 @@ class ProjectNext(__name: String = "ProjectNext"): ObjectNode(__name) {
         ScalarNode("number").also { doInit(it) }
     fun owner(init: ProjectNextOwner.() -> Unit) =
         ProjectNextOwner("owner").also { doInit(it, init) }
+    val public get() =
+        ScalarNode("public").also { doInit(it) }
     val resourcePath get() =
         ScalarNode("resourcePath").also { doInit(it) }
+    val shortDescription get() =
+        ScalarNode("shortDescription").also { doInit(it) }
     val title get() =
         ScalarNode("title").also { doInit(it) }
     val updatedAt get() =
@@ -8269,6 +8378,8 @@ class ProjectNextItem(__name: String = "ProjectNextItem"): ObjectNode(__name) {
         ProjectNextItemFieldValueConnection("fieldValues").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.also { doInit(it, init) }
     val id get() =
         ScalarNode("id").also { doInit(it) }
+    val isArchived get() =
+        ScalarNode("isArchived").also { doInit(it) }
     fun project(init: ProjectNext.() -> Unit) =
         ProjectNext("project").also { doInit(it, init) }
     val title get() =
@@ -8501,6 +8612,8 @@ class PullRequest(__name: String = "PullRequest"): ObjectNode(__name) {
         ProjectCardConnection("projectCards").apply { addArgs("after", after) }.apply { addArgs("archivedStates", archivedStates) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.also { doInit(it, init) }
     fun projectNext(number: Int, init: ProjectNext.() -> Unit) =
         ProjectNext("projectNext").apply { addArgs("number", number) }.also { doInit(it, init) }
+    fun projectNextItems(after: String? = null, before: String? = null, first: Int? = null, includeArchived: Boolean? = null, last: Int? = null, init: ProjectNextItemConnection.() -> Unit) =
+        ProjectNextItemConnection("projectNextItems").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("includeArchived", includeArchived) }.apply { addArgs("last", last) }.also { doInit(it, init) }
     fun projectsNext(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, query: String? = null, sortBy: ProjectNextOrderField? = null, init: ProjectNextConnection.() -> Unit) =
         ProjectNextConnection("projectsNext").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("query", query) }.apply { addArgs("sortBy", sortBy) }.also { doInit(it, init) }
     val publishedAt get() =
@@ -10804,6 +10917,41 @@ class RepositoryInvitationEdge(__name: String = "RepositoryInvitationEdge"): Obj
         RepositoryInvitation("node").also { doInit(it, init) }
 }
 
+class RepositoryMigration(__name: String = "RepositoryMigration"): ObjectNode(__name) {
+    val continueOnError get() =
+        ScalarNode("continueOnError").also { doInit(it) }
+    val createdAt get() =
+        ScalarNode("createdAt").also { doInit(it) }
+    val failureReason get() =
+        ScalarNode("failureReason").also { doInit(it) }
+    val id get() =
+        ScalarNode("id").also { doInit(it) }
+    fun migrationSource(init: MigrationSource.() -> Unit) =
+        MigrationSource("migrationSource").also { doInit(it, init) }
+    val sourceUrl get() =
+        ScalarNode("sourceUrl").also { doInit(it) }
+    val state get() =
+        ScalarNode("state").also { doInit(it) }
+}
+
+class RepositoryMigrationConnection(__name: String = "RepositoryMigrationConnection"): ObjectNode(__name) {
+    fun edges(init: RepositoryMigrationEdge.() -> Unit) =
+        RepositoryMigrationEdge("edges").also { doInit(it, init) }
+    fun nodes(init: RepositoryMigration.() -> Unit) =
+        RepositoryMigration("nodes").also { doInit(it, init) }
+    fun pageInfo(init: PageInfo.() -> Unit) =
+        PageInfo("pageInfo").also { doInit(it, init) }
+    val totalCount get() =
+        ScalarNode("totalCount").also { doInit(it) }
+}
+
+class RepositoryMigrationEdge(__name: String = "RepositoryMigrationEdge"): ObjectNode(__name) {
+    val cursor get() =
+        ScalarNode("cursor").also { doInit(it) }
+    fun node(init: RepositoryMigration.() -> Unit) =
+        RepositoryMigration("node").also { doInit(it, init) }
+}
+
 class RepositoryTopic(__name: String = "RepositoryTopic"): ObjectNode(__name) {
     val id get() =
         ScalarNode("id").also { doInit(it) }
@@ -11129,6 +11277,20 @@ class ReviewStatusHovercardContext(__name: String = "ReviewStatusHovercardContex
         ScalarNode("octicon").also { doInit(it) }
     val reviewDecision get() =
         ScalarNode("reviewDecision").also { doInit(it) }
+}
+
+class RevokeEnterpriseOrganizationsMigratorRolePayload(__name: String = "RevokeEnterpriseOrganizationsMigratorRolePayload"): ObjectNode(__name) {
+    val clientMutationId get() =
+        ScalarNode("clientMutationId").also { doInit(it) }
+    fun organizations(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, init: OrganizationConnection.() -> Unit) =
+        OrganizationConnection("organizations").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.also { doInit(it, init) }
+}
+
+class RevokeMigratorRolePayload(__name: String = "RevokeMigratorRolePayload"): ObjectNode(__name) {
+    val clientMutationId get() =
+        ScalarNode("clientMutationId").also { doInit(it) }
+    val success get() =
+        ScalarNode("success").also { doInit(it) }
 }
 
 class SavedReply(__name: String = "SavedReply"): ObjectNode(__name) {
@@ -11638,6 +11800,13 @@ class StarredRepositoryEdge(__name: String = "StarredRepositoryEdge"): ObjectNod
         Repository("node").also { doInit(it, init) }
     val starredAt get() =
         ScalarNode("starredAt").also { doInit(it) }
+}
+
+class StartRepositoryMigrationPayload(__name: String = "StartRepositoryMigrationPayload"): ObjectNode(__name) {
+    val clientMutationId get() =
+        ScalarNode("clientMutationId").also { doInit(it) }
+    fun repositoryMigration(init: RepositoryMigration.() -> Unit) =
+        RepositoryMigration("repositoryMigration").also { doInit(it, init) }
 }
 
 class Status(__name: String = "Status"): ObjectNode(__name) {
@@ -12790,6 +12959,13 @@ class UpdateEnterpriseOrganizationProjectsSettingPayload(__name: String = "Updat
         ScalarNode("message").also { doInit(it) }
 }
 
+class UpdateEnterpriseOwnerOrganizationRolePayload(__name: String = "UpdateEnterpriseOwnerOrganizationRolePayload"): ObjectNode(__name) {
+    val clientMutationId get() =
+        ScalarNode("clientMutationId").also { doInit(it) }
+    val message get() =
+        ScalarNode("message").also { doInit(it) }
+}
+
 class UpdateEnterpriseProfilePayload(__name: String = "UpdateEnterpriseProfilePayload"): ObjectNode(__name) {
     val clientMutationId get() =
         ScalarNode("clientMutationId").also { doInit(it) }
@@ -13832,6 +14008,25 @@ class MemberStatusable(__name: String = "MemberStatusable"): ObjectNode(__name) 
         Team("...on Team").also { doInit(it, init) }
 }
 
+class Migration(__name: String = "Migration"): ObjectNode(__name) {
+    val continueOnError get() =
+        ScalarNode("continueOnError").also { doInit(it) }
+    val createdAt get() =
+        ScalarNode("createdAt").also { doInit(it) }
+    val failureReason get() =
+        ScalarNode("failureReason").also { doInit(it) }
+    val id get() =
+        ScalarNode("id").also { doInit(it) }
+    fun migrationSource(init: MigrationSource.() -> Unit) =
+        MigrationSource("migrationSource").also { doInit(it, init) }
+    val sourceUrl get() =
+        ScalarNode("sourceUrl").also { doInit(it) }
+    val state get() =
+        ScalarNode("state").also { doInit(it) }
+    fun `on RepositoryMigration`(init: RepositoryMigration.() -> Unit) =
+        RepositoryMigration("...on RepositoryMigration").also { doInit(it, init) }
+}
+
 class Minimizable(__name: String = "Minimizable"): ObjectNode(__name) {
     val isMinimized get() =
         ScalarNode("isMinimized").also { doInit(it) }
@@ -13972,6 +14167,8 @@ class Node(__name: String = "Node"): ObjectNode(__name) {
         HeadRefForcePushedEvent("...on HeadRefForcePushedEvent").also { doInit(it, init) }
     fun `on HeadRefRestoredEvent`(init: HeadRefRestoredEvent.() -> Unit) =
         HeadRefRestoredEvent("...on HeadRefRestoredEvent").also { doInit(it, init) }
+    fun `on Import`(init: Import.() -> Unit) =
+        Import("...on Import").also { doInit(it, init) }
     fun `on IpAllowListEntry`(init: IpAllowListEntry.() -> Unit) =
         IpAllowListEntry("...on IpAllowListEntry").also { doInit(it, init) }
     fun `on Issue`(init: Issue.() -> Unit) =
@@ -14006,6 +14203,8 @@ class Node(__name: String = "Node"): ObjectNode(__name) {
         MentionedEvent("...on MentionedEvent").also { doInit(it, init) }
     fun `on MergedEvent`(init: MergedEvent.() -> Unit) =
         MergedEvent("...on MergedEvent").also { doInit(it, init) }
+    fun `on MigrationSource`(init: MigrationSource.() -> Unit) =
+        MigrationSource("...on MigrationSource").also { doInit(it, init) }
     fun `on Milestone`(init: Milestone.() -> Unit) =
         Milestone("...on Milestone").also { doInit(it, init) }
     fun `on MilestonedEvent`(init: MilestonedEvent.() -> Unit) =
@@ -14182,6 +14381,8 @@ class Node(__name: String = "Node"): ObjectNode(__name) {
         Repository("...on Repository").also { doInit(it, init) }
     fun `on RepositoryInvitation`(init: RepositoryInvitation.() -> Unit) =
         RepositoryInvitation("...on RepositoryInvitation").also { doInit(it, init) }
+    fun `on RepositoryMigration`(init: RepositoryMigration.() -> Unit) =
+        RepositoryMigration("...on RepositoryMigration").also { doInit(it, init) }
     fun `on RepositoryTopic`(init: RepositoryTopic.() -> Unit) =
         RepositoryTopic("...on RepositoryTopic").also { doInit(it, init) }
     fun `on RepositoryVisibilityChangeDisableAuditEntry`(init: RepositoryVisibilityChangeDisableAuditEntry.() -> Unit) =
@@ -15614,6 +15815,10 @@ class VerifiableDomainOwner(__name: String = "VerifiableDomainOwner"): ObjectNod
         Organization("...on Organization").also { doInit(it, init) }
 }
 
+class AbortQueuedMigrationsInput(val clientMutationId: String? = null, val ownerId: ID) {
+    override fun toString() = "{ clientMutationId: \"$clientMutationId\", ownerId: \"$ownerId\" }"
+}
+
 class AcceptEnterpriseAdministratorInvitationInput(val clientMutationId: String? = null, val invitationId: ID) {
     override fun toString() = "{ clientMutationId: \"$clientMutationId\", invitationId: \"$invitationId\" }"
 }
@@ -15838,6 +16043,10 @@ class CreateLabelInput(val clientMutationId: String? = null, val color: String, 
     override fun toString() = "{ clientMutationId: \"$clientMutationId\", color: \"$color\", description: \"$description\", name: \"$name\", repositoryId: \"$repositoryId\" }"
 }
 
+class CreateMigrationSourceInput(val accessToken: String, val clientMutationId: String? = null, val githubPat: String? = null, val name: String, val ownerId: ID, val type: MigrationSourceType, val url: String) {
+    override fun toString() = "{ accessToken: \"$accessToken\", clientMutationId: \"$clientMutationId\", githubPat: \"$githubPat\", name: \"$name\", ownerId: \"$ownerId\", type: $type, url: \"$url\" }"
+}
+
 class CreateProjectInput(val body: String? = null, val clientMutationId: String? = null, val name: String, val ownerId: ID, val repositoryIds: ID? = null, val template: ProjectTemplate? = null) {
     override fun toString() = "{ body: \"$body\", clientMutationId: \"$clientMutationId\", name: \"$name\", ownerId: \"$ownerId\", repositoryIds: \"$repositoryIds\", template: $template }"
 }
@@ -16024,6 +16233,14 @@ class FollowUserInput(val clientMutationId: String? = null, val userId: ID) {
 
 class GistOrder(val direction: OrderDirection, val field: GistOrderField) {
     override fun toString() = "{ direction: $direction, field: $field }"
+}
+
+class GrantEnterpriseOrganizationsMigratorRoleInput(val clientMutationId: String? = null, val enterpriseId: ID, val login: String) {
+    override fun toString() = "{ clientMutationId: \"$clientMutationId\", enterpriseId: \"$enterpriseId\", login: \"$login\" }"
+}
+
+class GrantMigratorRoleInput(val actor: String, val actorType: ActorType, val clientMutationId: String? = null, val organizationId: ID) {
+    override fun toString() = "{ actor: \"$actor\", actorType: $actorType, clientMutationId: \"$clientMutationId\", organizationId: \"$organizationId\" }"
 }
 
 class ImportProjectInput(val body: String? = null, val clientMutationId: String? = null, val columnImports: ProjectColumnImport, val name: String, val ownerName: String, val public: Boolean? = null) {
@@ -16222,6 +16439,10 @@ class RepositoryInvitationOrder(val direction: OrderDirection, val field: Reposi
     override fun toString() = "{ direction: $direction, field: $field }"
 }
 
+class RepositoryMigrationOrder(val direction: RepositoryMigrationOrderDirection, val field: RepositoryMigrationOrderField) {
+    override fun toString() = "{ direction: $direction, field: $field }"
+}
+
 class RepositoryOrder(val direction: OrderDirection, val field: RepositoryOrderField) {
     override fun toString() = "{ direction: $direction, field: $field }"
 }
@@ -16240,6 +16461,14 @@ class RerequestCheckSuiteInput(val checkSuiteId: ID, val clientMutationId: Strin
 
 class ResolveReviewThreadInput(val clientMutationId: String? = null, val threadId: ID) {
     override fun toString() = "{ clientMutationId: \"$clientMutationId\", threadId: \"$threadId\" }"
+}
+
+class RevokeEnterpriseOrganizationsMigratorRoleInput(val clientMutationId: String? = null, val enterpriseId: ID, val login: String) {
+    override fun toString() = "{ clientMutationId: \"$clientMutationId\", enterpriseId: \"$enterpriseId\", login: \"$login\" }"
+}
+
+class RevokeMigratorRoleInput(val actor: String, val actorType: ActorType, val clientMutationId: String? = null, val organizationId: ID) {
+    override fun toString() = "{ actor: \"$actor\", actorType: $actorType, clientMutationId: \"$clientMutationId\", organizationId: \"$organizationId\" }"
 }
 
 class SavedReplyOrder(val direction: OrderDirection, val field: SavedReplyOrderField) {
@@ -16300,6 +16529,10 @@ class SponsorshipOrder(val direction: OrderDirection, val field: SponsorshipOrde
 
 class StarOrder(val direction: OrderDirection, val field: StarOrderField) {
     override fun toString() = "{ direction: $direction, field: $field }"
+}
+
+class StartRepositoryMigrationInput(val clientMutationId: String? = null, val continueOnError: Boolean? = null, val ownerId: ID, val repositoryName: String, val sourceId: ID, val sourceRepositoryUrl: URI) {
+    override fun toString() = "{ clientMutationId: \"$clientMutationId\", continueOnError: $continueOnError, ownerId: \"$ownerId\", repositoryName: \"$repositoryName\", sourceId: \"$sourceId\", sourceRepositoryUrl: \"$sourceRepositoryUrl\" }"
 }
 
 class SubmitPullRequestReviewInput(val body: String? = null, val clientMutationId: String? = null, val event: PullRequestReviewEvent, val pullRequestId: ID? = null, val pullRequestReviewId: ID? = null) {
@@ -16436,6 +16669,10 @@ class UpdateEnterpriseMembersCanViewDependencyInsightsSettingInput(val clientMut
 
 class UpdateEnterpriseOrganizationProjectsSettingInput(val clientMutationId: String? = null, val enterpriseId: ID, val settingValue: EnterpriseEnabledDisabledSettingValue) {
     override fun toString() = "{ clientMutationId: \"$clientMutationId\", enterpriseId: \"$enterpriseId\", settingValue: $settingValue }"
+}
+
+class UpdateEnterpriseOwnerOrganizationRoleInput(val clientMutationId: String? = null, val enterpriseId: ID, val organizationId: ID, val organizationRole: RoleInOrganization) {
+    override fun toString() = "{ clientMutationId: \"$clientMutationId\", enterpriseId: \"$enterpriseId\", organizationId: \"$organizationId\", organizationRole: $organizationRole }"
 }
 
 class UpdateEnterpriseProfileInput(val clientMutationId: String? = null, val description: String? = null, val enterpriseId: ID, val location: String? = null, val name: String? = null, val websiteUrl: String? = null) {
