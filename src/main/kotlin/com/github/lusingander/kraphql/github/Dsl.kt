@@ -778,6 +778,31 @@ enum class ProjectColumnPurpose {
     ;
 }
 
+enum class ProjectItemType {
+    DRAFT_ISSUE,
+    ISSUE,
+    PULL_REQUEST,
+    REDACTED,
+    ;
+}
+
+enum class ProjectNextFieldType {
+    ASSIGNEES,
+    DATE,
+    ITERATION,
+    LABELS,
+    LINKED_PULL_REQUESTS,
+    MILESTONE,
+    NUMBER,
+    REPOSITORY,
+    REVIEWERS,
+    SINGLE_SELECT,
+    TEXT,
+    TITLE,
+    TRACKS,
+    ;
+}
+
 enum class ProjectNextOrderField {
     CREATED_AT,
     NUMBER,
@@ -804,6 +829,12 @@ enum class ProjectTemplate {
     AUTOMATED_REVIEWS_KANBAN,
     BASIC_KANBAN,
     BUG_TRIAGE,
+    ;
+}
+
+enum class ProjectViewLayout {
+    BOARD_LAYOUT,
+    TABLE_LAYOUT,
     ;
 }
 
@@ -1055,7 +1086,6 @@ enum class RepositoryInteractionLimitOrigin {
 
 enum class RepositoryInvitationOrderField {
     CREATED_AT,
-    INVITEE_LOGIN,
     ;
 }
 
@@ -1348,6 +1378,12 @@ enum class TopicSuggestionDeclineReason {
     PERSONAL_PREFERENCE,
     TOO_GENERAL,
     TOO_SPECIFIC,
+    ;
+}
+
+enum class TrackedIssueStates {
+    CLOSED,
+    OPEN,
     ;
 }
 
@@ -2884,6 +2920,13 @@ class CreateRepositoryPayload(__name: String = "CreateRepositoryPayload"): Objec
         Repository("repository").also { doInit(it, init) }
 }
 
+class CreateSponsorsTierPayload(__name: String = "CreateSponsorsTierPayload"): ObjectNode(__name) {
+    val clientMutationId get() =
+        ScalarNode("clientMutationId").also { doInit(it) }
+    fun sponsorsTier(init: SponsorsTier.() -> Unit) =
+        SponsorsTier("sponsorsTier").also { doInit(it, init) }
+}
+
 class CreateSponsorshipPayload(__name: String = "CreateSponsorshipPayload"): ObjectNode(__name) {
     val clientMutationId get() =
         ScalarNode("clientMutationId").also { doInit(it) }
@@ -3245,6 +3288,24 @@ class DemilestonedEvent(__name: String = "DemilestonedEvent"): ObjectNode(__name
         ScalarNode("milestoneTitle").also { doInit(it) }
     fun subject(init: MilestoneItem.() -> Unit) =
         MilestoneItem("subject").also { doInit(it, init) }
+}
+
+class DependabotUpdate(__name: String = "DependabotUpdate"): ObjectNode(__name) {
+    fun error(init: DependabotUpdateError.() -> Unit) =
+        DependabotUpdateError("error").also { doInit(it, init) }
+    fun pullRequest(init: PullRequest.() -> Unit) =
+        PullRequest("pullRequest").also { doInit(it, init) }
+    fun repository(init: Repository.() -> Unit) =
+        Repository("repository").also { doInit(it, init) }
+}
+
+class DependabotUpdateError(__name: String = "DependabotUpdateError"): ObjectNode(__name) {
+    val body get() =
+        ScalarNode("body").also { doInit(it) }
+    val errorType get() =
+        ScalarNode("errorType").also { doInit(it) }
+    val title get() =
+        ScalarNode("title").also { doInit(it) }
 }
 
 class DependencyGraphDependency(__name: String = "DependencyGraphDependency"): ObjectNode(__name) {
@@ -3860,6 +3921,31 @@ class DismissRepositoryVulnerabilityAlertPayload(__name: String = "DismissReposi
         RepositoryVulnerabilityAlert("repositoryVulnerabilityAlert").also { doInit(it, init) }
 }
 
+class DraftIssue(__name: String = "DraftIssue"): ObjectNode(__name) {
+    fun assignees(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, init: UserConnection.() -> Unit) =
+        UserConnection("assignees").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.also { doInit(it, init) }
+    val body get() =
+        ScalarNode("body").also { doInit(it) }
+    val bodyHTML get() =
+        ScalarNode("bodyHTML").also { doInit(it) }
+    val bodyText get() =
+        ScalarNode("bodyText").also { doInit(it) }
+    val createdAt get() =
+        ScalarNode("createdAt").also { doInit(it) }
+    fun creator(init: Actor.() -> Unit) =
+        Actor("creator").also { doInit(it, init) }
+    val id get() =
+        ScalarNode("id").also { doInit(it) }
+    fun project(init: ProjectNext.() -> Unit) =
+        ProjectNext("project").also { doInit(it, init) }
+    fun projectItem(init: ProjectNextItem.() -> Unit) =
+        ProjectNextItem("projectItem").also { doInit(it, init) }
+    val title get() =
+        ScalarNode("title").also { doInit(it) }
+    val updatedAt get() =
+        ScalarNode("updatedAt").also { doInit(it) }
+}
+
 class EnablePullRequestAutoMergePayload(__name: String = "EnablePullRequestAutoMergePayload"): ObjectNode(__name) {
     fun actor(init: Actor.() -> Unit) =
         Actor("actor").also { doInit(it, init) }
@@ -3902,6 +3988,7 @@ class Enterprise(__name: String = "Enterprise"): ObjectNode(__name) {
         ScalarNode("slug").also { doInit(it) }
     val url get() =
         ScalarNode("url").also { doInit(it) }
+    @Deprecated("The `Enterprise.userAccounts` field is being removed. Use the `Enterprise.members` field instead. Removal on 2022-07-01 UTC.")
     fun userAccounts(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, init: EnterpriseUserAccountConnection.() -> Unit) =
         EnterpriseUserAccountConnection("userAccounts").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.also { doInit(it, init) }
     val viewerIsAdmin get() =
@@ -4158,9 +4245,6 @@ class EnterpriseOwnerInfo(__name: String = "EnterpriseOwnerInfo"): ObjectNode(__
         EnterpriseAdministratorInvitationConnection("pendingAdminInvitations").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.apply { addArgs("query", query) }.apply { addArgs("role", role) }.also { doInit(it, init) }
     fun pendingCollaboratorInvitations(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, orderBy: RepositoryInvitationOrder? = null, query: String? = null, init: RepositoryInvitationConnection.() -> Unit) =
         RepositoryInvitationConnection("pendingCollaboratorInvitations").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.apply { addArgs("query", query) }.also { doInit(it, init) }
-    @Deprecated("Repository invitations can now be associated with an email, not only an invitee. Use the `pendingCollaboratorInvitations` field instead. Removal on 2020-10-01 UTC.")
-    fun pendingCollaborators(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, orderBy: RepositoryInvitationOrder? = null, query: String? = null, init: EnterprisePendingCollaboratorConnection.() -> Unit) =
-        EnterprisePendingCollaboratorConnection("pendingCollaborators").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.apply { addArgs("query", query) }.also { doInit(it, init) }
     fun pendingMemberInvitations(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, query: String? = null, init: EnterprisePendingMemberInvitationConnection.() -> Unit) =
         EnterprisePendingMemberInvitationConnection("pendingMemberInvitations").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("query", query) }.also { doInit(it, init) }
     val repositoryProjectsSetting get() =
@@ -4181,29 +4265,6 @@ class EnterpriseOwnerInfo(__name: String = "EnterpriseOwnerInfo"): ObjectNode(__
         ScalarNode("twoFactorRequiredSetting").also { doInit(it) }
     fun twoFactorRequiredSettingOrganizations(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, orderBy: OrganizationOrder? = null, value: Boolean, init: OrganizationConnection.() -> Unit) =
         OrganizationConnection("twoFactorRequiredSettingOrganizations").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.apply { addArgs("value", value) }.also { doInit(it, init) }
-}
-
-class EnterprisePendingCollaboratorConnection(__name: String = "EnterprisePendingCollaboratorConnection"): ObjectNode(__name) {
-    fun edges(init: EnterprisePendingCollaboratorEdge.() -> Unit) =
-        EnterprisePendingCollaboratorEdge("edges").also { doInit(it, init) }
-    fun nodes(init: User.() -> Unit) =
-        User("nodes").also { doInit(it, init) }
-    fun pageInfo(init: PageInfo.() -> Unit) =
-        PageInfo("pageInfo").also { doInit(it, init) }
-    val totalCount get() =
-        ScalarNode("totalCount").also { doInit(it) }
-}
-
-class EnterprisePendingCollaboratorEdge(__name: String = "EnterprisePendingCollaboratorEdge"): ObjectNode(__name) {
-    val cursor get() =
-        ScalarNode("cursor").also { doInit(it) }
-    @Deprecated("All pending collaborators consume a license Removal on 2021-01-01 UTC.")
-    val isUnlicensed get() =
-        ScalarNode("isUnlicensed").also { doInit(it) }
-    fun node(init: User.() -> Unit) =
-        User("node").also { doInit(it, init) }
-    fun repositories(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, orderBy: RepositoryOrder? = null, init: EnterpriseRepositoryInfoConnection.() -> Unit) =
-        EnterpriseRepositoryInfoConnection("repositories").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.also { doInit(it, init) }
 }
 
 class EnterprisePendingMemberInvitationConnection(__name: String = "EnterprisePendingMemberInvitationConnection"): ObjectNode(__name) {
@@ -4989,6 +5050,14 @@ class Issue(__name: String = "Issue"): ObjectNode(__name) {
         ScalarNode("title").also { doInit(it) }
     val titleHTML get() =
         ScalarNode("titleHTML").also { doInit(it) }
+    fun trackedInIssues(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, init: IssueConnection.() -> Unit) =
+        IssueConnection("trackedInIssues").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.also { doInit(it, init) }
+    fun trackedIssues(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, init: IssueConnection.() -> Unit) =
+        IssueConnection("trackedIssues").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.also { doInit(it, init) }
+    fun trackedIssuesCount(states: TrackedIssueStates? = null) =
+        ScalarWithArgsNode("trackedIssuesCount", mapOf("states" to states)).also { doInit(it) }
+    val trackedIssuesCount get() =
+        ScalarNode("trackedIssuesCount").also { doInit(it) }
     val updatedAt get() =
         ScalarNode("updatedAt").also { doInit(it) }
     val url get() =
@@ -5959,6 +6028,8 @@ class Mutation(__name: String = "mutation"): ObjectNode(__name) {
         CreateRefPayload("createRef").apply { addArgs("input", input) }.also { doInit(it, init) }
     fun createRepository(input: CreateRepositoryInput, init: CreateRepositoryPayload.() -> Unit) =
         CreateRepositoryPayload("createRepository").apply { addArgs("input", input) }.also { doInit(it, init) }
+    fun createSponsorsTier(input: CreateSponsorsTierInput, init: CreateSponsorsTierPayload.() -> Unit) =
+        CreateSponsorsTierPayload("createSponsorsTier").apply { addArgs("input", input) }.also { doInit(it, init) }
     fun createSponsorship(input: CreateSponsorshipInput, init: CreateSponsorshipPayload.() -> Unit) =
         CreateSponsorshipPayload("createSponsorship").apply { addArgs("input", input) }.also { doInit(it, init) }
     fun createTeamDiscussion(input: CreateTeamDiscussionInput, init: CreateTeamDiscussionPayload.() -> Unit) =
@@ -8322,6 +8393,8 @@ class ProjectNext(__name: String = "ProjectNext"): ObjectNode(__name) {
         ScalarNode("url").also { doInit(it) }
     val viewerCanUpdate get() =
         ScalarNode("viewerCanUpdate").also { doInit(it) }
+    fun views(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, init: ProjectViewConnection.() -> Unit) =
+        ProjectViewConnection("views").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.also { doInit(it, init) }
 }
 
 class ProjectNextConnection(__name: String = "ProjectNextConnection"): ObjectNode(__name) {
@@ -8345,6 +8418,8 @@ class ProjectNextEdge(__name: String = "ProjectNextEdge"): ObjectNode(__name) {
 class ProjectNextField(__name: String = "ProjectNextField"): ObjectNode(__name) {
     val createdAt get() =
         ScalarNode("createdAt").also { doInit(it) }
+    val dataType get() =
+        ScalarNode("dataType").also { doInit(it) }
     val databaseId get() =
         ScalarNode("databaseId").also { doInit(it) }
     val id get() =
@@ -8396,6 +8471,8 @@ class ProjectNextItem(__name: String = "ProjectNextItem"): ObjectNode(__name) {
         ProjectNext("project").also { doInit(it, init) }
     val title get() =
         ScalarNode("title").also { doInit(it) }
+    val type get() =
+        ScalarNode("type").also { doInit(it) }
     val updatedAt get() =
         ScalarNode("updatedAt").also { doInit(it) }
 }
@@ -8470,6 +8547,53 @@ class ProjectProgress(__name: String = "ProjectProgress"): ObjectNode(__name) {
         ScalarNode("todoCount").also { doInit(it) }
     val todoPercentage get() =
         ScalarNode("todoPercentage").also { doInit(it) }
+}
+
+class ProjectView(__name: String = "ProjectView"): ObjectNode(__name) {
+    val createdAt get() =
+        ScalarNode("createdAt").also { doInit(it) }
+    val databaseId get() =
+        ScalarNode("databaseId").also { doInit(it) }
+    val filter get() =
+        ScalarNode("filter").also { doInit(it) }
+    val groupBy get() =
+        ScalarNode("groupBy").also { doInit(it) }
+    val id get() =
+        ScalarNode("id").also { doInit(it) }
+    val layout get() =
+        ScalarNode("layout").also { doInit(it) }
+    val name get() =
+        ScalarNode("name").also { doInit(it) }
+    val number get() =
+        ScalarNode("number").also { doInit(it) }
+    fun project(init: ProjectNext.() -> Unit) =
+        ProjectNext("project").also { doInit(it, init) }
+    fun sortBy(init: SortBy.() -> Unit) =
+        SortBy("sortBy").also { doInit(it, init) }
+    val updatedAt get() =
+        ScalarNode("updatedAt").also { doInit(it) }
+    val verticalGroupBy get() =
+        ScalarNode("verticalGroupBy").also { doInit(it) }
+    val visibleFields get() =
+        ScalarNode("visibleFields").also { doInit(it) }
+}
+
+class ProjectViewConnection(__name: String = "ProjectViewConnection"): ObjectNode(__name) {
+    fun edges(init: ProjectViewEdge.() -> Unit) =
+        ProjectViewEdge("edges").also { doInit(it, init) }
+    fun nodes(init: ProjectView.() -> Unit) =
+        ProjectView("nodes").also { doInit(it, init) }
+    fun pageInfo(init: PageInfo.() -> Unit) =
+        PageInfo("pageInfo").also { doInit(it, init) }
+    val totalCount get() =
+        ScalarNode("totalCount").also { doInit(it) }
+}
+
+class ProjectViewEdge(__name: String = "ProjectViewEdge"): ObjectNode(__name) {
+    val cursor get() =
+        ScalarNode("cursor").also { doInit(it) }
+    fun node(init: ProjectView.() -> Unit) =
+        ProjectView("node").also { doInit(it, init) }
 }
 
 class PublicKey(__name: String = "PublicKey"): ObjectNode(__name) {
@@ -11116,6 +11240,8 @@ class RepositoryVisibilityChangeEnableAuditEntry(__name: String = "RepositoryVis
 class RepositoryVulnerabilityAlert(__name: String = "RepositoryVulnerabilityAlert"): ObjectNode(__name) {
     val createdAt get() =
         ScalarNode("createdAt").also { doInit(it) }
+    fun dependabotUpdate(init: DependabotUpdate.() -> Unit) =
+        DependabotUpdate("dependabotUpdate").also { doInit(it, init) }
     val dismissReason get() =
         ScalarNode("dismissReason").also { doInit(it) }
     val dismissedAt get() =
@@ -11561,6 +11687,13 @@ class SmimeSignature(__name: String = "SmimeSignature"): ObjectNode(__name) {
         ScalarNode("state").also { doInit(it) }
     val wasSignedByGitHub get() =
         ScalarNode("wasSignedByGitHub").also { doInit(it) }
+}
+
+class SortBy(__name: String = "SortBy"): ObjectNode(__name) {
+    val direction get() =
+        ScalarNode("direction").also { doInit(it) }
+    val field get() =
+        ScalarNode("field").also { doInit(it) }
 }
 
 class SponsorConnection(__name: String = "SponsorConnection"): ObjectNode(__name) {
@@ -14192,6 +14325,8 @@ class Node(__name: String = "Node"): ObjectNode(__name) {
         DiscussionCategory("...on DiscussionCategory").also { doInit(it, init) }
     fun `on DiscussionComment`(init: DiscussionComment.() -> Unit) =
         DiscussionComment("...on DiscussionComment").also { doInit(it, init) }
+    fun `on DraftIssue`(init: DraftIssue.() -> Unit) =
+        DraftIssue("...on DraftIssue").also { doInit(it, init) }
     fun `on Enterprise`(init: Enterprise.() -> Unit) =
         Enterprise("...on Enterprise").also { doInit(it, init) }
     fun `on EnterpriseAdministratorInvitation`(init: EnterpriseAdministratorInvitation.() -> Unit) =
@@ -14354,10 +14489,14 @@ class Node(__name: String = "Node"): ObjectNode(__name) {
         ProjectColumn("...on ProjectColumn").also { doInit(it, init) }
     fun `on ProjectNext`(init: ProjectNext.() -> Unit) =
         ProjectNext("...on ProjectNext").also { doInit(it, init) }
+    fun `on ProjectNextField`(init: ProjectNextField.() -> Unit) =
+        ProjectNextField("...on ProjectNextField").also { doInit(it, init) }
     fun `on ProjectNextItem`(init: ProjectNextItem.() -> Unit) =
         ProjectNextItem("...on ProjectNextItem").also { doInit(it, init) }
     fun `on ProjectNextItemFieldValue`(init: ProjectNextItemFieldValue.() -> Unit) =
         ProjectNextItemFieldValue("...on ProjectNextItemFieldValue").also { doInit(it, init) }
+    fun `on ProjectView`(init: ProjectView.() -> Unit) =
+        ProjectView("...on ProjectView").also { doInit(it, init) }
     fun `on PublicKey`(init: PublicKey.() -> Unit) =
         PublicKey("...on PublicKey").also { doInit(it, init) }
     fun `on PullRequest`(init: PullRequest.() -> Unit) =
@@ -14722,6 +14861,27 @@ class ProfileOwner(__name: String = "ProfileOwner"): ObjectNode(__name) {
         User("...on User").also { doInit(it, init) }
 }
 
+class ProjectNextFieldCommon(__name: String = "ProjectNextFieldCommon"): ObjectNode(__name) {
+    val createdAt get() =
+        ScalarNode("createdAt").also { doInit(it) }
+    val dataType get() =
+        ScalarNode("dataType").also { doInit(it) }
+    val databaseId get() =
+        ScalarNode("databaseId").also { doInit(it) }
+    val id get() =
+        ScalarNode("id").also { doInit(it) }
+    val name get() =
+        ScalarNode("name").also { doInit(it) }
+    fun project(init: ProjectNext.() -> Unit) =
+        ProjectNext("project").also { doInit(it, init) }
+    val settings get() =
+        ScalarNode("settings").also { doInit(it) }
+    val updatedAt get() =
+        ScalarNode("updatedAt").also { doInit(it) }
+    fun `on ProjectNextField`(init: ProjectNextField.() -> Unit) =
+        ProjectNextField("...on ProjectNextField").also { doInit(it, init) }
+}
+
 class ProjectNextOwner(__name: String = "ProjectNextOwner"): ObjectNode(__name) {
     val id get() =
         ScalarNode("id").also { doInit(it) }
@@ -14944,6 +15104,8 @@ class RepositoryNode(__name: String = "RepositoryNode"): ObjectNode(__name) {
         CommitComment("...on CommitComment").also { doInit(it, init) }
     fun `on CommitCommentThread`(init: CommitCommentThread.() -> Unit) =
         CommitCommentThread("...on CommitCommentThread").also { doInit(it, init) }
+    fun `on DependabotUpdate`(init: DependabotUpdate.() -> Unit) =
+        DependabotUpdate("...on DependabotUpdate").also { doInit(it, init) }
     fun `on Discussion`(init: Discussion.() -> Unit) =
         Discussion("...on Discussion").also { doInit(it, init) }
     fun `on DiscussionCategory`(init: DiscussionCategory.() -> Unit) =
@@ -15583,6 +15745,8 @@ class ProjectCardItem(__name: String = "ProjectCardItem"): ObjectNode(__name) {
 }
 
 class ProjectNextItemContent(__name: String = "ProjectNextItemContent"): ObjectNode(__name) {
+    fun `on DraftIssue`(init: DraftIssue.() -> Unit) =
+        DraftIssue("...on DraftIssue").also { doInit(it, init) }
     fun `on Issue`(init: Issue.() -> Unit) =
         Issue("...on Issue").also { doInit(it, init) }
     fun `on PullRequest`(init: PullRequest.() -> Unit) =
@@ -16098,7 +16262,7 @@ class CreateLabelInput(val clientMutationId: String? = null, val color: String, 
     override fun toString() = "{ clientMutationId: \"$clientMutationId\", color: \"$color\", description: \"$description\", name: \"$name\", repositoryId: \"$repositoryId\" }"
 }
 
-class CreateMigrationSourceInput(val accessToken: String, val clientMutationId: String? = null, val githubPat: String? = null, val name: String, val ownerId: ID, val type: MigrationSourceType, val url: String) {
+class CreateMigrationSourceInput(val accessToken: String? = null, val clientMutationId: String? = null, val githubPat: String? = null, val name: String, val ownerId: ID, val type: MigrationSourceType, val url: String) {
     override fun toString() = "{ accessToken: \"$accessToken\", clientMutationId: \"$clientMutationId\", githubPat: \"$githubPat\", name: \"$name\", ownerId: \"$ownerId\", type: $type, url: \"$url\" }"
 }
 
@@ -16116,6 +16280,10 @@ class CreateRefInput(val clientMutationId: String? = null, val name: String, val
 
 class CreateRepositoryInput(val clientMutationId: String? = null, val description: String? = null, val hasIssuesEnabled: Boolean? = null, val hasWikiEnabled: Boolean? = null, val homepageUrl: URI? = null, val name: String, val ownerId: ID? = null, val teamId: ID? = null, val template: Boolean? = null, val visibility: RepositoryVisibility) {
     override fun toString() = "{ clientMutationId: \"$clientMutationId\", description: \"$description\", hasIssuesEnabled: $hasIssuesEnabled, hasWikiEnabled: $hasWikiEnabled, homepageUrl: \"$homepageUrl\", name: \"$name\", ownerId: \"$ownerId\", teamId: \"$teamId\", template: $template, visibility: $visibility }"
+}
+
+class CreateSponsorsTierInput(val amount: Int, val clientMutationId: String? = null, val description: String, val isRecurring: Boolean? = null, val publish: Boolean? = null, val repositoryId: ID? = null, val repositoryName: String? = null, val repositoryOwnerLogin: String? = null, val sponsorableId: ID? = null, val sponsorableLogin: String? = null, val welcomeMessage: String? = null) {
+    override fun toString() = "{ amount: $amount, clientMutationId: \"$clientMutationId\", description: \"$description\", isRecurring: $isRecurring, publish: $publish, repositoryId: \"$repositoryId\", repositoryName: \"$repositoryName\", repositoryOwnerLogin: \"$repositoryOwnerLogin\", sponsorableId: \"$sponsorableId\", sponsorableLogin: \"$sponsorableLogin\", welcomeMessage: \"$welcomeMessage\" }"
 }
 
 class CreateSponsorshipInput(val amount: Int? = null, val clientMutationId: String? = null, val isRecurring: Boolean? = null, val privacyLevel: SponsorshipPrivacy? = null, val receiveEmails: Boolean? = null, val sponsorId: ID? = null, val sponsorLogin: String? = null, val sponsorableId: ID? = null, val sponsorableLogin: String? = null, val tierId: ID? = null) {
@@ -16798,7 +16966,7 @@ class UpdateProjectNextInput(val clientMutationId: String? = null, val closed: B
     override fun toString() = "{ clientMutationId: \"$clientMutationId\", closed: $closed, description: \"$description\", projectId: \"$projectId\", public: $public, shortDescription: \"$shortDescription\", title: \"$title\" }"
 }
 
-class UpdateProjectNextItemFieldInput(val clientMutationId: String? = null, val fieldId: ID, val itemId: ID, val projectId: ID, val value: String) {
+class UpdateProjectNextItemFieldInput(val clientMutationId: String? = null, val fieldId: ID? = null, val itemId: ID, val projectId: ID, val value: String) {
     override fun toString() = "{ clientMutationId: \"$clientMutationId\", fieldId: \"$fieldId\", itemId: \"$itemId\", projectId: \"$projectId\", value: \"$value\" }"
 }
 
