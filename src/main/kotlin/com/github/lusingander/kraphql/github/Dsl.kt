@@ -180,6 +180,7 @@ enum class DependencyGraphEcosystem {
     NUGET,
     PIP,
     RUBYGEMS,
+    RUST,
     ;
 }
 
@@ -425,6 +426,12 @@ enum class IpAllowListForInstalledAppsEnabledSettingValue {
     ;
 }
 
+enum class IssueClosedStateReason {
+    COMPLETED,
+    NOT_PLANNED,
+    ;
+}
+
 enum class IssueCommentOrderField {
     UPDATED_AT,
     ;
@@ -440,6 +447,13 @@ enum class IssueOrderField {
 enum class IssueState {
     CLOSED,
     OPEN,
+    ;
+}
+
+enum class IssueStateReason {
+    COMPLETED,
+    NOT_PLANNED,
+    REOPENED,
     ;
 }
 
@@ -527,8 +541,10 @@ enum class MigrationSourceType {
 
 enum class MigrationState {
     FAILED,
+    FAILED_VALIDATION,
     IN_PROGRESS,
     NOT_STARTED,
+    PENDING_VALIDATION,
     QUEUED,
     SUCCEEDED,
     ;
@@ -724,6 +740,16 @@ enum class PackageType {
 
 enum class PackageVersionOrderField {
     CREATED_AT,
+    ;
+}
+
+enum class PatchStatus {
+    ADDED,
+    CHANGED,
+    COPIED,
+    DELETED,
+    MODIFIED,
+    RENAMED,
     ;
 }
 
@@ -1191,6 +1217,12 @@ enum class SearchType {
     ;
 }
 
+enum class SecurityAdvisoryClassification {
+    GENERAL,
+    MALWARE,
+    ;
+}
+
 enum class SecurityAdvisoryEcosystem {
     COMPOSER,
     GO,
@@ -1499,6 +1531,13 @@ class AddProjectColumnPayload(__name: String = "AddProjectColumnPayload"): Objec
         ProjectColumnEdge("columnEdge").also { doInit(it, init) }
     fun project(init: Project.() -> Unit) =
         Project("project").also { doInit(it, init) }
+}
+
+class AddProjectDraftIssuePayload(__name: String = "AddProjectDraftIssuePayload"): ObjectNode(__name) {
+    val clientMutationId get() =
+        ScalarNode("clientMutationId").also { doInit(it) }
+    fun projectNextItem(init: ProjectNextItem.() -> Unit) =
+        ProjectNextItem("projectNextItem").also { doInit(it, init) }
 }
 
 class AddProjectNextItemPayload(__name: String = "AddProjectNextItemPayload"): ObjectNode(__name) {
@@ -1859,6 +1898,8 @@ class BranchProtectionRule(__name: String = "BranchProtectionRule"): ObjectNode(
         ScalarNode("allowsDeletions").also { doInit(it) }
     val allowsForcePushes get() =
         ScalarNode("allowsForcePushes").also { doInit(it) }
+    val blocksCreations get() =
+        ScalarNode("blocksCreations").also { doInit(it) }
     fun branchProtectionRuleConflicts(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, init: BranchProtectionRuleConflictConnection.() -> Unit) =
         BranchProtectionRuleConflictConnection("branchProtectionRuleConflicts").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.also { doInit(it, init) }
     fun bypassForcePushAllowances(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, init: BypassForcePushAllowanceConnection.() -> Unit) =
@@ -2329,6 +2370,8 @@ class ClosedEvent(__name: String = "ClosedEvent"): ObjectNode(__name) {
         ScalarNode("id").also { doInit(it) }
     val resourcePath get() =
         ScalarNode("resourcePath").also { doInit(it) }
+    val stateReason get() =
+        ScalarNode("stateReason").also { doInit(it) }
     val url get() =
         ScalarNode("url").also { doInit(it) }
 }
@@ -3311,6 +3354,7 @@ class DependabotUpdateError(__name: String = "DependabotUpdateError"): ObjectNod
 class DependencyGraphDependency(__name: String = "DependencyGraphDependency"): ObjectNode(__name) {
     val hasDependencies get() =
         ScalarNode("hasDependencies").also { doInit(it) }
+    @Deprecated("`packageLabel` will be removed. Use normalized `packageName` field instead. Removal on 2022-10-01 UTC.")
     val packageLabel get() =
         ScalarNode("packageLabel").also { doInit(it) }
     val packageManager get() =
@@ -4057,18 +4101,12 @@ class EnterpriseBillingInfo(__name: String = "EnterpriseBillingInfo"): ObjectNod
         ScalarNode("allLicensableUsersCount").also { doInit(it) }
     val assetPacks get() =
         ScalarNode("assetPacks").also { doInit(it) }
-    @Deprecated("`availableSeats` will be replaced with `totalAvailableLicenses` to provide more clarity on the value being returned Use EnterpriseBillingInfo.totalAvailableLicenses instead. Removal on 2020-01-01 UTC.")
-    val availableSeats get() =
-        ScalarNode("availableSeats").also { doInit(it) }
     val bandwidthQuota get() =
         ScalarNode("bandwidthQuota").also { doInit(it) }
     val bandwidthUsage get() =
         ScalarNode("bandwidthUsage").also { doInit(it) }
     val bandwidthUsagePercentage get() =
         ScalarNode("bandwidthUsagePercentage").also { doInit(it) }
-    @Deprecated("`seats` will be replaced with `totalLicenses` to provide more clarity on the value being returned Use EnterpriseBillingInfo.totalLicenses instead. Removal on 2020-01-01 UTC.")
-    val seats get() =
-        ScalarNode("seats").also { doInit(it) }
     val storageQuota get() =
         ScalarNode("storageQuota").also { doInit(it) }
     val storageUsage get() =
@@ -4116,9 +4154,6 @@ class EnterpriseMemberConnection(__name: String = "EnterpriseMemberConnection"):
 class EnterpriseMemberEdge(__name: String = "EnterpriseMemberEdge"): ObjectNode(__name) {
     val cursor get() =
         ScalarNode("cursor").also { doInit(it) }
-    @Deprecated("All members consume a license Removal on 2021-01-01 UTC.")
-    val isUnlicensed get() =
-        ScalarNode("isUnlicensed").also { doInit(it) }
     fun node(init: EnterpriseMember.() -> Unit) =
         EnterpriseMember("node").also { doInit(it, init) }
 }
@@ -4157,9 +4192,6 @@ class EnterpriseOutsideCollaboratorConnection(__name: String = "EnterpriseOutsid
 class EnterpriseOutsideCollaboratorEdge(__name: String = "EnterpriseOutsideCollaboratorEdge"): ObjectNode(__name) {
     val cursor get() =
         ScalarNode("cursor").also { doInit(it) }
-    @Deprecated("All outside collaborators consume a license Removal on 2021-01-01 UTC.")
-    val isUnlicensed get() =
-        ScalarNode("isUnlicensed").also { doInit(it) }
     fun node(init: User.() -> Unit) =
         User("node").also { doInit(it, init) }
     fun repositories(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, orderBy: RepositoryOrder? = null, init: EnterpriseRepositoryInfoConnection.() -> Unit) =
@@ -4167,8 +4199,8 @@ class EnterpriseOutsideCollaboratorEdge(__name: String = "EnterpriseOutsideColla
 }
 
 class EnterpriseOwnerInfo(__name: String = "EnterpriseOwnerInfo"): ObjectNode(__name) {
-    fun admins(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, orderBy: EnterpriseMemberOrder? = null, query: String? = null, role: EnterpriseAdministratorRole? = null, init: EnterpriseAdministratorConnection.() -> Unit) =
-        EnterpriseAdministratorConnection("admins").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.apply { addArgs("query", query) }.apply { addArgs("role", role) }.also { doInit(it, init) }
+    fun admins(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, orderBy: EnterpriseMemberOrder? = null, organizationLogins: String? = null, query: String? = null, role: EnterpriseAdministratorRole? = null, init: EnterpriseAdministratorConnection.() -> Unit) =
+        EnterpriseAdministratorConnection("admins").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.apply { addArgs("organizationLogins", organizationLogins) }.apply { addArgs("query", query) }.apply { addArgs("role", role) }.also { doInit(it, init) }
     fun affiliatedUsersWithTwoFactorDisabled(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, init: UserConnection.() -> Unit) =
         UserConnection("affiliatedUsersWithTwoFactorDisabled").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.also { doInit(it, init) }
     val affiliatedUsersWithTwoFactorDisabledExist get() =
@@ -4239,14 +4271,14 @@ class EnterpriseOwnerInfo(__name: String = "EnterpriseOwnerInfo"): ObjectNode(__
         ScalarNode("organizationProjectsSetting").also { doInit(it) }
     fun organizationProjectsSettingOrganizations(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, orderBy: OrganizationOrder? = null, value: Boolean, init: OrganizationConnection.() -> Unit) =
         OrganizationConnection("organizationProjectsSettingOrganizations").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.apply { addArgs("value", value) }.also { doInit(it, init) }
-    fun outsideCollaborators(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, login: String? = null, orderBy: EnterpriseMemberOrder? = null, query: String? = null, visibility: RepositoryVisibility? = null, init: EnterpriseOutsideCollaboratorConnection.() -> Unit) =
-        EnterpriseOutsideCollaboratorConnection("outsideCollaborators").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("login", login) }.apply { addArgs("orderBy", orderBy) }.apply { addArgs("query", query) }.apply { addArgs("visibility", visibility) }.also { doInit(it, init) }
+    fun outsideCollaborators(after: String? = null, before: String? = null, first: Int? = null, hasTwoFactorEnabled: Boolean? = null, last: Int? = null, login: String? = null, orderBy: EnterpriseMemberOrder? = null, organizationLogins: String? = null, query: String? = null, visibility: RepositoryVisibility? = null, init: EnterpriseOutsideCollaboratorConnection.() -> Unit) =
+        EnterpriseOutsideCollaboratorConnection("outsideCollaborators").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("hasTwoFactorEnabled", hasTwoFactorEnabled) }.apply { addArgs("last", last) }.apply { addArgs("login", login) }.apply { addArgs("orderBy", orderBy) }.apply { addArgs("organizationLogins", organizationLogins) }.apply { addArgs("query", query) }.apply { addArgs("visibility", visibility) }.also { doInit(it, init) }
     fun pendingAdminInvitations(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, orderBy: EnterpriseAdministratorInvitationOrder? = null, query: String? = null, role: EnterpriseAdministratorRole? = null, init: EnterpriseAdministratorInvitationConnection.() -> Unit) =
         EnterpriseAdministratorInvitationConnection("pendingAdminInvitations").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.apply { addArgs("query", query) }.apply { addArgs("role", role) }.also { doInit(it, init) }
     fun pendingCollaboratorInvitations(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, orderBy: RepositoryInvitationOrder? = null, query: String? = null, init: RepositoryInvitationConnection.() -> Unit) =
         RepositoryInvitationConnection("pendingCollaboratorInvitations").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.apply { addArgs("query", query) }.also { doInit(it, init) }
-    fun pendingMemberInvitations(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, query: String? = null, init: EnterprisePendingMemberInvitationConnection.() -> Unit) =
-        EnterprisePendingMemberInvitationConnection("pendingMemberInvitations").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("query", query) }.also { doInit(it, init) }
+    fun pendingMemberInvitations(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, organizationLogins: String? = null, query: String? = null, init: EnterprisePendingMemberInvitationConnection.() -> Unit) =
+        EnterprisePendingMemberInvitationConnection("pendingMemberInvitations").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("organizationLogins", organizationLogins) }.apply { addArgs("query", query) }.also { doInit(it, init) }
     val repositoryProjectsSetting get() =
         ScalarNode("repositoryProjectsSetting").also { doInit(it) }
     fun repositoryProjectsSettingOrganizations(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, orderBy: OrganizationOrder? = null, value: Boolean, init: OrganizationConnection.() -> Unit) =
@@ -4283,9 +4315,6 @@ class EnterprisePendingMemberInvitationConnection(__name: String = "EnterprisePe
 class EnterprisePendingMemberInvitationEdge(__name: String = "EnterprisePendingMemberInvitationEdge"): ObjectNode(__name) {
     val cursor get() =
         ScalarNode("cursor").also { doInit(it) }
-    @Deprecated("All pending members consume a license Removal on 2020-07-01 UTC.")
-    val isUnlicensed get() =
-        ScalarNode("isUnlicensed").also { doInit(it) }
     fun node(init: OrganizationInvitation.() -> Unit) =
         OrganizationInvitation("node").also { doInit(it, init) }
 }
@@ -4554,6 +4583,15 @@ class ExternalIdentity(__name: String = "ExternalIdentity"): ObjectNode(__name) 
         User("user").also { doInit(it, init) }
 }
 
+class ExternalIdentityAttribute(__name: String = "ExternalIdentityAttribute"): ObjectNode(__name) {
+    val metadata get() =
+        ScalarNode("metadata").also { doInit(it) }
+    val name get() =
+        ScalarNode("name").also { doInit(it) }
+    val value get() =
+        ScalarNode("value").also { doInit(it) }
+}
+
 class ExternalIdentityConnection(__name: String = "ExternalIdentityConnection"): ObjectNode(__name) {
     fun edges(init: ExternalIdentityEdge.() -> Unit) =
         ExternalIdentityEdge("edges").also { doInit(it, init) }
@@ -4573,6 +4611,8 @@ class ExternalIdentityEdge(__name: String = "ExternalIdentityEdge"): ObjectNode(
 }
 
 class ExternalIdentitySamlAttributes(__name: String = "ExternalIdentitySamlAttributes"): ObjectNode(__name) {
+    fun attributes(init: ExternalIdentityAttribute.() -> Unit) =
+        ExternalIdentityAttribute("attributes").also { doInit(it, init) }
     fun emails(init: UserEmailMetadata.() -> Unit) =
         UserEmailMetadata("emails").also { doInit(it, init) }
     val familyName get() =
@@ -4598,6 +4638,13 @@ class ExternalIdentityScimAttributes(__name: String = "ExternalIdentityScimAttri
         ScalarNode("groups").also { doInit(it) }
     val username get() =
         ScalarNode("username").also { doInit(it) }
+}
+
+class FollowOrganizationPayload(__name: String = "FollowOrganizationPayload"): ObjectNode(__name) {
+    val clientMutationId get() =
+        ScalarNode("clientMutationId").also { doInit(it) }
+    fun organization(init: Organization.() -> Unit) =
+        Organization("organization").also { doInit(it, init) }
 }
 
 class FollowUserPayload(__name: String = "FollowUserPayload"): ObjectNode(__name) {
@@ -5041,6 +5088,8 @@ class Issue(__name: String = "Issue"): ObjectNode(__name) {
         ScalarNode("resourcePath").also { doInit(it) }
     val state get() =
         ScalarNode("state").also { doInit(it) }
+    val stateReason get() =
+        ScalarNode("stateReason").also { doInit(it) }
     @Deprecated("`timeline` will be removed Use Issue.timelineItems instead. Removal on 2020-10-01 UTC.")
     fun timeline(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, since: DateTime? = null, init: IssueTimelineConnection.() -> Unit) =
         IssueTimelineConnection("timeline").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("since", since) }.also { doInit(it, init) }
@@ -5952,6 +6001,8 @@ class Mutation(__name: String = "mutation"): ObjectNode(__name) {
         AddProjectCardPayload("addProjectCard").apply { addArgs("input", input) }.also { doInit(it, init) }
     fun addProjectColumn(input: AddProjectColumnInput, init: AddProjectColumnPayload.() -> Unit) =
         AddProjectColumnPayload("addProjectColumn").apply { addArgs("input", input) }.also { doInit(it, init) }
+    fun addProjectDraftIssue(input: AddProjectDraftIssueInput, init: AddProjectDraftIssuePayload.() -> Unit) =
+        AddProjectDraftIssuePayload("addProjectDraftIssue").apply { addArgs("input", input) }.also { doInit(it, init) }
     fun addProjectNextItem(input: AddProjectNextItemInput, init: AddProjectNextItemPayload.() -> Unit) =
         AddProjectNextItemPayload("addProjectNextItem").apply { addArgs("input", input) }.also { doInit(it, init) }
     fun addPullRequestReview(input: AddPullRequestReviewInput, init: AddPullRequestReviewPayload.() -> Unit) =
@@ -6086,6 +6137,8 @@ class Mutation(__name: String = "mutation"): ObjectNode(__name) {
         DismissRepositoryVulnerabilityAlertPayload("dismissRepositoryVulnerabilityAlert").apply { addArgs("input", input) }.also { doInit(it, init) }
     fun enablePullRequestAutoMerge(input: EnablePullRequestAutoMergeInput, init: EnablePullRequestAutoMergePayload.() -> Unit) =
         EnablePullRequestAutoMergePayload("enablePullRequestAutoMerge").apply { addArgs("input", input) }.also { doInit(it, init) }
+    fun followOrganization(input: FollowOrganizationInput, init: FollowOrganizationPayload.() -> Unit) =
+        FollowOrganizationPayload("followOrganization").apply { addArgs("input", input) }.also { doInit(it, init) }
     fun followUser(input: FollowUserInput, init: FollowUserPayload.() -> Unit) =
         FollowUserPayload("followUser").apply { addArgs("input", input) }.also { doInit(it, init) }
     fun grantEnterpriseOrganizationsMigratorRole(input: GrantEnterpriseOrganizationsMigratorRoleInput, init: GrantEnterpriseOrganizationsMigratorRolePayload.() -> Unit) =
@@ -6174,6 +6227,8 @@ class Mutation(__name: String = "mutation"): ObjectNode(__name) {
         TransferIssuePayload("transferIssue").apply { addArgs("input", input) }.also { doInit(it, init) }
     fun unarchiveRepository(input: UnarchiveRepositoryInput, init: UnarchiveRepositoryPayload.() -> Unit) =
         UnarchiveRepositoryPayload("unarchiveRepository").apply { addArgs("input", input) }.also { doInit(it, init) }
+    fun unfollowOrganization(input: UnfollowOrganizationInput, init: UnfollowOrganizationPayload.() -> Unit) =
+        UnfollowOrganizationPayload("unfollowOrganization").apply { addArgs("input", input) }.also { doInit(it, init) }
     fun unfollowUser(input: UnfollowUserInput, init: UnfollowUserPayload.() -> Unit) =
         UnfollowUserPayload("unfollowUser").apply { addArgs("input", input) }.also { doInit(it, init) }
     fun unlinkRepositoryFromProject(input: UnlinkRepositoryFromProjectInput, init: UnlinkRepositoryFromProjectPayload.() -> Unit) =
@@ -6260,6 +6315,8 @@ class Mutation(__name: String = "mutation"): ObjectNode(__name) {
         UpdateProjectCardPayload("updateProjectCard").apply { addArgs("input", input) }.also { doInit(it, init) }
     fun updateProjectColumn(input: UpdateProjectColumnInput, init: UpdateProjectColumnPayload.() -> Unit) =
         UpdateProjectColumnPayload("updateProjectColumn").apply { addArgs("input", input) }.also { doInit(it, init) }
+    fun updateProjectDraftIssue(input: UpdateProjectDraftIssueInput, init: UpdateProjectDraftIssuePayload.() -> Unit) =
+        UpdateProjectDraftIssuePayload("updateProjectDraftIssue").apply { addArgs("input", input) }.also { doInit(it, init) }
     fun updateProjectNext(input: UpdateProjectNextInput, init: UpdateProjectNextPayload.() -> Unit) =
         UpdateProjectNextPayload("updateProjectNext").apply { addArgs("input", input) }.also { doInit(it, init) }
     fun updateProjectNextItemField(input: UpdateProjectNextItemFieldInput, init: UpdateProjectNextItemFieldPayload.() -> Unit) =
@@ -6288,6 +6345,8 @@ class Mutation(__name: String = "mutation"): ObjectNode(__name) {
         UpdateTeamDiscussionCommentPayload("updateTeamDiscussionComment").apply { addArgs("input", input) }.also { doInit(it, init) }
     fun updateTeamReviewAssignment(input: UpdateTeamReviewAssignmentInput, init: UpdateTeamReviewAssignmentPayload.() -> Unit) =
         UpdateTeamReviewAssignmentPayload("updateTeamReviewAssignment").apply { addArgs("input", input) }.also { doInit(it, init) }
+    fun updateTeamsRepository(input: UpdateTeamsRepositoryInput, init: UpdateTeamsRepositoryPayload.() -> Unit) =
+        UpdateTeamsRepositoryPayload("updateTeamsRepository").apply { addArgs("input", input) }.also { doInit(it, init) }
     fun updateTopics(input: UpdateTopicsInput, init: UpdateTopicsPayload.() -> Unit) =
         UpdateTopicsPayload("updateTopics").apply { addArgs("input", input) }.also { doInit(it, init) }
     fun verifyVerifiableDomain(input: VerifyVerifiableDomainInput, init: VerifyVerifiableDomainPayload.() -> Unit) =
@@ -7610,8 +7669,8 @@ class Organization(__name: String = "Organization"): ObjectNode(__name) {
         DiscussionCommentConnection("repositoryDiscussionComments").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("onlyAnswers", onlyAnswers) }.apply { addArgs("repositoryId", repositoryId) }.also { doInit(it, init) }
     fun repositoryDiscussions(after: String? = null, answered: Boolean? = null, before: String? = null, first: Int? = null, last: Int? = null, orderBy: DiscussionOrder? = null, repositoryId: ID? = null, init: DiscussionConnection.() -> Unit) =
         DiscussionConnection("repositoryDiscussions").apply { addArgs("after", after) }.apply { addArgs("answered", answered) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.apply { addArgs("repositoryId", repositoryId) }.also { doInit(it, init) }
-    fun repositoryMigrations(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, orderBy: RepositoryMigrationOrder? = null, state: MigrationState? = null, init: RepositoryMigrationConnection.() -> Unit) =
-        RepositoryMigrationConnection("repositoryMigrations").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.apply { addArgs("state", state) }.also { doInit(it, init) }
+    fun repositoryMigrations(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, orderBy: RepositoryMigrationOrder? = null, repositoryName: String? = null, state: MigrationState? = null, init: RepositoryMigrationConnection.() -> Unit) =
+        RepositoryMigrationConnection("repositoryMigrations").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.apply { addArgs("repositoryName", repositoryName) }.apply { addArgs("state", state) }.also { doInit(it, init) }
     val requiresTwoFactorAuthentication get() =
         ScalarNode("requiresTwoFactorAuthentication").also { doInit(it) }
     val resourcePath get() =
@@ -7664,6 +7723,8 @@ class Organization(__name: String = "Organization"): ObjectNode(__name) {
         ScalarNode("viewerCanSponsor").also { doInit(it) }
     val viewerIsAMember get() =
         ScalarNode("viewerIsAMember").also { doInit(it) }
+    val viewerIsFollowing get() =
+        ScalarNode("viewerIsFollowing").also { doInit(it) }
     val viewerIsSponsoring get() =
         ScalarNode("viewerIsSponsoring").also { doInit(it) }
     val websiteUrl get() =
@@ -8560,6 +8621,8 @@ class ProjectView(__name: String = "ProjectView"): ObjectNode(__name) {
         ScalarNode("groupBy").also { doInit(it) }
     val id get() =
         ScalarNode("id").also { doInit(it) }
+    fun items(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, init: ProjectNextItemConnection.() -> Unit) =
+        ProjectNextItemConnection("items").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.also { doInit(it, init) }
     val layout get() =
         ScalarNode("layout").also { doInit(it) }
     val name get() =
@@ -8832,6 +8895,8 @@ class PullRequest(__name: String = "PullRequest"): ObjectNode(__name) {
 class PullRequestChangedFile(__name: String = "PullRequestChangedFile"): ObjectNode(__name) {
     val additions get() =
         ScalarNode("additions").also { doInit(it) }
+    val changeType get() =
+        ScalarNode("changeType").also { doInit(it) }
     val deletions get() =
         ScalarNode("deletions").also { doInit(it) }
     val path get() =
@@ -9326,12 +9391,12 @@ class Query(__name: String = "query"): ObjectNode(__name) {
         UniformResourceLocatable("resource").apply { addArgs("url", url) }.also { doInit(it, init) }
     fun search(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, query: String, type: SearchType, init: SearchResultItemConnection.() -> Unit) =
         SearchResultItemConnection("search").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("query", query) }.apply { addArgs("type", type) }.also { doInit(it, init) }
-    fun securityAdvisories(after: String? = null, before: String? = null, first: Int? = null, identifier: SecurityAdvisoryIdentifierFilter? = null, last: Int? = null, orderBy: SecurityAdvisoryOrder? = null, publishedSince: DateTime? = null, updatedSince: DateTime? = null, init: SecurityAdvisoryConnection.() -> Unit) =
-        SecurityAdvisoryConnection("securityAdvisories").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("identifier", identifier) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.apply { addArgs("publishedSince", publishedSince) }.apply { addArgs("updatedSince", updatedSince) }.also { doInit(it, init) }
+    fun securityAdvisories(after: String? = null, before: String? = null, classifications: SecurityAdvisoryClassification? = null, first: Int? = null, identifier: SecurityAdvisoryIdentifierFilter? = null, last: Int? = null, orderBy: SecurityAdvisoryOrder? = null, publishedSince: DateTime? = null, updatedSince: DateTime? = null, init: SecurityAdvisoryConnection.() -> Unit) =
+        SecurityAdvisoryConnection("securityAdvisories").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("classifications", classifications) }.apply { addArgs("first", first) }.apply { addArgs("identifier", identifier) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.apply { addArgs("publishedSince", publishedSince) }.apply { addArgs("updatedSince", updatedSince) }.also { doInit(it, init) }
     fun securityAdvisory(ghsaId: String, init: SecurityAdvisory.() -> Unit) =
         SecurityAdvisory("securityAdvisory").apply { addArgs("ghsaId", ghsaId) }.also { doInit(it, init) }
-    fun securityVulnerabilities(after: String? = null, before: String? = null, ecosystem: SecurityAdvisoryEcosystem? = null, first: Int? = null, last: Int? = null, orderBy: SecurityVulnerabilityOrder? = null, `package`: String? = null, severities: SecurityAdvisorySeverity? = null, init: SecurityVulnerabilityConnection.() -> Unit) =
-        SecurityVulnerabilityConnection("securityVulnerabilities").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("ecosystem", ecosystem) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.apply { addArgs("package", `package`) }.apply { addArgs("severities", severities) }.also { doInit(it, init) }
+    fun securityVulnerabilities(after: String? = null, before: String? = null, classifications: SecurityAdvisoryClassification? = null, ecosystem: SecurityAdvisoryEcosystem? = null, first: Int? = null, last: Int? = null, orderBy: SecurityVulnerabilityOrder? = null, `package`: String? = null, severities: SecurityAdvisorySeverity? = null, init: SecurityVulnerabilityConnection.() -> Unit) =
+        SecurityVulnerabilityConnection("securityVulnerabilities").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("classifications", classifications) }.apply { addArgs("ecosystem", ecosystem) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.apply { addArgs("package", `package`) }.apply { addArgs("severities", severities) }.also { doInit(it, init) }
     fun sponsorables(after: String? = null, before: String? = null, dependencyEcosystem: SecurityAdvisoryEcosystem? = null, ecosystem: DependencyGraphEcosystem? = null, first: Int? = null, last: Int? = null, onlyDependencies: Boolean? = null, orderBy: SponsorableOrder? = null, orgLoginForDependencies: String? = null, init: SponsorableItemConnection.() -> Unit) =
         SponsorableItemConnection("sponsorables").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("dependencyEcosystem", dependencyEcosystem) }.apply { addArgs("ecosystem", ecosystem) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("onlyDependencies", onlyDependencies) }.apply { addArgs("orderBy", orderBy) }.apply { addArgs("orgLoginForDependencies", orgLoginForDependencies) }.also { doInit(it, init) }
     fun topic(name: String, init: Topic.() -> Unit) =
@@ -9505,6 +9570,8 @@ class RefUpdateRule(__name: String = "RefUpdateRule"): ObjectNode(__name) {
         ScalarNode("allowsDeletions").also { doInit(it) }
     val allowsForcePushes get() =
         ScalarNode("allowsForcePushes").also { doInit(it) }
+    val blocksCreations get() =
+        ScalarNode("blocksCreations").also { doInit(it) }
     val pattern get() =
         ScalarNode("pattern").also { doInit(it) }
     val requiredApprovingReviewCount get() =
@@ -9814,6 +9881,8 @@ class ReopenedEvent(__name: String = "ReopenedEvent"): ObjectNode(__name) {
         ScalarNode("createdAt").also { doInit(it) }
     val id get() =
         ScalarNode("id").also { doInit(it) }
+    val stateReason get() =
+        ScalarNode("stateReason").also { doInit(it) }
 }
 
 class RepoAccessAuditEntry(__name: String = "RepoAccessAuditEntry"): ObjectNode(__name) {
@@ -10920,6 +10989,8 @@ class Repository(__name: String = "Repository"): ObjectNode(__name) {
         ScalarNode("shortDescriptionHTML").also { doInit(it) }
     val squashMergeAllowed get() =
         ScalarNode("squashMergeAllowed").also { doInit(it) }
+    val squashPrTitleUsedAsDefault get() =
+        ScalarNode("squashPrTitleUsedAsDefault").also { doInit(it) }
     val sshUrl get() =
         ScalarNode("sshUrl").also { doInit(it) }
     val stargazerCount get() =
@@ -11092,8 +11163,12 @@ class RepositoryMigration(__name: String = "RepositoryMigration"): ObjectNode(__
         ScalarNode("failureReason").also { doInit(it) }
     val id get() =
         ScalarNode("id").also { doInit(it) }
+    val migrationLogUrl get() =
+        ScalarNode("migrationLogUrl").also { doInit(it) }
     fun migrationSource(init: MigrationSource.() -> Unit) =
         MigrationSource("migrationSource").also { doInit(it, init) }
+    val repositoryName get() =
+        ScalarNode("repositoryName").also { doInit(it) }
     val sourceUrl get() =
         ScalarNode("sourceUrl").also { doInit(it) }
     val state get() =
@@ -11533,6 +11608,8 @@ class SearchResultItemEdge(__name: String = "SearchResultItemEdge"): ObjectNode(
 }
 
 class SecurityAdvisory(__name: String = "SecurityAdvisory"): ObjectNode(__name) {
+    val classification get() =
+        ScalarNode("classification").also { doInit(it) }
     fun cvss(init: CVSS.() -> Unit) =
         CVSS("cvss").also { doInit(it, init) }
     fun cwes(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, init: CWEConnection.() -> Unit) =
@@ -11563,8 +11640,8 @@ class SecurityAdvisory(__name: String = "SecurityAdvisory"): ObjectNode(__name) 
         ScalarNode("summary").also { doInit(it) }
     val updatedAt get() =
         ScalarNode("updatedAt").also { doInit(it) }
-    fun vulnerabilities(after: String? = null, before: String? = null, ecosystem: SecurityAdvisoryEcosystem? = null, first: Int? = null, last: Int? = null, orderBy: SecurityVulnerabilityOrder? = null, `package`: String? = null, severities: SecurityAdvisorySeverity? = null, init: SecurityVulnerabilityConnection.() -> Unit) =
-        SecurityVulnerabilityConnection("vulnerabilities").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("ecosystem", ecosystem) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.apply { addArgs("package", `package`) }.apply { addArgs("severities", severities) }.also { doInit(it, init) }
+    fun vulnerabilities(after: String? = null, before: String? = null, classifications: SecurityAdvisoryClassification? = null, ecosystem: SecurityAdvisoryEcosystem? = null, first: Int? = null, last: Int? = null, orderBy: SecurityVulnerabilityOrder? = null, `package`: String? = null, severities: SecurityAdvisorySeverity? = null, init: SecurityVulnerabilityConnection.() -> Unit) =
+        SecurityVulnerabilityConnection("vulnerabilities").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("classifications", classifications) }.apply { addArgs("ecosystem", ecosystem) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.apply { addArgs("package", `package`) }.apply { addArgs("severities", severities) }.also { doInit(it, init) }
     val withdrawnAt get() =
         ScalarNode("withdrawnAt").also { doInit(it) }
 }
@@ -12815,6 +12892,8 @@ class TreeEntry(__name: String = "TreeEntry"): ObjectNode(__name) {
         ScalarNode("extension").also { doInit(it) }
     val isGenerated get() =
         ScalarNode("isGenerated").also { doInit(it) }
+    val lineCount get() =
+        ScalarNode("lineCount").also { doInit(it) }
     val mode get() =
         ScalarNode("mode").also { doInit(it) }
     val name get() =
@@ -12854,6 +12933,13 @@ class UnassignedEvent(__name: String = "UnassignedEvent"): ObjectNode(__name) {
     @Deprecated("Assignees can now be mannequins. Use the `assignee` field instead. Removal on 2020-01-01 UTC.")
     fun user(init: User.() -> Unit) =
         User("user").also { doInit(it, init) }
+}
+
+class UnfollowOrganizationPayload(__name: String = "UnfollowOrganizationPayload"): ObjectNode(__name) {
+    val clientMutationId get() =
+        ScalarNode("clientMutationId").also { doInit(it) }
+    fun organization(init: Organization.() -> Unit) =
+        Organization("organization").also { doInit(it, init) }
 }
 
 class UnfollowUserPayload(__name: String = "UnfollowUserPayload"): ObjectNode(__name) {
@@ -13264,6 +13350,13 @@ class UpdateProjectColumnPayload(__name: String = "UpdateProjectColumnPayload"):
         ProjectColumn("projectColumn").also { doInit(it, init) }
 }
 
+class UpdateProjectDraftIssuePayload(__name: String = "UpdateProjectDraftIssuePayload"): ObjectNode(__name) {
+    val clientMutationId get() =
+        ScalarNode("clientMutationId").also { doInit(it) }
+    fun draftIssue(init: DraftIssue.() -> Unit) =
+        DraftIssue("draftIssue").also { doInit(it, init) }
+}
+
 class UpdateProjectNextItemFieldPayload(__name: String = "UpdateProjectNextItemFieldPayload"): ObjectNode(__name) {
     val clientMutationId get() =
         ScalarNode("clientMutationId").also { doInit(it) }
@@ -13367,6 +13460,15 @@ class UpdateTeamReviewAssignmentPayload(__name: String = "UpdateTeamReviewAssign
         ScalarNode("clientMutationId").also { doInit(it) }
     fun team(init: Team.() -> Unit) =
         Team("team").also { doInit(it, init) }
+}
+
+class UpdateTeamsRepositoryPayload(__name: String = "UpdateTeamsRepositoryPayload"): ObjectNode(__name) {
+    val clientMutationId get() =
+        ScalarNode("clientMutationId").also { doInit(it) }
+    fun repository(init: Repository.() -> Unit) =
+        Repository("repository").also { doInit(it, init) }
+    fun teams(init: Team.() -> Unit) =
+        Team("teams").also { doInit(it, init) }
 }
 
 class UpdateTopicsPayload(__name: String = "UpdateTopicsPayload"): ObjectNode(__name) {
@@ -14207,8 +14309,12 @@ class Migration(__name: String = "Migration"): ObjectNode(__name) {
         ScalarNode("failureReason").also { doInit(it) }
     val id get() =
         ScalarNode("id").also { doInit(it) }
+    val migrationLogUrl get() =
+        ScalarNode("migrationLogUrl").also { doInit(it) }
     fun migrationSource(init: MigrationSource.() -> Unit) =
         MigrationSource("migrationSource").also { doInit(it, init) }
+    val repositoryName get() =
+        ScalarNode("repositoryName").also { doInit(it) }
     val sourceUrl get() =
         ScalarNode("sourceUrl").also { doInit(it) }
     val state get() =
@@ -15416,6 +15522,8 @@ class AuditEntryActor(__name: String = "AuditEntryActor"): ObjectNode(__name) {
 }
 
 class BranchActorAllowanceActor(__name: String = "BranchActorAllowanceActor"): ObjectNode(__name) {
+    fun `on App`(init: App.() -> Unit) =
+        App("...on App").also { doInit(it, init) }
     fun `on Team`(init: Team.() -> Unit) =
         Team("...on Team").also { doInit(it, init) }
     fun `on User`(init: User.() -> Unit) =
@@ -15981,6 +16089,8 @@ class RequestedReviewer(__name: String = "RequestedReviewer"): ObjectNode(__name
 }
 
 class ReviewDismissalAllowanceActor(__name: String = "ReviewDismissalAllowanceActor"): ObjectNode(__name) {
+    fun `on App`(init: App.() -> Unit) =
+        App("...on App").also { doInit(it, init) }
     fun `on Team`(init: Team.() -> Unit) =
         Team("...on Team").also { doInit(it, init) }
     fun `on User`(init: User.() -> Unit) =
@@ -16072,6 +16182,10 @@ class AddProjectCardInput(val clientMutationId: String? = null, val contentId: I
 
 class AddProjectColumnInput(val clientMutationId: String? = null, val name: String, val projectId: ID) {
     override fun toString() = "{ clientMutationId: \"$clientMutationId\", name: \"$name\", projectId: \"$projectId\" }"
+}
+
+class AddProjectDraftIssueInput(val assigneeIds: ID? = null, val body: String? = null, val clientMutationId: String? = null, val projectId: ID, val title: String) {
+    override fun toString() = "{ assigneeIds: \"$assigneeIds\", body: \"$body\", clientMutationId: \"$clientMutationId\", projectId: \"$projectId\", title: \"$title\" }"
 }
 
 class AddProjectNextItemInput(val clientMutationId: String? = null, val contentId: ID, val projectId: ID) {
@@ -16178,8 +16292,8 @@ class CloneTemplateRepositoryInput(val clientMutationId: String? = null, val des
     override fun toString() = "{ clientMutationId: \"$clientMutationId\", description: \"$description\", includeAllBranches: $includeAllBranches, name: \"$name\", ownerId: \"$ownerId\", repositoryId: \"$repositoryId\", visibility: $visibility }"
 }
 
-class CloseIssueInput(val clientMutationId: String? = null, val issueId: ID) {
-    override fun toString() = "{ clientMutationId: \"$clientMutationId\", issueId: \"$issueId\" }"
+class CloseIssueInput(val clientMutationId: String? = null, val issueId: ID, val stateReason: IssueClosedStateReason? = null) {
+    override fun toString() = "{ clientMutationId: \"$clientMutationId\", issueId: \"$issueId\", stateReason: $stateReason }"
 }
 
 class ClosePullRequestInput(val clientMutationId: String? = null, val pullRequestId: ID) {
@@ -16214,8 +16328,8 @@ class ConvertPullRequestToDraftInput(val clientMutationId: String? = null, val p
     override fun toString() = "{ clientMutationId: \"$clientMutationId\", pullRequestId: \"$pullRequestId\" }"
 }
 
-class CreateBranchProtectionRuleInput(val allowsDeletions: Boolean? = null, val allowsForcePushes: Boolean? = null, val bypassForcePushActorIds: ID? = null, val bypassPullRequestActorIds: ID? = null, val clientMutationId: String? = null, val dismissesStaleReviews: Boolean? = null, val isAdminEnforced: Boolean? = null, val pattern: String, val pushActorIds: ID? = null, val repositoryId: ID, val requiredApprovingReviewCount: Int? = null, val requiredStatusCheckContexts: String? = null, val requiredStatusChecks: RequiredStatusCheckInput? = null, val requiresApprovingReviews: Boolean? = null, val requiresCodeOwnerReviews: Boolean? = null, val requiresCommitSignatures: Boolean? = null, val requiresConversationResolution: Boolean? = null, val requiresLinearHistory: Boolean? = null, val requiresStatusChecks: Boolean? = null, val requiresStrictStatusChecks: Boolean? = null, val restrictsPushes: Boolean? = null, val restrictsReviewDismissals: Boolean? = null, val reviewDismissalActorIds: ID? = null) {
-    override fun toString() = "{ allowsDeletions: $allowsDeletions, allowsForcePushes: $allowsForcePushes, bypassForcePushActorIds: \"$bypassForcePushActorIds\", bypassPullRequestActorIds: \"$bypassPullRequestActorIds\", clientMutationId: \"$clientMutationId\", dismissesStaleReviews: $dismissesStaleReviews, isAdminEnforced: $isAdminEnforced, pattern: \"$pattern\", pushActorIds: \"$pushActorIds\", repositoryId: \"$repositoryId\", requiredApprovingReviewCount: $requiredApprovingReviewCount, requiredStatusCheckContexts: \"$requiredStatusCheckContexts\", requiredStatusChecks: $requiredStatusChecks, requiresApprovingReviews: $requiresApprovingReviews, requiresCodeOwnerReviews: $requiresCodeOwnerReviews, requiresCommitSignatures: $requiresCommitSignatures, requiresConversationResolution: $requiresConversationResolution, requiresLinearHistory: $requiresLinearHistory, requiresStatusChecks: $requiresStatusChecks, requiresStrictStatusChecks: $requiresStrictStatusChecks, restrictsPushes: $restrictsPushes, restrictsReviewDismissals: $restrictsReviewDismissals, reviewDismissalActorIds: \"$reviewDismissalActorIds\" }"
+class CreateBranchProtectionRuleInput(val allowsDeletions: Boolean? = null, val allowsForcePushes: Boolean? = null, val blocksCreations: Boolean? = null, val bypassForcePushActorIds: ID? = null, val bypassPullRequestActorIds: ID? = null, val clientMutationId: String? = null, val dismissesStaleReviews: Boolean? = null, val isAdminEnforced: Boolean? = null, val pattern: String, val pushActorIds: ID? = null, val repositoryId: ID, val requiredApprovingReviewCount: Int? = null, val requiredStatusCheckContexts: String? = null, val requiredStatusChecks: RequiredStatusCheckInput? = null, val requiresApprovingReviews: Boolean? = null, val requiresCodeOwnerReviews: Boolean? = null, val requiresCommitSignatures: Boolean? = null, val requiresConversationResolution: Boolean? = null, val requiresLinearHistory: Boolean? = null, val requiresStatusChecks: Boolean? = null, val requiresStrictStatusChecks: Boolean? = null, val restrictsPushes: Boolean? = null, val restrictsReviewDismissals: Boolean? = null, val reviewDismissalActorIds: ID? = null) {
+    override fun toString() = "{ allowsDeletions: $allowsDeletions, allowsForcePushes: $allowsForcePushes, blocksCreations: $blocksCreations, bypassForcePushActorIds: \"$bypassForcePushActorIds\", bypassPullRequestActorIds: \"$bypassPullRequestActorIds\", clientMutationId: \"$clientMutationId\", dismissesStaleReviews: $dismissesStaleReviews, isAdminEnforced: $isAdminEnforced, pattern: \"$pattern\", pushActorIds: \"$pushActorIds\", repositoryId: \"$repositoryId\", requiredApprovingReviewCount: $requiredApprovingReviewCount, requiredStatusCheckContexts: \"$requiredStatusCheckContexts\", requiredStatusChecks: $requiredStatusChecks, requiresApprovingReviews: $requiresApprovingReviews, requiresCodeOwnerReviews: $requiresCodeOwnerReviews, requiresCommitSignatures: $requiresCommitSignatures, requiresConversationResolution: $requiresConversationResolution, requiresLinearHistory: $requiresLinearHistory, requiresStatusChecks: $requiresStatusChecks, requiresStrictStatusChecks: $requiresStrictStatusChecks, restrictsPushes: $restrictsPushes, restrictsReviewDismissals: $restrictsReviewDismissals, reviewDismissalActorIds: \"$reviewDismissalActorIds\" }"
 }
 
 class CreateCheckRunInput(val actions: CheckRunAction? = null, val clientMutationId: String? = null, val completedAt: DateTime? = null, val conclusion: CheckConclusionState? = null, val detailsUrl: URI? = null, val externalId: String? = null, val headSha: GitObjectID, val name: String, val output: CheckRunOutput? = null, val repositoryId: ID, val startedAt: DateTime? = null, val status: RequestableCheckStatusState? = null) {
@@ -16448,6 +16562,10 @@ class FileChanges(val additions: FileAddition? = null, val deletions: FileDeleti
 
 class FileDeletion(val path: String) {
     override fun toString() = "{ path: \"$path\" }"
+}
+
+class FollowOrganizationInput(val clientMutationId: String? = null, val organizationId: ID) {
+    override fun toString() = "{ clientMutationId: \"$clientMutationId\", organizationId: \"$organizationId\" }"
 }
 
 class FollowUserInput(val clientMutationId: String? = null, val userId: ID) {
@@ -16754,8 +16872,8 @@ class StarOrder(val direction: OrderDirection, val field: StarOrderField) {
     override fun toString() = "{ direction: $direction, field: $field }"
 }
 
-class StartRepositoryMigrationInput(val accessToken: String? = null, val clientMutationId: String? = null, val continueOnError: Boolean? = null, val gitArchiveUrl: String? = null, val githubPat: String? = null, val metadataArchiveUrl: String? = null, val ownerId: ID, val repositoryName: String, val sourceId: ID, val sourceRepositoryUrl: URI) {
-    override fun toString() = "{ accessToken: \"$accessToken\", clientMutationId: \"$clientMutationId\", continueOnError: $continueOnError, gitArchiveUrl: \"$gitArchiveUrl\", githubPat: \"$githubPat\", metadataArchiveUrl: \"$metadataArchiveUrl\", ownerId: \"$ownerId\", repositoryName: \"$repositoryName\", sourceId: \"$sourceId\", sourceRepositoryUrl: \"$sourceRepositoryUrl\" }"
+class StartRepositoryMigrationInput(val accessToken: String, val clientMutationId: String? = null, val continueOnError: Boolean? = null, val gitArchiveUrl: String? = null, val githubPat: String? = null, val metadataArchiveUrl: String? = null, val ownerId: ID, val repositoryName: String, val skipReleases: Boolean? = null, val sourceId: ID, val sourceRepositoryUrl: URI) {
+    override fun toString() = "{ accessToken: \"$accessToken\", clientMutationId: \"$clientMutationId\", continueOnError: $continueOnError, gitArchiveUrl: \"$gitArchiveUrl\", githubPat: \"$githubPat\", metadataArchiveUrl: \"$metadataArchiveUrl\", ownerId: \"$ownerId\", repositoryName: \"$repositoryName\", skipReleases: $skipReleases, sourceId: \"$sourceId\", sourceRepositoryUrl: \"$sourceRepositoryUrl\" }"
 }
 
 class SubmitPullRequestReviewInput(val body: String? = null, val clientMutationId: String? = null, val event: PullRequestReviewEvent, val pullRequestId: ID? = null, val pullRequestReviewId: ID? = null) {
@@ -16788,6 +16906,10 @@ class TransferIssueInput(val clientMutationId: String? = null, val issueId: ID, 
 
 class UnarchiveRepositoryInput(val clientMutationId: String? = null, val repositoryId: ID) {
     override fun toString() = "{ clientMutationId: \"$clientMutationId\", repositoryId: \"$repositoryId\" }"
+}
+
+class UnfollowOrganizationInput(val clientMutationId: String? = null, val organizationId: ID) {
+    override fun toString() = "{ clientMutationId: \"$clientMutationId\", organizationId: \"$organizationId\" }"
 }
 
 class UnfollowUserInput(val clientMutationId: String? = null, val userId: ID) {
@@ -16826,8 +16948,8 @@ class UnresolveReviewThreadInput(val clientMutationId: String? = null, val threa
     override fun toString() = "{ clientMutationId: \"$clientMutationId\", threadId: \"$threadId\" }"
 }
 
-class UpdateBranchProtectionRuleInput(val allowsDeletions: Boolean? = null, val allowsForcePushes: Boolean? = null, val branchProtectionRuleId: ID, val bypassForcePushActorIds: ID? = null, val bypassPullRequestActorIds: ID? = null, val clientMutationId: String? = null, val dismissesStaleReviews: Boolean? = null, val isAdminEnforced: Boolean? = null, val pattern: String? = null, val pushActorIds: ID? = null, val requiredApprovingReviewCount: Int? = null, val requiredStatusCheckContexts: String? = null, val requiredStatusChecks: RequiredStatusCheckInput? = null, val requiresApprovingReviews: Boolean? = null, val requiresCodeOwnerReviews: Boolean? = null, val requiresCommitSignatures: Boolean? = null, val requiresConversationResolution: Boolean? = null, val requiresLinearHistory: Boolean? = null, val requiresStatusChecks: Boolean? = null, val requiresStrictStatusChecks: Boolean? = null, val restrictsPushes: Boolean? = null, val restrictsReviewDismissals: Boolean? = null, val reviewDismissalActorIds: ID? = null) {
-    override fun toString() = "{ allowsDeletions: $allowsDeletions, allowsForcePushes: $allowsForcePushes, branchProtectionRuleId: \"$branchProtectionRuleId\", bypassForcePushActorIds: \"$bypassForcePushActorIds\", bypassPullRequestActorIds: \"$bypassPullRequestActorIds\", clientMutationId: \"$clientMutationId\", dismissesStaleReviews: $dismissesStaleReviews, isAdminEnforced: $isAdminEnforced, pattern: \"$pattern\", pushActorIds: \"$pushActorIds\", requiredApprovingReviewCount: $requiredApprovingReviewCount, requiredStatusCheckContexts: \"$requiredStatusCheckContexts\", requiredStatusChecks: $requiredStatusChecks, requiresApprovingReviews: $requiresApprovingReviews, requiresCodeOwnerReviews: $requiresCodeOwnerReviews, requiresCommitSignatures: $requiresCommitSignatures, requiresConversationResolution: $requiresConversationResolution, requiresLinearHistory: $requiresLinearHistory, requiresStatusChecks: $requiresStatusChecks, requiresStrictStatusChecks: $requiresStrictStatusChecks, restrictsPushes: $restrictsPushes, restrictsReviewDismissals: $restrictsReviewDismissals, reviewDismissalActorIds: \"$reviewDismissalActorIds\" }"
+class UpdateBranchProtectionRuleInput(val allowsDeletions: Boolean? = null, val allowsForcePushes: Boolean? = null, val blocksCreations: Boolean? = null, val branchProtectionRuleId: ID, val bypassForcePushActorIds: ID? = null, val bypassPullRequestActorIds: ID? = null, val clientMutationId: String? = null, val dismissesStaleReviews: Boolean? = null, val isAdminEnforced: Boolean? = null, val pattern: String? = null, val pushActorIds: ID? = null, val requiredApprovingReviewCount: Int? = null, val requiredStatusCheckContexts: String? = null, val requiredStatusChecks: RequiredStatusCheckInput? = null, val requiresApprovingReviews: Boolean? = null, val requiresCodeOwnerReviews: Boolean? = null, val requiresCommitSignatures: Boolean? = null, val requiresConversationResolution: Boolean? = null, val requiresLinearHistory: Boolean? = null, val requiresStatusChecks: Boolean? = null, val requiresStrictStatusChecks: Boolean? = null, val restrictsPushes: Boolean? = null, val restrictsReviewDismissals: Boolean? = null, val reviewDismissalActorIds: ID? = null) {
+    override fun toString() = "{ allowsDeletions: $allowsDeletions, allowsForcePushes: $allowsForcePushes, blocksCreations: $blocksCreations, branchProtectionRuleId: \"$branchProtectionRuleId\", bypassForcePushActorIds: \"$bypassForcePushActorIds\", bypassPullRequestActorIds: \"$bypassPullRequestActorIds\", clientMutationId: \"$clientMutationId\", dismissesStaleReviews: $dismissesStaleReviews, isAdminEnforced: $isAdminEnforced, pattern: \"$pattern\", pushActorIds: \"$pushActorIds\", requiredApprovingReviewCount: $requiredApprovingReviewCount, requiredStatusCheckContexts: \"$requiredStatusCheckContexts\", requiredStatusChecks: $requiredStatusChecks, requiresApprovingReviews: $requiresApprovingReviews, requiresCodeOwnerReviews: $requiresCodeOwnerReviews, requiresCommitSignatures: $requiresCommitSignatures, requiresConversationResolution: $requiresConversationResolution, requiresLinearHistory: $requiresLinearHistory, requiresStatusChecks: $requiresStatusChecks, requiresStrictStatusChecks: $requiresStrictStatusChecks, restrictsPushes: $restrictsPushes, restrictsReviewDismissals: $restrictsReviewDismissals, reviewDismissalActorIds: \"$reviewDismissalActorIds\" }"
 }
 
 class UpdateCheckRunInput(val actions: CheckRunAction? = null, val checkRunId: ID, val clientMutationId: String? = null, val completedAt: DateTime? = null, val conclusion: CheckConclusionState? = null, val detailsUrl: URI? = null, val externalId: String? = null, val name: String? = null, val output: CheckRunOutput? = null, val repositoryId: ID, val startedAt: DateTime? = null, val status: RequestableCheckStatusState? = null) {
@@ -16958,6 +17080,10 @@ class UpdateProjectColumnInput(val clientMutationId: String? = null, val name: S
     override fun toString() = "{ clientMutationId: \"$clientMutationId\", name: \"$name\", projectColumnId: \"$projectColumnId\" }"
 }
 
+class UpdateProjectDraftIssueInput(val assigneeIds: ID? = null, val body: String? = null, val clientMutationId: String? = null, val draftIssueId: ID, val title: String? = null) {
+    override fun toString() = "{ assigneeIds: \"$assigneeIds\", body: \"$body\", clientMutationId: \"$clientMutationId\", draftIssueId: \"$draftIssueId\", title: \"$title\" }"
+}
+
 class UpdateProjectInput(val body: String? = null, val clientMutationId: String? = null, val name: String? = null, val projectId: ID, val public: Boolean? = null, val state: ProjectState? = null) {
     override fun toString() = "{ body: \"$body\", clientMutationId: \"$clientMutationId\", name: \"$name\", projectId: \"$projectId\", public: $public, state: $state }"
 }
@@ -17016,6 +17142,10 @@ class UpdateTeamDiscussionInput(val body: String? = null, val bodyVersion: Strin
 
 class UpdateTeamReviewAssignmentInput(val algorithm: TeamReviewAssignmentAlgorithm? = null, val clientMutationId: String? = null, val enabled: Boolean, val excludedTeamMemberIds: ID? = null, val id: ID, val notifyTeam: Boolean? = null, val teamMemberCount: Int? = null) {
     override fun toString() = "{ algorithm: $algorithm, clientMutationId: \"$clientMutationId\", enabled: $enabled, excludedTeamMemberIds: \"$excludedTeamMemberIds\", id: \"$id\", notifyTeam: $notifyTeam, teamMemberCount: $teamMemberCount }"
+}
+
+class UpdateTeamsRepositoryInput(val clientMutationId: String? = null, val permission: RepositoryPermission, val repositoryId: ID, val teamIds: ID) {
+    override fun toString() = "{ clientMutationId: \"$clientMutationId\", permission: $permission, repositoryId: \"$repositoryId\", teamIds: \"$teamIds\" }"
 }
 
 class UpdateTopicsInput(val clientMutationId: String? = null, val repositoryId: ID, val topicNames: String) {
