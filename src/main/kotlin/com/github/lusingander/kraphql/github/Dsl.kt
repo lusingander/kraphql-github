@@ -102,6 +102,24 @@ enum class CheckConclusionState {
     ;
 }
 
+enum class CheckRunState {
+    ACTION_REQUIRED,
+    CANCELLED,
+    COMPLETED,
+    FAILURE,
+    IN_PROGRESS,
+    NEUTRAL,
+    PENDING,
+    QUEUED,
+    SKIPPED,
+    STALE,
+    STARTUP_FAILURE,
+    SUCCESS,
+    TIMED_OUT,
+    WAITING,
+    ;
+}
+
 enum class CheckRunType {
     ALL,
     LATEST,
@@ -154,6 +172,14 @@ enum class CommitContributionOrderField {
     ;
 }
 
+enum class ComparisonStatus {
+    AHEAD,
+    BEHIND,
+    DIVERGED,
+    IDENTICAL,
+    ;
+}
+
 enum class ContributionLevel {
     FIRST_QUARTILE,
     FOURTH_QUARTILE,
@@ -179,6 +205,7 @@ enum class DependencyGraphEcosystem {
     NPM,
     NUGET,
     PIP,
+    PUB,
     RUBYGEMS,
     RUST,
     ;
@@ -239,6 +266,12 @@ enum class DiscussionOrderField {
     ;
 }
 
+enum class DiscussionPollOptionOrderField {
+    AUTHORED_ORDER,
+    VOTE_COUNT,
+    ;
+}
+
 enum class DismissReason {
     FIX_STARTED,
     INACCURATE,
@@ -256,6 +289,16 @@ enum class EnterpriseAdministratorInvitationOrderField {
 enum class EnterpriseAdministratorRole {
     BILLING_MANAGER,
     OWNER,
+    ;
+}
+
+enum class EnterpriseAllowPrivateRepositoryForkingPolicyValue {
+    ENTERPRISE_ORGANIZATIONS,
+    ENTERPRISE_ORGANIZATIONS_USER_ACCOUNTS,
+    EVERYWHERE,
+    SAME_ORGANIZATION,
+    SAME_ORGANIZATION_USER_ACCOUNTS,
+    USER_ACCOUNTS,
     ;
 }
 
@@ -335,6 +378,7 @@ enum class EnterpriseServerUserAccountsUploadSyncState {
 enum class EnterpriseUserAccountMembershipRole {
     MEMBER,
     OWNER,
+    UNAFFILIATED,
     ;
 }
 
@@ -511,6 +555,19 @@ enum class LockReason {
     ;
 }
 
+enum class MergeCommitMessage {
+    BLANK,
+    PR_BODY,
+    PR_TITLE,
+    ;
+}
+
+enum class MergeCommitTitle {
+    MERGE_MESSAGE,
+    PR_TITLE,
+    ;
+}
+
 enum class MergeStateStatus {
     BEHIND,
     BLOCKED,
@@ -533,9 +590,7 @@ enum class MergeableState {
 enum class MigrationSourceType {
     AZURE_DEVOPS,
     BITBUCKET_SERVER,
-    GITHUB,
     GITHUB_ARCHIVE,
-    GITLAB,
     ;
 }
 
@@ -631,6 +686,7 @@ enum class OrgRemoveMemberAuditEntryMembershipType {
     BILLING_MANAGER,
     DIRECT_MEMBER,
     OUTSIDE_COLLABORATOR,
+    SUSPENDED,
     UNAFFILIATED,
     ;
 }
@@ -825,6 +881,7 @@ enum class ProjectNextFieldType {
     SINGLE_SELECT,
     TEXT,
     TITLE,
+    TRACKED_BY,
     TRACKS,
     ;
 }
@@ -855,6 +912,70 @@ enum class ProjectTemplate {
     AUTOMATED_REVIEWS_KANBAN,
     BASIC_KANBAN,
     BUG_TRIAGE,
+    ;
+}
+
+enum class ProjectV2FieldOrderField {
+    CREATED_AT,
+    NAME,
+    POSITION,
+    ;
+}
+
+enum class ProjectV2FieldType {
+    ASSIGNEES,
+    DATE,
+    ITERATION,
+    LABELS,
+    LINKED_PULL_REQUESTS,
+    MILESTONE,
+    NUMBER,
+    REPOSITORY,
+    REVIEWERS,
+    SINGLE_SELECT,
+    TEXT,
+    TITLE,
+    TRACKED_BY,
+    TRACKS,
+    ;
+}
+
+enum class ProjectV2ItemFieldValueOrderField {
+    POSITION,
+    ;
+}
+
+enum class ProjectV2ItemOrderField {
+    POSITION,
+    ;
+}
+
+enum class ProjectV2ItemType {
+    DRAFT_ISSUE,
+    ISSUE,
+    PULL_REQUEST,
+    REDACTED,
+    ;
+}
+
+enum class ProjectV2OrderField {
+    CREATED_AT,
+    NUMBER,
+    TITLE,
+    UPDATED_AT,
+    ;
+}
+
+enum class ProjectV2ViewLayout {
+    BOARD_LAYOUT,
+    TABLE_LAYOUT,
+    ;
+}
+
+enum class ProjectV2ViewOrderField {
+    CREATED_AT,
+    NAME,
+    POSITION,
     ;
 }
 
@@ -1165,6 +1286,12 @@ enum class RepositoryVisibility {
     ;
 }
 
+enum class RepositoryVulnerabilityAlertDependencyScope {
+    DEVELOPMENT,
+    RUNTIME,
+    ;
+}
+
 enum class RepositoryVulnerabilityAlertState {
     DISMISSED,
     FIXED,
@@ -1224,12 +1351,15 @@ enum class SecurityAdvisoryClassification {
 }
 
 enum class SecurityAdvisoryEcosystem {
+    ACTIONS,
     COMPOSER,
+    ERLANG,
     GO,
     MAVEN,
     NPM,
     NUGET,
     PIP,
+    PUB,
     RUBYGEMS,
     RUST,
     ;
@@ -1319,6 +1449,19 @@ enum class SponsorshipOrderField {
 enum class SponsorshipPrivacy {
     PRIVATE,
     PUBLIC,
+    ;
+}
+
+enum class SquashMergeCommitMessage {
+    BLANK,
+    COMMIT_MESSAGES,
+    PR_BODY,
+    ;
+}
+
+enum class SquashMergeCommitTitle {
+    COMMIT_OR_PR_TITLE,
+    PR_TITLE,
     ;
 }
 
@@ -1439,6 +1582,11 @@ enum class VerifiableDomainOrderField {
     ;
 }
 
+enum class WorkflowRunOrderField {
+    CREATED_AT,
+    ;
+}
+
 
 class AbortQueuedMigrationsPayload(__name: String = "AbortQueuedMigrationsPayload"): ObjectNode(__name) {
     val clientMutationId get() =
@@ -1501,6 +1649,13 @@ class AddDiscussionCommentPayload(__name: String = "AddDiscussionCommentPayload"
         DiscussionComment("comment").also { doInit(it, init) }
 }
 
+class AddDiscussionPollVotePayload(__name: String = "AddDiscussionPollVotePayload"): ObjectNode(__name) {
+    val clientMutationId get() =
+        ScalarNode("clientMutationId").also { doInit(it) }
+    fun pollOption(init: DiscussionPollOption.() -> Unit) =
+        DiscussionPollOption("pollOption").also { doInit(it, init) }
+}
+
 class AddEnterpriseSupportEntitlementPayload(__name: String = "AddEnterpriseSupportEntitlementPayload"): ObjectNode(__name) {
     val clientMutationId get() =
         ScalarNode("clientMutationId").also { doInit(it) }
@@ -1536,6 +1691,7 @@ class AddProjectColumnPayload(__name: String = "AddProjectColumnPayload"): Objec
 class AddProjectDraftIssuePayload(__name: String = "AddProjectDraftIssuePayload"): ObjectNode(__name) {
     val clientMutationId get() =
         ScalarNode("clientMutationId").also { doInit(it) }
+    @Deprecated("The `ProjectNext` API is deprecated in favour of the more capable `ProjectV2` API. Follow the ProjectV2 guide at https://github.blog/changelog/2022-06-23-the-new-github-issues-june-23rd-update/, to find a suitable replacement. Removal on 2023-01-01 UTC.")
     fun projectNextItem(init: ProjectNextItem.() -> Unit) =
         ProjectNextItem("projectNextItem").also { doInit(it, init) }
 }
@@ -1543,8 +1699,23 @@ class AddProjectDraftIssuePayload(__name: String = "AddProjectDraftIssuePayload"
 class AddProjectNextItemPayload(__name: String = "AddProjectNextItemPayload"): ObjectNode(__name) {
     val clientMutationId get() =
         ScalarNode("clientMutationId").also { doInit(it) }
+    @Deprecated("The `ProjectNext` API is deprecated in favour of the more capable `ProjectV2` API. Follow the ProjectV2 guide at https://github.blog/changelog/2022-06-23-the-new-github-issues-june-23rd-update/, to find a suitable replacement. Removal on 2023-01-01 UTC.")
     fun projectNextItem(init: ProjectNextItem.() -> Unit) =
         ProjectNextItem("projectNextItem").also { doInit(it, init) }
+}
+
+class AddProjectV2DraftIssuePayload(__name: String = "AddProjectV2DraftIssuePayload"): ObjectNode(__name) {
+    val clientMutationId get() =
+        ScalarNode("clientMutationId").also { doInit(it) }
+    fun projectItem(init: ProjectV2Item.() -> Unit) =
+        ProjectV2Item("projectItem").also { doInit(it, init) }
+}
+
+class AddProjectV2ItemByIdPayload(__name: String = "AddProjectV2ItemByIdPayload"): ObjectNode(__name) {
+    val clientMutationId get() =
+        ScalarNode("clientMutationId").also { doInit(it) }
+    fun item(init: ProjectV2Item.() -> Unit) =
+        ProjectV2Item("item").also { doInit(it, init) }
 }
 
 class AddPullRequestReviewCommentPayload(__name: String = "AddPullRequestReviewCommentPayload"): ObjectNode(__name) {
@@ -1658,6 +1829,13 @@ class ApproveVerifiableDomainPayload(__name: String = "ApproveVerifiableDomainPa
         ScalarNode("clientMutationId").also { doInit(it) }
     fun domain(init: VerifiableDomain.() -> Unit) =
         VerifiableDomain("domain").also { doInit(it, init) }
+}
+
+class ArchiveProjectV2ItemPayload(__name: String = "ArchiveProjectV2ItemPayload"): ObjectNode(__name) {
+    val clientMutationId get() =
+        ScalarNode("clientMutationId").also { doInit(it) }
+    fun item(init: ProjectV2Item.() -> Unit) =
+        ProjectV2Item("item").also { doInit(it, init) }
 }
 
 class ArchiveRepositoryPayload(__name: String = "ArchiveRepositoryPayload"): ObjectNode(__name) {
@@ -1916,6 +2094,10 @@ class BranchProtectionRule(__name: String = "BranchProtectionRule"): ObjectNode(
         ScalarNode("id").also { doInit(it) }
     val isAdminEnforced get() =
         ScalarNode("isAdminEnforced").also { doInit(it) }
+    val lockAllowsFetchAndMerge get() =
+        ScalarNode("lockAllowsFetchAndMerge").also { doInit(it) }
+    val lockBranch get() =
+        ScalarNode("lockBranch").also { doInit(it) }
     fun matchingRefs(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, query: String? = null, init: RefConnection.() -> Unit) =
         RefConnection("matchingRefs").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("query", query) }.also { doInit(it, init) }
     val pattern get() =
@@ -1924,6 +2106,8 @@ class BranchProtectionRule(__name: String = "BranchProtectionRule"): ObjectNode(
         PushAllowanceConnection("pushAllowances").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.also { doInit(it, init) }
     fun repository(init: Repository.() -> Unit) =
         Repository("repository").also { doInit(it, init) }
+    val requireLastPushApproval get() =
+        ScalarNode("requireLastPushApproval").also { doInit(it) }
     val requiredApprovingReviewCount get() =
         ScalarNode("requiredApprovingReviewCount").also { doInit(it) }
     val requiredStatusCheckContexts get() =
@@ -2228,6 +2412,13 @@ class CheckRunEdge(__name: String = "CheckRunEdge"): ObjectNode(__name) {
         CheckRun("node").also { doInit(it, init) }
 }
 
+class CheckRunStateCount(__name: String = "CheckRunStateCount"): ObjectNode(__name) {
+    val count get() =
+        ScalarNode("count").also { doInit(it) }
+    val state get() =
+        ScalarNode("state").also { doInit(it) }
+}
+
 class CheckStep(__name: String = "CheckStep"): ObjectNode(__name) {
     val completedAt get() =
         ScalarNode("completedAt").also { doInit(it) }
@@ -2327,6 +2518,13 @@ class ClearLabelsFromLabelablePayload(__name: String = "ClearLabelsFromLabelable
         Labelable("labelable").also { doInit(it, init) }
 }
 
+class ClearProjectV2ItemFieldValuePayload(__name: String = "ClearProjectV2ItemFieldValuePayload"): ObjectNode(__name) {
+    val clientMutationId get() =
+        ScalarNode("clientMutationId").also { doInit(it) }
+    fun projectV2Item(init: ProjectV2Item.() -> Unit) =
+        ProjectV2Item("projectV2Item").also { doInit(it, init) }
+}
+
 class CloneProjectPayload(__name: String = "CloneProjectPayload"): ObjectNode(__name) {
     val clientMutationId get() =
         ScalarNode("clientMutationId").also { doInit(it) }
@@ -2421,8 +2619,11 @@ class Commit(__name: String = "Commit"): ObjectNode(__name) {
         GitActorConnection("authors").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.also { doInit(it, init) }
     fun blame(path: String, init: Blame.() -> Unit) =
         Blame("blame").apply { addArgs("path", path) }.also { doInit(it, init) }
+    @Deprecated("`changedFiles` will be removed. Use `changedFilesIfAvailable` instead. Removal on 2023-01-01 UTC.")
     val changedFiles get() =
         ScalarNode("changedFiles").also { doInit(it) }
+    val changedFilesIfAvailable get() =
+        ScalarNode("changedFilesIfAvailable").also { doInit(it) }
     fun checkSuites(after: String? = null, before: String? = null, filterBy: CheckSuiteFilter? = null, first: Int? = null, last: Int? = null, init: CheckSuiteConnection.() -> Unit) =
         CheckSuiteConnection("checkSuites").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("filterBy", filterBy) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.also { doInit(it, init) }
     fun comments(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, init: CommitCommentConnection.() -> Unit) =
@@ -2623,6 +2824,36 @@ class CommitEdge(__name: String = "CommitEdge"): ObjectNode(__name) {
 }
 
 class CommitHistoryConnection(__name: String = "CommitHistoryConnection"): ObjectNode(__name) {
+    fun edges(init: CommitEdge.() -> Unit) =
+        CommitEdge("edges").also { doInit(it, init) }
+    fun nodes(init: Commit.() -> Unit) =
+        Commit("nodes").also { doInit(it, init) }
+    fun pageInfo(init: PageInfo.() -> Unit) =
+        PageInfo("pageInfo").also { doInit(it, init) }
+    val totalCount get() =
+        ScalarNode("totalCount").also { doInit(it) }
+}
+
+class Comparison(__name: String = "Comparison"): ObjectNode(__name) {
+    val aheadBy get() =
+        ScalarNode("aheadBy").also { doInit(it) }
+    fun baseTarget(init: GitObject.() -> Unit) =
+        GitObject("baseTarget").also { doInit(it, init) }
+    val behindBy get() =
+        ScalarNode("behindBy").also { doInit(it) }
+    fun commits(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, init: ComparisonCommitConnection.() -> Unit) =
+        ComparisonCommitConnection("commits").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.also { doInit(it, init) }
+    fun headTarget(init: GitObject.() -> Unit) =
+        GitObject("headTarget").also { doInit(it, init) }
+    val id get() =
+        ScalarNode("id").also { doInit(it) }
+    val status get() =
+        ScalarNode("status").also { doInit(it) }
+}
+
+class ComparisonCommitConnection(__name: String = "ComparisonCommitConnection"): ObjectNode(__name) {
+    val authorCount get() =
+        ScalarNode("authorCount").also { doInit(it) }
     fun edges(init: CommitEdge.() -> Unit) =
         CommitEdge("edges").also { doInit(it, init) }
     fun nodes(init: Commit.() -> Unit) =
@@ -2928,6 +3159,13 @@ class CreateLabelPayload(__name: String = "CreateLabelPayload"): ObjectNode(__na
         Label("label").also { doInit(it, init) }
 }
 
+class CreateLinkedBranchPayload(__name: String = "CreateLinkedBranchPayload"): ObjectNode(__name) {
+    val clientMutationId get() =
+        ScalarNode("clientMutationId").also { doInit(it) }
+    fun linkedBranch(init: LinkedBranch.() -> Unit) =
+        LinkedBranch("linkedBranch").also { doInit(it, init) }
+}
+
 class CreateMigrationSourcePayload(__name: String = "CreateMigrationSourcePayload"): ObjectNode(__name) {
     val clientMutationId get() =
         ScalarNode("clientMutationId").also { doInit(it) }
@@ -2940,6 +3178,13 @@ class CreateProjectPayload(__name: String = "CreateProjectPayload"): ObjectNode(
         ScalarNode("clientMutationId").also { doInit(it) }
     fun project(init: Project.() -> Unit) =
         Project("project").also { doInit(it, init) }
+}
+
+class CreateProjectV2Payload(__name: String = "CreateProjectV2Payload"): ObjectNode(__name) {
+    val clientMutationId get() =
+        ScalarNode("clientMutationId").also { doInit(it) }
+    fun projectV2(init: ProjectV2.() -> Unit) =
+        ProjectV2("projectV2").also { doInit(it, init) }
 }
 
 class CreatePullRequestPayload(__name: String = "CreatePullRequestPayload"): ObjectNode(__name) {
@@ -3245,6 +3490,13 @@ class DeleteLabelPayload(__name: String = "DeleteLabelPayload"): ObjectNode(__na
         ScalarNode("clientMutationId").also { doInit(it) }
 }
 
+class DeleteLinkedBranchPayload(__name: String = "DeleteLinkedBranchPayload"): ObjectNode(__name) {
+    val clientMutationId get() =
+        ScalarNode("clientMutationId").also { doInit(it) }
+    fun issue(init: Issue.() -> Unit) =
+        Issue("issue").also { doInit(it, init) }
+}
+
 class DeletePackageVersionPayload(__name: String = "DeletePackageVersionPayload"): ObjectNode(__name) {
     val clientMutationId get() =
         ScalarNode("clientMutationId").also { doInit(it) }
@@ -3273,6 +3525,7 @@ class DeleteProjectColumnPayload(__name: String = "DeleteProjectColumnPayload"):
 class DeleteProjectNextItemPayload(__name: String = "DeleteProjectNextItemPayload"): ObjectNode(__name) {
     val clientMutationId get() =
         ScalarNode("clientMutationId").also { doInit(it) }
+    @Deprecated("The `ProjectNext` API is deprecated in favour of the more capable `ProjectV2` API. Follow the ProjectV2 guide at https://github.blog/changelog/2022-06-23-the-new-github-issues-june-23rd-update/, to find a suitable replacement. Removal on 2023-01-01 UTC.")
     val deletedItemId get() =
         ScalarNode("deletedItemId").also { doInit(it) }
 }
@@ -3284,11 +3537,20 @@ class DeleteProjectPayload(__name: String = "DeleteProjectPayload"): ObjectNode(
         ProjectOwner("owner").also { doInit(it, init) }
 }
 
+class DeleteProjectV2ItemPayload(__name: String = "DeleteProjectV2ItemPayload"): ObjectNode(__name) {
+    val clientMutationId get() =
+        ScalarNode("clientMutationId").also { doInit(it) }
+    val deletedItemId get() =
+        ScalarNode("deletedItemId").also { doInit(it) }
+}
+
 class DeletePullRequestReviewCommentPayload(__name: String = "DeletePullRequestReviewCommentPayload"): ObjectNode(__name) {
     val clientMutationId get() =
         ScalarNode("clientMutationId").also { doInit(it) }
     fun pullRequestReview(init: PullRequestReview.() -> Unit) =
         PullRequestReview("pullRequestReview").also { doInit(it, init) }
+    fun pullRequestReviewComment(init: PullRequestReviewComment.() -> Unit) =
+        PullRequestReviewComment("pullRequestReviewComment").also { doInit(it, init) }
 }
 
 class DeletePullRequestReviewPayload(__name: String = "DeletePullRequestReviewPayload"): ObjectNode(__name) {
@@ -3761,6 +4023,8 @@ class Discussion(__name: String = "Discussion"): ObjectNode(__name) {
         ScalarNode("locked").also { doInit(it) }
     val number get() =
         ScalarNode("number").also { doInit(it) }
+    fun poll(init: DiscussionPoll.() -> Unit) =
+        DiscussionPoll("poll").also { doInit(it, init) }
     val publishedAt get() =
         ScalarNode("publishedAt").also { doInit(it) }
     fun reactionGroups(init: ReactionGroup.() -> Unit) =
@@ -3816,6 +4080,8 @@ class DiscussionCategory(__name: String = "DiscussionCategory"): ObjectNode(__na
         ScalarNode("name").also { doInit(it) }
     fun repository(init: Repository.() -> Unit) =
         Repository("repository").also { doInit(it, init) }
+    val slug get() =
+        ScalarNode("slug").also { doInit(it) }
     val updatedAt get() =
         ScalarNode("updatedAt").also { doInit(it) }
 }
@@ -3951,6 +4217,54 @@ class DiscussionEdge(__name: String = "DiscussionEdge"): ObjectNode(__name) {
         Discussion("node").also { doInit(it, init) }
 }
 
+class DiscussionPoll(__name: String = "DiscussionPoll"): ObjectNode(__name) {
+    fun discussion(init: Discussion.() -> Unit) =
+        Discussion("discussion").also { doInit(it, init) }
+    val id get() =
+        ScalarNode("id").also { doInit(it) }
+    fun options(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, orderBy: DiscussionPollOptionOrder? = null, init: DiscussionPollOptionConnection.() -> Unit) =
+        DiscussionPollOptionConnection("options").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.also { doInit(it, init) }
+    val question get() =
+        ScalarNode("question").also { doInit(it) }
+    val totalVoteCount get() =
+        ScalarNode("totalVoteCount").also { doInit(it) }
+    val viewerCanVote get() =
+        ScalarNode("viewerCanVote").also { doInit(it) }
+    val viewerHasVoted get() =
+        ScalarNode("viewerHasVoted").also { doInit(it) }
+}
+
+class DiscussionPollOption(__name: String = "DiscussionPollOption"): ObjectNode(__name) {
+    val id get() =
+        ScalarNode("id").also { doInit(it) }
+    val option get() =
+        ScalarNode("option").also { doInit(it) }
+    fun poll(init: DiscussionPoll.() -> Unit) =
+        DiscussionPoll("poll").also { doInit(it, init) }
+    val totalVoteCount get() =
+        ScalarNode("totalVoteCount").also { doInit(it) }
+    val viewerHasVoted get() =
+        ScalarNode("viewerHasVoted").also { doInit(it) }
+}
+
+class DiscussionPollOptionConnection(__name: String = "DiscussionPollOptionConnection"): ObjectNode(__name) {
+    fun edges(init: DiscussionPollOptionEdge.() -> Unit) =
+        DiscussionPollOptionEdge("edges").also { doInit(it, init) }
+    fun nodes(init: DiscussionPollOption.() -> Unit) =
+        DiscussionPollOption("nodes").also { doInit(it, init) }
+    fun pageInfo(init: PageInfo.() -> Unit) =
+        PageInfo("pageInfo").also { doInit(it, init) }
+    val totalCount get() =
+        ScalarNode("totalCount").also { doInit(it) }
+}
+
+class DiscussionPollOptionEdge(__name: String = "DiscussionPollOptionEdge"): ObjectNode(__name) {
+    val cursor get() =
+        ScalarNode("cursor").also { doInit(it) }
+    fun node(init: DiscussionPollOption.() -> Unit) =
+        DiscussionPollOption("node").also { doInit(it, init) }
+}
+
 class DismissPullRequestReviewPayload(__name: String = "DismissPullRequestReviewPayload"): ObjectNode(__name) {
     val clientMutationId get() =
         ScalarNode("clientMutationId").also { doInit(it) }
@@ -3984,6 +4298,10 @@ class DraftIssue(__name: String = "DraftIssue"): ObjectNode(__name) {
         ProjectNext("project").also { doInit(it, init) }
     fun projectItem(init: ProjectNextItem.() -> Unit) =
         ProjectNextItem("projectItem").also { doInit(it, init) }
+    fun projectV2Items(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, init: ProjectV2ItemConnection.() -> Unit) =
+        ProjectV2ItemConnection("projectV2Items").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.also { doInit(it, init) }
+    fun projectsV2(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, init: ProjectV2Connection.() -> Unit) =
+        ProjectV2Connection("projectsV2").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.also { doInit(it, init) }
     val title get() =
         ScalarNode("title").also { doInit(it) }
     val updatedAt get() =
@@ -4018,8 +4336,8 @@ class Enterprise(__name: String = "Enterprise"): ObjectNode(__name) {
         ScalarNode("id").also { doInit(it) }
     val location get() =
         ScalarNode("location").also { doInit(it) }
-    fun members(after: String? = null, before: String? = null, deployment: EnterpriseUserDeployment? = null, first: Int? = null, last: Int? = null, orderBy: EnterpriseMemberOrder? = null, organizationLogins: String? = null, query: String? = null, role: EnterpriseUserAccountMembershipRole? = null, init: EnterpriseMemberConnection.() -> Unit) =
-        EnterpriseMemberConnection("members").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("deployment", deployment) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.apply { addArgs("organizationLogins", organizationLogins) }.apply { addArgs("query", query) }.apply { addArgs("role", role) }.also { doInit(it, init) }
+    fun members(after: String? = null, before: String? = null, deployment: EnterpriseUserDeployment? = null, first: Int? = null, hasTwoFactorEnabled: Boolean? = null, last: Int? = null, orderBy: EnterpriseMemberOrder? = null, organizationLogins: String? = null, query: String? = null, role: EnterpriseUserAccountMembershipRole? = null, init: EnterpriseMemberConnection.() -> Unit) =
+        EnterpriseMemberConnection("members").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("deployment", deployment) }.apply { addArgs("first", first) }.apply { addArgs("hasTwoFactorEnabled", hasTwoFactorEnabled) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.apply { addArgs("organizationLogins", organizationLogins) }.apply { addArgs("query", query) }.apply { addArgs("role", role) }.also { doInit(it, init) }
     val name get() =
         ScalarNode("name").also { doInit(it) }
     fun organizations(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, orderBy: OrganizationOrder? = null, query: String? = null, viewerOrganizationRole: RoleInOrganization? = null, init: OrganizationConnection.() -> Unit) =
@@ -4032,9 +4350,6 @@ class Enterprise(__name: String = "Enterprise"): ObjectNode(__name) {
         ScalarNode("slug").also { doInit(it) }
     val url get() =
         ScalarNode("url").also { doInit(it) }
-    @Deprecated("The `Enterprise.userAccounts` field is being removed. Use the `Enterprise.members` field instead. Removal on 2022-07-01 UTC.")
-    fun userAccounts(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, init: EnterpriseUserAccountConnection.() -> Unit) =
-        EnterpriseUserAccountConnection("userAccounts").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.also { doInit(it, init) }
     val viewerIsAdmin get() =
         ScalarNode("viewerIsAdmin").also { doInit(it) }
     val websiteUrl get() =
@@ -4199,8 +4514,8 @@ class EnterpriseOutsideCollaboratorEdge(__name: String = "EnterpriseOutsideColla
 }
 
 class EnterpriseOwnerInfo(__name: String = "EnterpriseOwnerInfo"): ObjectNode(__name) {
-    fun admins(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, orderBy: EnterpriseMemberOrder? = null, organizationLogins: String? = null, query: String? = null, role: EnterpriseAdministratorRole? = null, init: EnterpriseAdministratorConnection.() -> Unit) =
-        EnterpriseAdministratorConnection("admins").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.apply { addArgs("organizationLogins", organizationLogins) }.apply { addArgs("query", query) }.apply { addArgs("role", role) }.also { doInit(it, init) }
+    fun admins(after: String? = null, before: String? = null, first: Int? = null, hasTwoFactorEnabled: Boolean? = null, last: Int? = null, orderBy: EnterpriseMemberOrder? = null, organizationLogins: String? = null, query: String? = null, role: EnterpriseAdministratorRole? = null, init: EnterpriseAdministratorConnection.() -> Unit) =
+        EnterpriseAdministratorConnection("admins").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("hasTwoFactorEnabled", hasTwoFactorEnabled) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.apply { addArgs("organizationLogins", organizationLogins) }.apply { addArgs("query", query) }.apply { addArgs("role", role) }.also { doInit(it, init) }
     fun affiliatedUsersWithTwoFactorDisabled(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, init: UserConnection.() -> Unit) =
         UserConnection("affiliatedUsersWithTwoFactorDisabled").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.also { doInit(it, init) }
     val affiliatedUsersWithTwoFactorDisabledExist get() =
@@ -4209,6 +4524,8 @@ class EnterpriseOwnerInfo(__name: String = "EnterpriseOwnerInfo"): ObjectNode(__
         ScalarNode("allowPrivateRepositoryForkingSetting").also { doInit(it) }
     fun allowPrivateRepositoryForkingSettingOrganizations(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, orderBy: OrganizationOrder? = null, value: Boolean, init: OrganizationConnection.() -> Unit) =
         OrganizationConnection("allowPrivateRepositoryForkingSettingOrganizations").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.apply { addArgs("value", value) }.also { doInit(it, init) }
+    val allowPrivateRepositoryForkingSettingPolicyValue get() =
+        ScalarNode("allowPrivateRepositoryForkingSettingPolicyValue").also { doInit(it) }
     val defaultRepositoryPermissionSetting get() =
         ScalarNode("defaultRepositoryPermissionSetting").also { doInit(it) }
     fun defaultRepositoryPermissionSettingOrganizations(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, orderBy: OrganizationOrder? = null, value: DefaultRepositoryPermissionField, init: OrganizationConnection.() -> Unit) =
@@ -4519,24 +4836,6 @@ class EnterpriseUserAccount(__name: String = "EnterpriseUserAccount"): ObjectNod
         ScalarNode("url").also { doInit(it) }
     fun user(init: User.() -> Unit) =
         User("user").also { doInit(it, init) }
-}
-
-class EnterpriseUserAccountConnection(__name: String = "EnterpriseUserAccountConnection"): ObjectNode(__name) {
-    fun edges(init: EnterpriseUserAccountEdge.() -> Unit) =
-        EnterpriseUserAccountEdge("edges").also { doInit(it, init) }
-    fun nodes(init: EnterpriseUserAccount.() -> Unit) =
-        EnterpriseUserAccount("nodes").also { doInit(it, init) }
-    fun pageInfo(init: PageInfo.() -> Unit) =
-        PageInfo("pageInfo").also { doInit(it, init) }
-    val totalCount get() =
-        ScalarNode("totalCount").also { doInit(it) }
-}
-
-class EnterpriseUserAccountEdge(__name: String = "EnterpriseUserAccountEdge"): ObjectNode(__name) {
-    val cursor get() =
-        ScalarNode("cursor").also { doInit(it) }
-    fun node(init: EnterpriseUserAccount.() -> Unit) =
-        EnterpriseUserAccount("node").also { doInit(it, init) }
 }
 
 class Environment(__name: String = "Environment"): ObjectNode(__name) {
@@ -5060,6 +5359,8 @@ class Issue(__name: String = "Issue"): ObjectNode(__name) {
         LabelConnection("labels").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.also { doInit(it, init) }
     val lastEditedAt get() =
         ScalarNode("lastEditedAt").also { doInit(it) }
+    fun linkedBranches(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, init: LinkedBranchConnection.() -> Unit) =
+        LinkedBranchConnection("linkedBranches").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.also { doInit(it, init) }
     val locked get() =
         ScalarNode("locked").also { doInit(it) }
     fun milestone(init: Milestone.() -> Unit) =
@@ -5070,12 +5371,20 @@ class Issue(__name: String = "Issue"): ObjectNode(__name) {
         UserConnection("participants").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.also { doInit(it, init) }
     fun projectCards(after: String? = null, archivedStates: ProjectCardArchivedState? = null, before: String? = null, first: Int? = null, last: Int? = null, init: ProjectCardConnection.() -> Unit) =
         ProjectCardConnection("projectCards").apply { addArgs("after", after) }.apply { addArgs("archivedStates", archivedStates) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.also { doInit(it, init) }
+    fun projectItems(after: String? = null, before: String? = null, first: Int? = null, includeArchived: Boolean? = null, last: Int? = null, init: ProjectV2ItemConnection.() -> Unit) =
+        ProjectV2ItemConnection("projectItems").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("includeArchived", includeArchived) }.apply { addArgs("last", last) }.also { doInit(it, init) }
+    @Deprecated("The `ProjectNext` API is deprecated in favour of the more capable `ProjectV2` API. Follow the ProjectV2 guide at https://github.blog/changelog/2022-06-23-the-new-github-issues-june-23rd-update/, to find a suitable replacement. Removal on 2023-01-01 UTC.")
     fun projectNext(number: Int, init: ProjectNext.() -> Unit) =
         ProjectNext("projectNext").apply { addArgs("number", number) }.also { doInit(it, init) }
     fun projectNextItems(after: String? = null, before: String? = null, first: Int? = null, includeArchived: Boolean? = null, last: Int? = null, init: ProjectNextItemConnection.() -> Unit) =
         ProjectNextItemConnection("projectNextItems").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("includeArchived", includeArchived) }.apply { addArgs("last", last) }.also { doInit(it, init) }
+    fun projectV2(number: Int, init: ProjectV2.() -> Unit) =
+        ProjectV2("projectV2").apply { addArgs("number", number) }.also { doInit(it, init) }
+    @Deprecated("The `ProjectNext` API is deprecated in favour of the more capable `ProjectV2` API. Follow the ProjectV2 guide at https://github.blog/changelog/2022-06-23-the-new-github-issues-june-23rd-update/, to find a suitable replacement. Removal on 2023-01-01 UTC.")
     fun projectsNext(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, query: String? = null, sortBy: ProjectNextOrderField? = null, init: ProjectNextConnection.() -> Unit) =
         ProjectNextConnection("projectsNext").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("query", query) }.apply { addArgs("sortBy", sortBy) }.also { doInit(it, init) }
+    fun projectsV2(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, orderBy: ProjectV2Order? = null, query: String? = null, init: ProjectV2Connection.() -> Unit) =
+        ProjectV2Connection("projectsV2").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.apply { addArgs("query", query) }.also { doInit(it, init) }
     val publishedAt get() =
         ScalarNode("publishedAt").also { doInit(it) }
     fun reactionGroups(init: ReactionGroup.() -> Unit) =
@@ -5238,6 +5547,8 @@ class IssueTemplate(__name: String = "IssueTemplate"): ObjectNode(__name) {
         ScalarNode("about").also { doInit(it) }
     val body get() =
         ScalarNode("body").also { doInit(it) }
+    val filename get() =
+        ScalarNode("filename").also { doInit(it) }
     val name get() =
         ScalarNode("name").also { doInit(it) }
     val title get() =
@@ -5430,6 +5741,13 @@ class LicenseRule(__name: String = "LicenseRule"): ObjectNode(__name) {
         ScalarNode("label").also { doInit(it) }
 }
 
+class LinkProjectV2ToRepositoryPayload(__name: String = "LinkProjectV2ToRepositoryPayload"): ObjectNode(__name) {
+    val clientMutationId get() =
+        ScalarNode("clientMutationId").also { doInit(it) }
+    fun repository(init: Repository.() -> Unit) =
+        Repository("repository").also { doInit(it, init) }
+}
+
 class LinkRepositoryToProjectPayload(__name: String = "LinkRepositoryToProjectPayload"): ObjectNode(__name) {
     val clientMutationId get() =
         ScalarNode("clientMutationId").also { doInit(it) }
@@ -5437,6 +5755,31 @@ class LinkRepositoryToProjectPayload(__name: String = "LinkRepositoryToProjectPa
         Project("project").also { doInit(it, init) }
     fun repository(init: Repository.() -> Unit) =
         Repository("repository").also { doInit(it, init) }
+}
+
+class LinkedBranch(__name: String = "LinkedBranch"): ObjectNode(__name) {
+    val id get() =
+        ScalarNode("id").also { doInit(it) }
+    fun ref(init: Ref.() -> Unit) =
+        Ref("ref").also { doInit(it, init) }
+}
+
+class LinkedBranchConnection(__name: String = "LinkedBranchConnection"): ObjectNode(__name) {
+    fun edges(init: LinkedBranchEdge.() -> Unit) =
+        LinkedBranchEdge("edges").also { doInit(it, init) }
+    fun nodes(init: LinkedBranch.() -> Unit) =
+        LinkedBranch("nodes").also { doInit(it, init) }
+    fun pageInfo(init: PageInfo.() -> Unit) =
+        PageInfo("pageInfo").also { doInit(it, init) }
+    val totalCount get() =
+        ScalarNode("totalCount").also { doInit(it) }
+}
+
+class LinkedBranchEdge(__name: String = "LinkedBranchEdge"): ObjectNode(__name) {
+    val cursor get() =
+        ScalarNode("cursor").also { doInit(it) }
+    fun node(init: LinkedBranch.() -> Unit) =
+        LinkedBranch("node").also { doInit(it, init) }
 }
 
 class LockLockablePayload(__name: String = "LockLockablePayload"): ObjectNode(__name) {
@@ -5993,6 +6336,8 @@ class Mutation(__name: String = "mutation"): ObjectNode(__name) {
         AddCommentPayload("addComment").apply { addArgs("input", input) }.also { doInit(it, init) }
     fun addDiscussionComment(input: AddDiscussionCommentInput, init: AddDiscussionCommentPayload.() -> Unit) =
         AddDiscussionCommentPayload("addDiscussionComment").apply { addArgs("input", input) }.also { doInit(it, init) }
+    fun addDiscussionPollVote(input: AddDiscussionPollVoteInput, init: AddDiscussionPollVotePayload.() -> Unit) =
+        AddDiscussionPollVotePayload("addDiscussionPollVote").apply { addArgs("input", input) }.also { doInit(it, init) }
     fun addEnterpriseSupportEntitlement(input: AddEnterpriseSupportEntitlementInput, init: AddEnterpriseSupportEntitlementPayload.() -> Unit) =
         AddEnterpriseSupportEntitlementPayload("addEnterpriseSupportEntitlement").apply { addArgs("input", input) }.also { doInit(it, init) }
     fun addLabelsToLabelable(input: AddLabelsToLabelableInput, init: AddLabelsToLabelablePayload.() -> Unit) =
@@ -6001,10 +6346,16 @@ class Mutation(__name: String = "mutation"): ObjectNode(__name) {
         AddProjectCardPayload("addProjectCard").apply { addArgs("input", input) }.also { doInit(it, init) }
     fun addProjectColumn(input: AddProjectColumnInput, init: AddProjectColumnPayload.() -> Unit) =
         AddProjectColumnPayload("addProjectColumn").apply { addArgs("input", input) }.also { doInit(it, init) }
+    @Deprecated("The `ProjectNext` API is deprecated in favour of the more capable `ProjectV2` API. Follow the ProjectV2 guide at https://github.blog/changelog/2022-06-23-the-new-github-issues-june-23rd-update/, to find a suitable replacement. Removal on 2023-01-01 UTC.")
     fun addProjectDraftIssue(input: AddProjectDraftIssueInput, init: AddProjectDraftIssuePayload.() -> Unit) =
         AddProjectDraftIssuePayload("addProjectDraftIssue").apply { addArgs("input", input) }.also { doInit(it, init) }
+    @Deprecated("The `ProjectNext` API is deprecated in favour of the more capable `ProjectV2` API. Follow the ProjectV2 guide at https://github.blog/changelog/2022-06-23-the-new-github-issues-june-23rd-update/, to find a suitable replacement. Removal on 2023-01-01 UTC.")
     fun addProjectNextItem(input: AddProjectNextItemInput, init: AddProjectNextItemPayload.() -> Unit) =
         AddProjectNextItemPayload("addProjectNextItem").apply { addArgs("input", input) }.also { doInit(it, init) }
+    fun addProjectV2DraftIssue(input: AddProjectV2DraftIssueInput, init: AddProjectV2DraftIssuePayload.() -> Unit) =
+        AddProjectV2DraftIssuePayload("addProjectV2DraftIssue").apply { addArgs("input", input) }.also { doInit(it, init) }
+    fun addProjectV2ItemById(input: AddProjectV2ItemByIdInput, init: AddProjectV2ItemByIdPayload.() -> Unit) =
+        AddProjectV2ItemByIdPayload("addProjectV2ItemById").apply { addArgs("input", input) }.also { doInit(it, init) }
     fun addPullRequestReview(input: AddPullRequestReviewInput, init: AddPullRequestReviewPayload.() -> Unit) =
         AddPullRequestReviewPayload("addPullRequestReview").apply { addArgs("input", input) }.also { doInit(it, init) }
     fun addPullRequestReviewComment(input: AddPullRequestReviewCommentInput, init: AddPullRequestReviewCommentPayload.() -> Unit) =
@@ -6023,6 +6374,8 @@ class Mutation(__name: String = "mutation"): ObjectNode(__name) {
         ApproveDeploymentsPayload("approveDeployments").apply { addArgs("input", input) }.also { doInit(it, init) }
     fun approveVerifiableDomain(input: ApproveVerifiableDomainInput, init: ApproveVerifiableDomainPayload.() -> Unit) =
         ApproveVerifiableDomainPayload("approveVerifiableDomain").apply { addArgs("input", input) }.also { doInit(it, init) }
+    fun archiveProjectV2Item(input: ArchiveProjectV2ItemInput, init: ArchiveProjectV2ItemPayload.() -> Unit) =
+        ArchiveProjectV2ItemPayload("archiveProjectV2Item").apply { addArgs("input", input) }.also { doInit(it, init) }
     fun archiveRepository(input: ArchiveRepositoryInput, init: ArchiveRepositoryPayload.() -> Unit) =
         ArchiveRepositoryPayload("archiveRepository").apply { addArgs("input", input) }.also { doInit(it, init) }
     fun cancelEnterpriseAdminInvitation(input: CancelEnterpriseAdminInvitationInput, init: CancelEnterpriseAdminInvitationPayload.() -> Unit) =
@@ -6033,6 +6386,8 @@ class Mutation(__name: String = "mutation"): ObjectNode(__name) {
         ChangeUserStatusPayload("changeUserStatus").apply { addArgs("input", input) }.also { doInit(it, init) }
     fun clearLabelsFromLabelable(input: ClearLabelsFromLabelableInput, init: ClearLabelsFromLabelablePayload.() -> Unit) =
         ClearLabelsFromLabelablePayload("clearLabelsFromLabelable").apply { addArgs("input", input) }.also { doInit(it, init) }
+    fun clearProjectV2ItemFieldValue(input: ClearProjectV2ItemFieldValueInput, init: ClearProjectV2ItemFieldValuePayload.() -> Unit) =
+        ClearProjectV2ItemFieldValuePayload("clearProjectV2ItemFieldValue").apply { addArgs("input", input) }.also { doInit(it, init) }
     fun cloneProject(input: CloneProjectInput, init: CloneProjectPayload.() -> Unit) =
         CloneProjectPayload("cloneProject").apply { addArgs("input", input) }.also { doInit(it, init) }
     fun cloneTemplateRepository(input: CloneTemplateRepositoryInput, init: CloneTemplateRepositoryPayload.() -> Unit) =
@@ -6069,10 +6424,14 @@ class Mutation(__name: String = "mutation"): ObjectNode(__name) {
         CreateIssuePayload("createIssue").apply { addArgs("input", input) }.also { doInit(it, init) }
     fun createLabel(input: CreateLabelInput, init: CreateLabelPayload.() -> Unit) =
         CreateLabelPayload("createLabel").apply { addArgs("input", input) }.also { doInit(it, init) }
+    fun createLinkedBranch(input: CreateLinkedBranchInput, init: CreateLinkedBranchPayload.() -> Unit) =
+        CreateLinkedBranchPayload("createLinkedBranch").apply { addArgs("input", input) }.also { doInit(it, init) }
     fun createMigrationSource(input: CreateMigrationSourceInput, init: CreateMigrationSourcePayload.() -> Unit) =
         CreateMigrationSourcePayload("createMigrationSource").apply { addArgs("input", input) }.also { doInit(it, init) }
     fun createProject(input: CreateProjectInput, init: CreateProjectPayload.() -> Unit) =
         CreateProjectPayload("createProject").apply { addArgs("input", input) }.also { doInit(it, init) }
+    fun createProjectV2(input: CreateProjectV2Input, init: CreateProjectV2Payload.() -> Unit) =
+        CreateProjectV2Payload("createProjectV2").apply { addArgs("input", input) }.also { doInit(it, init) }
     fun createPullRequest(input: CreatePullRequestInput, init: CreatePullRequestPayload.() -> Unit) =
         CreatePullRequestPayload("createPullRequest").apply { addArgs("input", input) }.also { doInit(it, init) }
     fun createRef(input: CreateRefInput, init: CreateRefPayload.() -> Unit) =
@@ -6107,6 +6466,8 @@ class Mutation(__name: String = "mutation"): ObjectNode(__name) {
         DeleteIssueCommentPayload("deleteIssueComment").apply { addArgs("input", input) }.also { doInit(it, init) }
     fun deleteLabel(input: DeleteLabelInput, init: DeleteLabelPayload.() -> Unit) =
         DeleteLabelPayload("deleteLabel").apply { addArgs("input", input) }.also { doInit(it, init) }
+    fun deleteLinkedBranch(input: DeleteLinkedBranchInput, init: DeleteLinkedBranchPayload.() -> Unit) =
+        DeleteLinkedBranchPayload("deleteLinkedBranch").apply { addArgs("input", input) }.also { doInit(it, init) }
     fun deletePackageVersion(input: DeletePackageVersionInput, init: DeletePackageVersionPayload.() -> Unit) =
         DeletePackageVersionPayload("deletePackageVersion").apply { addArgs("input", input) }.also { doInit(it, init) }
     fun deleteProject(input: DeleteProjectInput, init: DeleteProjectPayload.() -> Unit) =
@@ -6115,8 +6476,11 @@ class Mutation(__name: String = "mutation"): ObjectNode(__name) {
         DeleteProjectCardPayload("deleteProjectCard").apply { addArgs("input", input) }.also { doInit(it, init) }
     fun deleteProjectColumn(input: DeleteProjectColumnInput, init: DeleteProjectColumnPayload.() -> Unit) =
         DeleteProjectColumnPayload("deleteProjectColumn").apply { addArgs("input", input) }.also { doInit(it, init) }
+    @Deprecated("The `ProjectNext` API is deprecated in favour of the more capable `ProjectV2` API. Follow the ProjectV2 guide at https://github.blog/changelog/2022-06-23-the-new-github-issues-june-23rd-update/, to find a suitable replacement. Removal on 2023-01-01 UTC.")
     fun deleteProjectNextItem(input: DeleteProjectNextItemInput, init: DeleteProjectNextItemPayload.() -> Unit) =
         DeleteProjectNextItemPayload("deleteProjectNextItem").apply { addArgs("input", input) }.also { doInit(it, init) }
+    fun deleteProjectV2Item(input: DeleteProjectV2ItemInput, init: DeleteProjectV2ItemPayload.() -> Unit) =
+        DeleteProjectV2ItemPayload("deleteProjectV2Item").apply { addArgs("input", input) }.also { doInit(it, init) }
     fun deletePullRequestReview(input: DeletePullRequestReviewInput, init: DeletePullRequestReviewPayload.() -> Unit) =
         DeletePullRequestReviewPayload("deletePullRequestReview").apply { addArgs("input", input) }.also { doInit(it, init) }
     fun deletePullRequestReviewComment(input: DeletePullRequestReviewCommentInput, init: DeletePullRequestReviewCommentPayload.() -> Unit) =
@@ -6149,6 +6513,8 @@ class Mutation(__name: String = "mutation"): ObjectNode(__name) {
         ImportProjectPayload("importProject").apply { addArgs("input", input) }.also { doInit(it, init) }
     fun inviteEnterpriseAdmin(input: InviteEnterpriseAdminInput, init: InviteEnterpriseAdminPayload.() -> Unit) =
         InviteEnterpriseAdminPayload("inviteEnterpriseAdmin").apply { addArgs("input", input) }.also { doInit(it, init) }
+    fun linkProjectV2ToRepository(input: LinkProjectV2ToRepositoryInput, init: LinkProjectV2ToRepositoryPayload.() -> Unit) =
+        LinkProjectV2ToRepositoryPayload("linkProjectV2ToRepository").apply { addArgs("input", input) }.also { doInit(it, init) }
     fun linkRepositoryToProject(input: LinkRepositoryToProjectInput, init: LinkRepositoryToProjectPayload.() -> Unit) =
         LinkRepositoryToProjectPayload("linkRepositoryToProject").apply { addArgs("input", input) }.also { doInit(it, init) }
     fun lockLockable(input: LockLockableInput, init: LockLockablePayload.() -> Unit) =
@@ -6225,12 +6591,16 @@ class Mutation(__name: String = "mutation"): ObjectNode(__name) {
         SubmitPullRequestReviewPayload("submitPullRequestReview").apply { addArgs("input", input) }.also { doInit(it, init) }
     fun transferIssue(input: TransferIssueInput, init: TransferIssuePayload.() -> Unit) =
         TransferIssuePayload("transferIssue").apply { addArgs("input", input) }.also { doInit(it, init) }
+    fun unarchiveProjectV2Item(input: UnarchiveProjectV2ItemInput, init: UnarchiveProjectV2ItemPayload.() -> Unit) =
+        UnarchiveProjectV2ItemPayload("unarchiveProjectV2Item").apply { addArgs("input", input) }.also { doInit(it, init) }
     fun unarchiveRepository(input: UnarchiveRepositoryInput, init: UnarchiveRepositoryPayload.() -> Unit) =
         UnarchiveRepositoryPayload("unarchiveRepository").apply { addArgs("input", input) }.also { doInit(it, init) }
     fun unfollowOrganization(input: UnfollowOrganizationInput, init: UnfollowOrganizationPayload.() -> Unit) =
         UnfollowOrganizationPayload("unfollowOrganization").apply { addArgs("input", input) }.also { doInit(it, init) }
     fun unfollowUser(input: UnfollowUserInput, init: UnfollowUserPayload.() -> Unit) =
         UnfollowUserPayload("unfollowUser").apply { addArgs("input", input) }.also { doInit(it, init) }
+    fun unlinkProjectV2FromRepository(input: UnlinkProjectV2FromRepositoryInput, init: UnlinkProjectV2FromRepositoryPayload.() -> Unit) =
+        UnlinkProjectV2FromRepositoryPayload("unlinkProjectV2FromRepository").apply { addArgs("input", input) }.also { doInit(it, init) }
     fun unlinkRepositoryFromProject(input: UnlinkRepositoryFromProjectInput, init: UnlinkRepositoryFromProjectPayload.() -> Unit) =
         UnlinkRepositoryFromProjectPayload("unlinkRepositoryFromProject").apply { addArgs("input", input) }.also { doInit(it, init) }
     fun unlockLockable(input: UnlockLockableInput, init: UnlockLockablePayload.() -> Unit) =
@@ -6309,18 +6679,31 @@ class Mutation(__name: String = "mutation"): ObjectNode(__name) {
         UpdateNotificationRestrictionSettingPayload("updateNotificationRestrictionSetting").apply { addArgs("input", input) }.also { doInit(it, init) }
     fun updateOrganizationAllowPrivateRepositoryForkingSetting(input: UpdateOrganizationAllowPrivateRepositoryForkingSettingInput, init: UpdateOrganizationAllowPrivateRepositoryForkingSettingPayload.() -> Unit) =
         UpdateOrganizationAllowPrivateRepositoryForkingSettingPayload("updateOrganizationAllowPrivateRepositoryForkingSetting").apply { addArgs("input", input) }.also { doInit(it, init) }
+    fun updateOrganizationWebCommitSignoffSetting(input: UpdateOrganizationWebCommitSignoffSettingInput, init: UpdateOrganizationWebCommitSignoffSettingPayload.() -> Unit) =
+        UpdateOrganizationWebCommitSignoffSettingPayload("updateOrganizationWebCommitSignoffSetting").apply { addArgs("input", input) }.also { doInit(it, init) }
     fun updateProject(input: UpdateProjectInput, init: UpdateProjectPayload.() -> Unit) =
         UpdateProjectPayload("updateProject").apply { addArgs("input", input) }.also { doInit(it, init) }
     fun updateProjectCard(input: UpdateProjectCardInput, init: UpdateProjectCardPayload.() -> Unit) =
         UpdateProjectCardPayload("updateProjectCard").apply { addArgs("input", input) }.also { doInit(it, init) }
     fun updateProjectColumn(input: UpdateProjectColumnInput, init: UpdateProjectColumnPayload.() -> Unit) =
         UpdateProjectColumnPayload("updateProjectColumn").apply { addArgs("input", input) }.also { doInit(it, init) }
+    @Deprecated("The `ProjectNext` API is deprecated in favour of the more capable `ProjectV2` API. Follow the ProjectV2 guide at https://github.blog/changelog/2022-06-23-the-new-github-issues-june-23rd-update/, to find a suitable replacement. Removal on 2023-01-01 UTC.")
     fun updateProjectDraftIssue(input: UpdateProjectDraftIssueInput, init: UpdateProjectDraftIssuePayload.() -> Unit) =
         UpdateProjectDraftIssuePayload("updateProjectDraftIssue").apply { addArgs("input", input) }.also { doInit(it, init) }
+    @Deprecated("The `ProjectNext` API is deprecated in favour of the more capable `ProjectV2` API. Follow the ProjectV2 guide at https://github.blog/changelog/2022-06-23-the-new-github-issues-june-23rd-update/, to find a suitable replacement. Removal on 2023-01-01 UTC.")
     fun updateProjectNext(input: UpdateProjectNextInput, init: UpdateProjectNextPayload.() -> Unit) =
         UpdateProjectNextPayload("updateProjectNext").apply { addArgs("input", input) }.also { doInit(it, init) }
+    @Deprecated("The `ProjectNext` API is deprecated in favour of the more capable `ProjectV2` API. Follow the ProjectV2 guide at https://github.blog/changelog/2022-06-23-the-new-github-issues-june-23rd-update/, to find a suitable replacement. Removal on 2023-01-01 UTC.")
     fun updateProjectNextItemField(input: UpdateProjectNextItemFieldInput, init: UpdateProjectNextItemFieldPayload.() -> Unit) =
         UpdateProjectNextItemFieldPayload("updateProjectNextItemField").apply { addArgs("input", input) }.also { doInit(it, init) }
+    fun updateProjectV2(input: UpdateProjectV2Input, init: UpdateProjectV2Payload.() -> Unit) =
+        UpdateProjectV2Payload("updateProjectV2").apply { addArgs("input", input) }.also { doInit(it, init) }
+    fun updateProjectV2DraftIssue(input: UpdateProjectV2DraftIssueInput, init: UpdateProjectV2DraftIssuePayload.() -> Unit) =
+        UpdateProjectV2DraftIssuePayload("updateProjectV2DraftIssue").apply { addArgs("input", input) }.also { doInit(it, init) }
+    fun updateProjectV2ItemFieldValue(input: UpdateProjectV2ItemFieldValueInput, init: UpdateProjectV2ItemFieldValuePayload.() -> Unit) =
+        UpdateProjectV2ItemFieldValuePayload("updateProjectV2ItemFieldValue").apply { addArgs("input", input) }.also { doInit(it, init) }
+    fun updateProjectV2ItemPosition(input: UpdateProjectV2ItemPositionInput, init: UpdateProjectV2ItemPositionPayload.() -> Unit) =
+        UpdateProjectV2ItemPositionPayload("updateProjectV2ItemPosition").apply { addArgs("input", input) }.also { doInit(it, init) }
     fun updatePullRequest(input: UpdatePullRequestInput, init: UpdatePullRequestPayload.() -> Unit) =
         UpdatePullRequestPayload("updatePullRequest").apply { addArgs("input", input) }.also { doInit(it, init) }
     fun updatePullRequestBranch(input: UpdatePullRequestBranchInput, init: UpdatePullRequestBranchPayload.() -> Unit) =
@@ -6335,6 +6718,8 @@ class Mutation(__name: String = "mutation"): ObjectNode(__name) {
         UpdateRefsPayload("updateRefs").apply { addArgs("input", input) }.also { doInit(it, init) }
     fun updateRepository(input: UpdateRepositoryInput, init: UpdateRepositoryPayload.() -> Unit) =
         UpdateRepositoryPayload("updateRepository").apply { addArgs("input", input) }.also { doInit(it, init) }
+    fun updateRepositoryWebCommitSignoffSetting(input: UpdateRepositoryWebCommitSignoffSettingInput, init: UpdateRepositoryWebCommitSignoffSettingPayload.() -> Unit) =
+        UpdateRepositoryWebCommitSignoffSettingPayload("updateRepositoryWebCommitSignoffSetting").apply { addArgs("input", input) }.also { doInit(it, init) }
     fun updateSponsorshipPreferences(input: UpdateSponsorshipPreferencesInput, init: UpdateSponsorshipPreferencesPayload.() -> Unit) =
         UpdateSponsorshipPreferencesPayload("updateSponsorshipPreferences").apply { addArgs("input", input) }.also { doInit(it, init) }
     fun updateSubscription(input: UpdateSubscriptionInput, init: UpdateSubscriptionPayload.() -> Unit) =
@@ -7651,16 +8036,24 @@ class Organization(__name: String = "Organization"): ObjectNode(__name) {
         ScalarNode("pinnedItemsRemaining").also { doInit(it) }
     fun project(number: Int, init: Project.() -> Unit) =
         Project("project").apply { addArgs("number", number) }.also { doInit(it, init) }
+    @Deprecated("The `ProjectNext` API is deprecated in favour of the more capable `ProjectV2` API. Follow the ProjectV2 guide at https://github.blog/changelog/2022-06-23-the-new-github-issues-june-23rd-update/, to find a suitable replacement. Removal on 2023-01-01 UTC.")
     fun projectNext(number: Int, init: ProjectNext.() -> Unit) =
         ProjectNext("projectNext").apply { addArgs("number", number) }.also { doInit(it, init) }
+    fun projectV2(number: Int, init: ProjectV2.() -> Unit) =
+        ProjectV2("projectV2").apply { addArgs("number", number) }.also { doInit(it, init) }
     fun projects(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, orderBy: ProjectOrder? = null, search: String? = null, states: ProjectState? = null, init: ProjectConnection.() -> Unit) =
         ProjectConnection("projects").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.apply { addArgs("search", search) }.apply { addArgs("states", states) }.also { doInit(it, init) }
+    @Deprecated("The `ProjectNext` API is deprecated in favour of the more capable `ProjectV2` API. Follow the ProjectV2 guide at https://github.blog/changelog/2022-06-23-the-new-github-issues-june-23rd-update/, to find a suitable replacement. Removal on 2023-01-01 UTC.")
     fun projectsNext(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, query: String? = null, sortBy: ProjectNextOrderField? = null, init: ProjectNextConnection.() -> Unit) =
         ProjectNextConnection("projectsNext").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("query", query) }.apply { addArgs("sortBy", sortBy) }.also { doInit(it, init) }
     val projectsResourcePath get() =
         ScalarNode("projectsResourcePath").also { doInit(it) }
     val projectsUrl get() =
         ScalarNode("projectsUrl").also { doInit(it) }
+    fun projectsV2(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, orderBy: ProjectV2Order? = null, query: String? = null, init: ProjectV2Connection.() -> Unit) =
+        ProjectV2Connection("projectsV2").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.apply { addArgs("query", query) }.also { doInit(it, init) }
+    fun recentProjects(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, init: ProjectV2Connection.() -> Unit) =
+        ProjectV2Connection("recentProjects").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.also { doInit(it, init) }
     fun repositories(affiliations: RepositoryAffiliation? = null, after: String? = null, before: String? = null, first: Int? = null, isFork: Boolean? = null, isLocked: Boolean? = null, last: Int? = null, orderBy: RepositoryOrder? = null, ownerAffiliations: RepositoryAffiliation? = null, privacy: RepositoryPrivacy? = null, init: RepositoryConnection.() -> Unit) =
         RepositoryConnection("repositories").apply { addArgs("affiliations", affiliations) }.apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("isFork", isFork) }.apply { addArgs("isLocked", isLocked) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.apply { addArgs("ownerAffiliations", ownerAffiliations) }.apply { addArgs("privacy", privacy) }.also { doInit(it, init) }
     fun repository(followRenames: Boolean? = null, name: String, init: Repository.() -> Unit) =
@@ -7681,8 +8074,8 @@ class Organization(__name: String = "Organization"): ObjectNode(__name) {
         SponsorConnection("sponsoring").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.also { doInit(it, init) }
     fun sponsors(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, orderBy: SponsorOrder? = null, tierId: ID? = null, init: SponsorConnection.() -> Unit) =
         SponsorConnection("sponsors").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.apply { addArgs("tierId", tierId) }.also { doInit(it, init) }
-    fun sponsorsActivities(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, orderBy: SponsorsActivityOrder? = null, period: SponsorsActivityPeriod? = null, init: SponsorsActivityConnection.() -> Unit) =
-        SponsorsActivityConnection("sponsorsActivities").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.apply { addArgs("period", period) }.also { doInit(it, init) }
+    fun sponsorsActivities(actions: SponsorsActivityAction? = null, after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, orderBy: SponsorsActivityOrder? = null, period: SponsorsActivityPeriod? = null, init: SponsorsActivityConnection.() -> Unit) =
+        SponsorsActivityConnection("sponsorsActivities").apply { addArgs("actions", actions) }.apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.apply { addArgs("period", period) }.also { doInit(it, init) }
     fun sponsorsListing(init: SponsorsListing.() -> Unit) =
         SponsorsListing("sponsorsListing").also { doInit(it, init) }
     fun sponsorshipForViewerAsSponsor(init: Sponsorship.() -> Unit) =
@@ -7727,6 +8120,8 @@ class Organization(__name: String = "Organization"): ObjectNode(__name) {
         ScalarNode("viewerIsFollowing").also { doInit(it) }
     val viewerIsSponsoring get() =
         ScalarNode("viewerIsSponsoring").also { doInit(it) }
+    val webCommitSignoffRequired get() =
+        ScalarNode("webCommitSignoffRequired").also { doInit(it) }
     val websiteUrl get() =
         ScalarNode("websiteUrl").also { doInit(it) }
 }
@@ -8416,44 +8811,61 @@ class ProjectEdge(__name: String = "ProjectEdge"): ObjectNode(__name) {
 }
 
 class ProjectNext(__name: String = "ProjectNext"): ObjectNode(__name) {
+    @Deprecated("The `ProjectNext` API is deprecated in favour of the more capable `ProjectV2` API. Follow the ProjectV2 guide at https://github.blog/changelog/2022-06-23-the-new-github-issues-june-23rd-update/, to find a suitable replacement. Removal on 2023-01-01 UTC.")
     val closed get() =
         ScalarNode("closed").also { doInit(it) }
     val closedAt get() =
         ScalarNode("closedAt").also { doInit(it) }
+    @Deprecated("The `ProjectNext` API is deprecated in favour of the more capable `ProjectV2` API. Follow the ProjectV2 guide at https://github.blog/changelog/2022-06-23-the-new-github-issues-june-23rd-update/, to find a suitable replacement. Removal on 2023-01-01 UTC.")
     val createdAt get() =
         ScalarNode("createdAt").also { doInit(it) }
+    @Deprecated("The `ProjectNext` API is deprecated in favour of the more capable `ProjectV2` API. Follow the ProjectV2 guide at https://github.blog/changelog/2022-06-23-the-new-github-issues-june-23rd-update/, to find a suitable replacement. Removal on 2023-01-01 UTC.")
     fun creator(init: Actor.() -> Unit) =
         Actor("creator").also { doInit(it, init) }
+    @Deprecated("The `ProjectNext` API is deprecated in favour of the more capable `ProjectV2` API. Follow the ProjectV2 guide at https://github.blog/changelog/2022-06-23-the-new-github-issues-june-23rd-update/, to find a suitable replacement. Removal on 2023-01-01 UTC.")
     val databaseId get() =
         ScalarNode("databaseId").also { doInit(it) }
+    @Deprecated("The `ProjectNext` API is deprecated in favour of the more capable `ProjectV2` API. Follow the ProjectV2 guide at https://github.blog/changelog/2022-06-23-the-new-github-issues-june-23rd-update/, to find a suitable replacement. Removal on 2023-01-01 UTC.")
     val description get() =
         ScalarNode("description").also { doInit(it) }
+    @Deprecated("The `ProjectNext` API is deprecated in favour of the more capable `ProjectV2` API. Follow the ProjectV2 guide at https://github.blog/changelog/2022-06-23-the-new-github-issues-june-23rd-update/, to find a suitable replacement. Removal on 2023-01-01 UTC.")
     fun fields(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, init: ProjectNextFieldConnection.() -> Unit) =
         ProjectNextFieldConnection("fields").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.also { doInit(it, init) }
     val id get() =
         ScalarNode("id").also { doInit(it) }
+    @Deprecated("The `ProjectNext` API is deprecated in favour of the more capable `ProjectV2` API. Follow the ProjectV2 guide at https://github.blog/changelog/2022-06-23-the-new-github-issues-june-23rd-update/, to find a suitable replacement. Removal on 2023-01-01 UTC.")
     fun items(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, init: ProjectNextItemConnection.() -> Unit) =
         ProjectNextItemConnection("items").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.also { doInit(it, init) }
+    @Deprecated("The `ProjectNext` API is deprecated in favour of the more capable `ProjectV2` API. Follow the ProjectV2 guide at https://github.blog/changelog/2022-06-23-the-new-github-issues-june-23rd-update/, to find a suitable replacement. Removal on 2023-01-01 UTC.")
     val number get() =
         ScalarNode("number").also { doInit(it) }
+    @Deprecated("The `ProjectNext` API is deprecated in favour of the more capable `ProjectV2` API. Follow the ProjectV2 guide at https://github.blog/changelog/2022-06-23-the-new-github-issues-june-23rd-update/, to find a suitable replacement. Removal on 2023-01-01 UTC.")
     fun owner(init: ProjectNextOwner.() -> Unit) =
         ProjectNextOwner("owner").also { doInit(it, init) }
+    @Deprecated("The `ProjectNext` API is deprecated in favour of the more capable `ProjectV2` API. Follow the ProjectV2 guide at https://github.blog/changelog/2022-06-23-the-new-github-issues-june-23rd-update/, to find a suitable replacement. Removal on 2023-01-01 UTC.")
     val public get() =
         ScalarNode("public").also { doInit(it) }
+    @Deprecated("The `ProjectNext` API is deprecated in favour of the more capable `ProjectV2` API. Follow the ProjectV2 guide at https://github.blog/changelog/2022-06-23-the-new-github-issues-june-23rd-update/, to find a suitable replacement. Removal on 2023-01-01 UTC.")
     fun repositories(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, init: RepositoryConnection.() -> Unit) =
         RepositoryConnection("repositories").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.also { doInit(it, init) }
+    @Deprecated("The `ProjectNext` API is deprecated in favour of the more capable `ProjectV2` API. Follow the ProjectV2 guide at https://github.blog/changelog/2022-06-23-the-new-github-issues-june-23rd-update/, to find a suitable replacement. Removal on 2023-01-01 UTC.")
     val resourcePath get() =
         ScalarNode("resourcePath").also { doInit(it) }
+    @Deprecated("The `ProjectNext` API is deprecated in favour of the more capable `ProjectV2` API. Follow the ProjectV2 guide at https://github.blog/changelog/2022-06-23-the-new-github-issues-june-23rd-update/, to find a suitable replacement. Removal on 2023-01-01 UTC.")
     val shortDescription get() =
         ScalarNode("shortDescription").also { doInit(it) }
+    @Deprecated("The `ProjectNext` API is deprecated in favour of the more capable `ProjectV2` API. Follow the ProjectV2 guide at https://github.blog/changelog/2022-06-23-the-new-github-issues-june-23rd-update/, to find a suitable replacement. Removal on 2023-01-01 UTC.")
     val title get() =
         ScalarNode("title").also { doInit(it) }
+    @Deprecated("The `ProjectNext` API is deprecated in favour of the more capable `ProjectV2` API. Follow the ProjectV2 guide at https://github.blog/changelog/2022-06-23-the-new-github-issues-june-23rd-update/, to find a suitable replacement. Removal on 2023-01-01 UTC.")
     val updatedAt get() =
         ScalarNode("updatedAt").also { doInit(it) }
+    @Deprecated("The `ProjectNext` API is deprecated in favour of the more capable `ProjectV2` API. Follow the ProjectV2 guide at https://github.blog/changelog/2022-06-23-the-new-github-issues-june-23rd-update/, to find a suitable replacement. Removal on 2023-01-01 UTC.")
     val url get() =
         ScalarNode("url").also { doInit(it) }
     val viewerCanUpdate get() =
         ScalarNode("viewerCanUpdate").also { doInit(it) }
+    @Deprecated("The `ProjectNext` API is deprecated in favour of the more capable `ProjectV2` API. Follow the ProjectV2 guide at https://github.blog/changelog/2022-06-23-the-new-github-issues-june-23rd-update/, to find a suitable replacement. Removal on 2023-01-01 UTC.")
     fun views(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, init: ProjectViewConnection.() -> Unit) =
         ProjectViewConnection("views").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.also { doInit(it, init) }
 }
@@ -8477,20 +8889,27 @@ class ProjectNextEdge(__name: String = "ProjectNextEdge"): ObjectNode(__name) {
 }
 
 class ProjectNextField(__name: String = "ProjectNextField"): ObjectNode(__name) {
+    @Deprecated("The `ProjectNext` API is deprecated in favour of the more capable `ProjectV2` API. Follow the ProjectV2 guide at https://github.blog/changelog/2022-06-23-the-new-github-issues-june-23rd-update/, to find a suitable replacement. Removal on 2023-01-01 UTC.")
     val createdAt get() =
         ScalarNode("createdAt").also { doInit(it) }
+    @Deprecated("The `ProjectNext` API is deprecated in favour of the more capable `ProjectV2` API. Follow the ProjectV2 guide at https://github.blog/changelog/2022-06-23-the-new-github-issues-june-23rd-update/, to find a suitable replacement. Removal on 2023-01-01 UTC.")
     val dataType get() =
         ScalarNode("dataType").also { doInit(it) }
+    @Deprecated("The `ProjectNext` API is deprecated in favour of the more capable `ProjectV2` API. Follow the ProjectV2 guide at https://github.blog/changelog/2022-06-23-the-new-github-issues-june-23rd-update/, to find a suitable replacement. Removal on 2023-01-01 UTC.")
     val databaseId get() =
         ScalarNode("databaseId").also { doInit(it) }
     val id get() =
         ScalarNode("id").also { doInit(it) }
+    @Deprecated("The `ProjectNext` API is deprecated in favour of the more capable `ProjectV2` API. Follow the ProjectV2 guide at https://github.blog/changelog/2022-06-23-the-new-github-issues-june-23rd-update/, to find a suitable replacement. Removal on 2023-01-01 UTC.")
     val name get() =
         ScalarNode("name").also { doInit(it) }
+    @Deprecated("The `ProjectNext` API is deprecated in favour of the more capable `ProjectV2` API. Follow the ProjectV2 guide at https://github.blog/changelog/2022-06-23-the-new-github-issues-june-23rd-update/, to find a suitable replacement. Removal on 2023-01-01 UTC.")
     fun project(init: ProjectNext.() -> Unit) =
         ProjectNext("project").also { doInit(it, init) }
+    @Deprecated("The `ProjectNext` API is deprecated in favour of the more capable `ProjectV2` API. Follow the ProjectV2 guide at https://github.blog/changelog/2022-06-23-the-new-github-issues-june-23rd-update/, to find a suitable replacement. Removal on 2023-01-01 UTC.")
     val settings get() =
         ScalarNode("settings").also { doInit(it) }
+    @Deprecated("The `ProjectNext` API is deprecated in favour of the more capable `ProjectV2` API. Follow the ProjectV2 guide at https://github.blog/changelog/2022-06-23-the-new-github-issues-june-23rd-update/, to find a suitable replacement. Removal on 2023-01-01 UTC.")
     val updatedAt get() =
         ScalarNode("updatedAt").also { doInit(it) }
 }
@@ -8514,26 +8933,36 @@ class ProjectNextFieldEdge(__name: String = "ProjectNextFieldEdge"): ObjectNode(
 }
 
 class ProjectNextItem(__name: String = "ProjectNextItem"): ObjectNode(__name) {
+    @Deprecated("The `ProjectNext` API is deprecated in favour of the more capable `ProjectV2` API. Follow the ProjectV2 guide at https://github.blog/changelog/2022-06-23-the-new-github-issues-june-23rd-update/, to find a suitable replacement. Removal on 2023-01-01 UTC.")
     fun content(init: ProjectNextItemContent.() -> Unit) =
         ProjectNextItemContent("content").also { doInit(it, init) }
+    @Deprecated("The `ProjectNext` API is deprecated in favour of the more capable `ProjectV2` API. Follow the ProjectV2 guide at https://github.blog/changelog/2022-06-23-the-new-github-issues-june-23rd-update/, to find a suitable replacement. Removal on 2023-01-01 UTC.")
     val createdAt get() =
         ScalarNode("createdAt").also { doInit(it) }
+    @Deprecated("The `ProjectNext` API is deprecated in favour of the more capable `ProjectV2` API. Follow the ProjectV2 guide at https://github.blog/changelog/2022-06-23-the-new-github-issues-june-23rd-update/, to find a suitable replacement. Removal on 2023-01-01 UTC.")
     fun creator(init: Actor.() -> Unit) =
         Actor("creator").also { doInit(it, init) }
+    @Deprecated("The `ProjectNext` API is deprecated in favour of the more capable `ProjectV2` API. Follow the ProjectV2 guide at https://github.blog/changelog/2022-06-23-the-new-github-issues-june-23rd-update/, to find a suitable replacement. Removal on 2023-01-01 UTC.")
     val databaseId get() =
         ScalarNode("databaseId").also { doInit(it) }
+    @Deprecated("The `ProjectNext` API is deprecated in favour of the more capable `ProjectV2` API. Follow the ProjectV2 guide at https://github.blog/changelog/2022-06-23-the-new-github-issues-june-23rd-update/, to find a suitable replacement. Removal on 2023-01-01 UTC.")
     fun fieldValues(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, init: ProjectNextItemFieldValueConnection.() -> Unit) =
         ProjectNextItemFieldValueConnection("fieldValues").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.also { doInit(it, init) }
     val id get() =
         ScalarNode("id").also { doInit(it) }
+    @Deprecated("The `ProjectNext` API is deprecated in favour of the more capable `ProjectV2` API. Follow the ProjectV2 guide at https://github.blog/changelog/2022-06-23-the-new-github-issues-june-23rd-update/, to find a suitable replacement. Removal on 2023-01-01 UTC.")
     val isArchived get() =
         ScalarNode("isArchived").also { doInit(it) }
+    @Deprecated("The `ProjectNext` API is deprecated in favour of the more capable `ProjectV2` API. Follow the ProjectV2 guide at https://github.blog/changelog/2022-06-23-the-new-github-issues-june-23rd-update/, to find a suitable replacement. Removal on 2023-01-01 UTC.")
     fun project(init: ProjectNext.() -> Unit) =
         ProjectNext("project").also { doInit(it, init) }
+    @Deprecated("The `ProjectNext` API is deprecated in favour of the more capable `ProjectV2` API. Follow the ProjectV2 guide at https://github.blog/changelog/2022-06-23-the-new-github-issues-june-23rd-update/, to find a suitable replacement. Removal on 2023-01-01 UTC.")
     val title get() =
         ScalarNode("title").also { doInit(it) }
+    @Deprecated("The `ProjectNext` API is deprecated in favour of the more capable `ProjectV2` API. Follow the ProjectV2 guide at https://github.blog/changelog/2022-06-23-the-new-github-issues-june-23rd-update/, to find a suitable replacement. Removal on 2023-01-01 UTC.")
     val type get() =
         ScalarNode("type").also { doInit(it) }
+    @Deprecated("The `ProjectNext` API is deprecated in favour of the more capable `ProjectV2` API. Follow the ProjectV2 guide at https://github.blog/changelog/2022-06-23-the-new-github-issues-june-23rd-update/, to find a suitable replacement. Removal on 2023-01-01 UTC.")
     val updatedAt get() =
         ScalarNode("updatedAt").also { doInit(it) }
 }
@@ -8557,20 +8986,27 @@ class ProjectNextItemEdge(__name: String = "ProjectNextItemEdge"): ObjectNode(__
 }
 
 class ProjectNextItemFieldValue(__name: String = "ProjectNextItemFieldValue"): ObjectNode(__name) {
+    @Deprecated("The `ProjectNext` API is deprecated in favour of the more capable `ProjectV2` API. Follow the ProjectV2 guide at https://github.blog/changelog/2022-06-23-the-new-github-issues-june-23rd-update/, to find a suitable replacement. Removal on 2023-01-01 UTC.")
     val createdAt get() =
         ScalarNode("createdAt").also { doInit(it) }
+    @Deprecated("The `ProjectNext` API is deprecated in favour of the more capable `ProjectV2` API. Follow the ProjectV2 guide at https://github.blog/changelog/2022-06-23-the-new-github-issues-june-23rd-update/, to find a suitable replacement. Removal on 2023-01-01 UTC.")
     fun creator(init: Actor.() -> Unit) =
         Actor("creator").also { doInit(it, init) }
+    @Deprecated("The `ProjectNext` API is deprecated in favour of the more capable `ProjectV2` API. Follow the ProjectV2 guide at https://github.blog/changelog/2022-06-23-the-new-github-issues-june-23rd-update/, to find a suitable replacement. Removal on 2023-01-01 UTC.")
     val databaseId get() =
         ScalarNode("databaseId").also { doInit(it) }
     val id get() =
         ScalarNode("id").also { doInit(it) }
+    @Deprecated("The `ProjectNext` API is deprecated in favour of the more capable `ProjectV2` API. Follow the ProjectV2 guide at https://github.blog/changelog/2022-06-23-the-new-github-issues-june-23rd-update/, to find a suitable replacement. Removal on 2023-01-01 UTC.")
     fun projectField(init: ProjectNextField.() -> Unit) =
         ProjectNextField("projectField").also { doInit(it, init) }
+    @Deprecated("The `ProjectNext` API is deprecated in favour of the more capable `ProjectV2` API. Follow the ProjectV2 guide at https://github.blog/changelog/2022-06-23-the-new-github-issues-june-23rd-update/, to find a suitable replacement. Removal on 2023-01-01 UTC.")
     fun projectItem(init: ProjectNextItem.() -> Unit) =
         ProjectNextItem("projectItem").also { doInit(it, init) }
+    @Deprecated("The `ProjectNext` API is deprecated in favour of the more capable `ProjectV2` API. Follow the ProjectV2 guide at https://github.blog/changelog/2022-06-23-the-new-github-issues-june-23rd-update/, to find a suitable replacement. Removal on 2023-01-01 UTC.")
     val updatedAt get() =
         ScalarNode("updatedAt").also { doInit(it) }
+    @Deprecated("The `ProjectNext` API is deprecated in favour of the more capable `ProjectV2` API. Follow the ProjectV2 guide at https://github.blog/changelog/2022-06-23-the-new-github-issues-june-23rd-update/, to find a suitable replacement. Removal on 2023-01-01 UTC.")
     val value get() =
         ScalarNode("value").also { doInit(it) }
 }
@@ -8610,33 +9046,553 @@ class ProjectProgress(__name: String = "ProjectProgress"): ObjectNode(__name) {
         ScalarNode("todoPercentage").also { doInit(it) }
 }
 
-class ProjectView(__name: String = "ProjectView"): ObjectNode(__name) {
+class ProjectV2(__name: String = "ProjectV2"): ObjectNode(__name) {
+    val closed get() =
+        ScalarNode("closed").also { doInit(it) }
+    val closedAt get() =
+        ScalarNode("closedAt").also { doInit(it) }
+    val createdAt get() =
+        ScalarNode("createdAt").also { doInit(it) }
+    fun creator(init: Actor.() -> Unit) =
+        Actor("creator").also { doInit(it, init) }
+    val databaseId get() =
+        ScalarNode("databaseId").also { doInit(it) }
+    fun field(name: String, init: ProjectV2FieldConfiguration.() -> Unit) =
+        ProjectV2FieldConfiguration("field").apply { addArgs("name", name) }.also { doInit(it, init) }
+    fun fields(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, orderBy: ProjectV2FieldOrder? = null, init: ProjectV2FieldConfigurationConnection.() -> Unit) =
+        ProjectV2FieldConfigurationConnection("fields").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.also { doInit(it, init) }
+    val id get() =
+        ScalarNode("id").also { doInit(it) }
+    fun items(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, orderBy: ProjectV2ItemOrder? = null, init: ProjectV2ItemConnection.() -> Unit) =
+        ProjectV2ItemConnection("items").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.also { doInit(it, init) }
+    val number get() =
+        ScalarNode("number").also { doInit(it) }
+    fun owner(init: ProjectV2Owner.() -> Unit) =
+        ProjectV2Owner("owner").also { doInit(it, init) }
+    val public get() =
+        ScalarNode("public").also { doInit(it) }
+    val readme get() =
+        ScalarNode("readme").also { doInit(it) }
+    fun repositories(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, orderBy: RepositoryOrder? = null, init: RepositoryConnection.() -> Unit) =
+        RepositoryConnection("repositories").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.also { doInit(it, init) }
+    val resourcePath get() =
+        ScalarNode("resourcePath").also { doInit(it) }
+    val shortDescription get() =
+        ScalarNode("shortDescription").also { doInit(it) }
+    fun teams(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, orderBy: TeamOrder? = null, init: TeamConnection.() -> Unit) =
+        TeamConnection("teams").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.also { doInit(it, init) }
+    val title get() =
+        ScalarNode("title").also { doInit(it) }
+    val updatedAt get() =
+        ScalarNode("updatedAt").also { doInit(it) }
+    val url get() =
+        ScalarNode("url").also { doInit(it) }
+    fun view(number: Int, init: ProjectV2View.() -> Unit) =
+        ProjectV2View("view").apply { addArgs("number", number) }.also { doInit(it, init) }
+    val viewerCanUpdate get() =
+        ScalarNode("viewerCanUpdate").also { doInit(it) }
+    fun views(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, orderBy: ProjectV2ViewOrder? = null, init: ProjectV2ViewConnection.() -> Unit) =
+        ProjectV2ViewConnection("views").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.also { doInit(it, init) }
+}
+
+class ProjectV2Connection(__name: String = "ProjectV2Connection"): ObjectNode(__name) {
+    fun edges(init: ProjectV2Edge.() -> Unit) =
+        ProjectV2Edge("edges").also { doInit(it, init) }
+    fun nodes(init: ProjectV2.() -> Unit) =
+        ProjectV2("nodes").also { doInit(it, init) }
+    fun pageInfo(init: PageInfo.() -> Unit) =
+        PageInfo("pageInfo").also { doInit(it, init) }
+    val totalCount get() =
+        ScalarNode("totalCount").also { doInit(it) }
+}
+
+class ProjectV2Edge(__name: String = "ProjectV2Edge"): ObjectNode(__name) {
+    val cursor get() =
+        ScalarNode("cursor").also { doInit(it) }
+    fun node(init: ProjectV2.() -> Unit) =
+        ProjectV2("node").also { doInit(it, init) }
+}
+
+class ProjectV2Field(__name: String = "ProjectV2Field"): ObjectNode(__name) {
+    val createdAt get() =
+        ScalarNode("createdAt").also { doInit(it) }
+    val dataType get() =
+        ScalarNode("dataType").also { doInit(it) }
+    val databaseId get() =
+        ScalarNode("databaseId").also { doInit(it) }
+    val id get() =
+        ScalarNode("id").also { doInit(it) }
+    val name get() =
+        ScalarNode("name").also { doInit(it) }
+    fun project(init: ProjectV2.() -> Unit) =
+        ProjectV2("project").also { doInit(it, init) }
+    val updatedAt get() =
+        ScalarNode("updatedAt").also { doInit(it) }
+}
+
+class ProjectV2FieldConfigurationConnection(__name: String = "ProjectV2FieldConfigurationConnection"): ObjectNode(__name) {
+    fun edges(init: ProjectV2FieldConfigurationEdge.() -> Unit) =
+        ProjectV2FieldConfigurationEdge("edges").also { doInit(it, init) }
+    fun nodes(init: ProjectV2FieldConfiguration.() -> Unit) =
+        ProjectV2FieldConfiguration("nodes").also { doInit(it, init) }
+    fun pageInfo(init: PageInfo.() -> Unit) =
+        PageInfo("pageInfo").also { doInit(it, init) }
+    val totalCount get() =
+        ScalarNode("totalCount").also { doInit(it) }
+}
+
+class ProjectV2FieldConfigurationEdge(__name: String = "ProjectV2FieldConfigurationEdge"): ObjectNode(__name) {
+    val cursor get() =
+        ScalarNode("cursor").also { doInit(it) }
+    fun node(init: ProjectV2FieldConfiguration.() -> Unit) =
+        ProjectV2FieldConfiguration("node").also { doInit(it, init) }
+}
+
+class ProjectV2FieldConnection(__name: String = "ProjectV2FieldConnection"): ObjectNode(__name) {
+    fun edges(init: ProjectV2FieldEdge.() -> Unit) =
+        ProjectV2FieldEdge("edges").also { doInit(it, init) }
+    fun nodes(init: ProjectV2Field.() -> Unit) =
+        ProjectV2Field("nodes").also { doInit(it, init) }
+    fun pageInfo(init: PageInfo.() -> Unit) =
+        PageInfo("pageInfo").also { doInit(it, init) }
+    val totalCount get() =
+        ScalarNode("totalCount").also { doInit(it) }
+}
+
+class ProjectV2FieldEdge(__name: String = "ProjectV2FieldEdge"): ObjectNode(__name) {
+    val cursor get() =
+        ScalarNode("cursor").also { doInit(it) }
+    fun node(init: ProjectV2Field.() -> Unit) =
+        ProjectV2Field("node").also { doInit(it, init) }
+}
+
+class ProjectV2Item(__name: String = "ProjectV2Item"): ObjectNode(__name) {
+    fun content(init: ProjectV2ItemContent.() -> Unit) =
+        ProjectV2ItemContent("content").also { doInit(it, init) }
+    val createdAt get() =
+        ScalarNode("createdAt").also { doInit(it) }
+    fun creator(init: Actor.() -> Unit) =
+        Actor("creator").also { doInit(it, init) }
+    val databaseId get() =
+        ScalarNode("databaseId").also { doInit(it) }
+    fun fieldValueByName(name: String, init: ProjectV2ItemFieldValue.() -> Unit) =
+        ProjectV2ItemFieldValue("fieldValueByName").apply { addArgs("name", name) }.also { doInit(it, init) }
+    fun fieldValues(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, orderBy: ProjectV2ItemFieldValueOrder? = null, init: ProjectV2ItemFieldValueConnection.() -> Unit) =
+        ProjectV2ItemFieldValueConnection("fieldValues").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.also { doInit(it, init) }
+    val id get() =
+        ScalarNode("id").also { doInit(it) }
+    val isArchived get() =
+        ScalarNode("isArchived").also { doInit(it) }
+    fun project(init: ProjectV2.() -> Unit) =
+        ProjectV2("project").also { doInit(it, init) }
+    val type get() =
+        ScalarNode("type").also { doInit(it) }
+    val updatedAt get() =
+        ScalarNode("updatedAt").also { doInit(it) }
+}
+
+class ProjectV2ItemConnection(__name: String = "ProjectV2ItemConnection"): ObjectNode(__name) {
+    fun edges(init: ProjectV2ItemEdge.() -> Unit) =
+        ProjectV2ItemEdge("edges").also { doInit(it, init) }
+    fun nodes(init: ProjectV2Item.() -> Unit) =
+        ProjectV2Item("nodes").also { doInit(it, init) }
+    fun pageInfo(init: PageInfo.() -> Unit) =
+        PageInfo("pageInfo").also { doInit(it, init) }
+    val totalCount get() =
+        ScalarNode("totalCount").also { doInit(it) }
+}
+
+class ProjectV2ItemEdge(__name: String = "ProjectV2ItemEdge"): ObjectNode(__name) {
+    val cursor get() =
+        ScalarNode("cursor").also { doInit(it) }
+    fun node(init: ProjectV2Item.() -> Unit) =
+        ProjectV2Item("node").also { doInit(it, init) }
+}
+
+class ProjectV2ItemFieldDateValue(__name: String = "ProjectV2ItemFieldDateValue"): ObjectNode(__name) {
+    val createdAt get() =
+        ScalarNode("createdAt").also { doInit(it) }
+    fun creator(init: Actor.() -> Unit) =
+        Actor("creator").also { doInit(it, init) }
+    val databaseId get() =
+        ScalarNode("databaseId").also { doInit(it) }
+    val date get() =
+        ScalarNode("date").also { doInit(it) }
+    fun field(init: ProjectV2FieldConfiguration.() -> Unit) =
+        ProjectV2FieldConfiguration("field").also { doInit(it, init) }
+    val id get() =
+        ScalarNode("id").also { doInit(it) }
+    fun item(init: ProjectV2Item.() -> Unit) =
+        ProjectV2Item("item").also { doInit(it, init) }
+    val updatedAt get() =
+        ScalarNode("updatedAt").also { doInit(it) }
+}
+
+class ProjectV2ItemFieldIterationValue(__name: String = "ProjectV2ItemFieldIterationValue"): ObjectNode(__name) {
+    val createdAt get() =
+        ScalarNode("createdAt").also { doInit(it) }
+    fun creator(init: Actor.() -> Unit) =
+        Actor("creator").also { doInit(it, init) }
+    val databaseId get() =
+        ScalarNode("databaseId").also { doInit(it) }
+    val duration get() =
+        ScalarNode("duration").also { doInit(it) }
+    fun field(init: ProjectV2FieldConfiguration.() -> Unit) =
+        ProjectV2FieldConfiguration("field").also { doInit(it, init) }
+    val id get() =
+        ScalarNode("id").also { doInit(it) }
+    fun item(init: ProjectV2Item.() -> Unit) =
+        ProjectV2Item("item").also { doInit(it, init) }
+    val iterationId get() =
+        ScalarNode("iterationId").also { doInit(it) }
+    val startDate get() =
+        ScalarNode("startDate").also { doInit(it) }
+    val title get() =
+        ScalarNode("title").also { doInit(it) }
+    val titleHTML get() =
+        ScalarNode("titleHTML").also { doInit(it) }
+    val updatedAt get() =
+        ScalarNode("updatedAt").also { doInit(it) }
+}
+
+class ProjectV2ItemFieldLabelValue(__name: String = "ProjectV2ItemFieldLabelValue"): ObjectNode(__name) {
+    fun field(init: ProjectV2FieldConfiguration.() -> Unit) =
+        ProjectV2FieldConfiguration("field").also { doInit(it, init) }
+    fun labels(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, init: LabelConnection.() -> Unit) =
+        LabelConnection("labels").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.also { doInit(it, init) }
+}
+
+class ProjectV2ItemFieldMilestoneValue(__name: String = "ProjectV2ItemFieldMilestoneValue"): ObjectNode(__name) {
+    fun field(init: ProjectV2FieldConfiguration.() -> Unit) =
+        ProjectV2FieldConfiguration("field").also { doInit(it, init) }
+    fun milestone(init: Milestone.() -> Unit) =
+        Milestone("milestone").also { doInit(it, init) }
+}
+
+class ProjectV2ItemFieldNumberValue(__name: String = "ProjectV2ItemFieldNumberValue"): ObjectNode(__name) {
+    val createdAt get() =
+        ScalarNode("createdAt").also { doInit(it) }
+    fun creator(init: Actor.() -> Unit) =
+        Actor("creator").also { doInit(it, init) }
+    val databaseId get() =
+        ScalarNode("databaseId").also { doInit(it) }
+    fun field(init: ProjectV2FieldConfiguration.() -> Unit) =
+        ProjectV2FieldConfiguration("field").also { doInit(it, init) }
+    val id get() =
+        ScalarNode("id").also { doInit(it) }
+    fun item(init: ProjectV2Item.() -> Unit) =
+        ProjectV2Item("item").also { doInit(it, init) }
+    val number get() =
+        ScalarNode("number").also { doInit(it) }
+    val updatedAt get() =
+        ScalarNode("updatedAt").also { doInit(it) }
+}
+
+class ProjectV2ItemFieldPullRequestValue(__name: String = "ProjectV2ItemFieldPullRequestValue"): ObjectNode(__name) {
+    fun field(init: ProjectV2FieldConfiguration.() -> Unit) =
+        ProjectV2FieldConfiguration("field").also { doInit(it, init) }
+    fun pullRequests(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, orderBy: PullRequestOrder? = null, init: PullRequestConnection.() -> Unit) =
+        PullRequestConnection("pullRequests").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.also { doInit(it, init) }
+}
+
+class ProjectV2ItemFieldRepositoryValue(__name: String = "ProjectV2ItemFieldRepositoryValue"): ObjectNode(__name) {
+    fun field(init: ProjectV2FieldConfiguration.() -> Unit) =
+        ProjectV2FieldConfiguration("field").also { doInit(it, init) }
+    fun repository(init: Repository.() -> Unit) =
+        Repository("repository").also { doInit(it, init) }
+}
+
+class ProjectV2ItemFieldReviewerValue(__name: String = "ProjectV2ItemFieldReviewerValue"): ObjectNode(__name) {
+    fun field(init: ProjectV2FieldConfiguration.() -> Unit) =
+        ProjectV2FieldConfiguration("field").also { doInit(it, init) }
+    fun reviewers(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, init: RequestedReviewerConnection.() -> Unit) =
+        RequestedReviewerConnection("reviewers").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.also { doInit(it, init) }
+}
+
+class ProjectV2ItemFieldSingleSelectValue(__name: String = "ProjectV2ItemFieldSingleSelectValue"): ObjectNode(__name) {
+    val createdAt get() =
+        ScalarNode("createdAt").also { doInit(it) }
+    fun creator(init: Actor.() -> Unit) =
+        Actor("creator").also { doInit(it, init) }
+    val databaseId get() =
+        ScalarNode("databaseId").also { doInit(it) }
+    fun field(init: ProjectV2FieldConfiguration.() -> Unit) =
+        ProjectV2FieldConfiguration("field").also { doInit(it, init) }
+    val id get() =
+        ScalarNode("id").also { doInit(it) }
+    fun item(init: ProjectV2Item.() -> Unit) =
+        ProjectV2Item("item").also { doInit(it, init) }
+    val name get() =
+        ScalarNode("name").also { doInit(it) }
+    val nameHTML get() =
+        ScalarNode("nameHTML").also { doInit(it) }
+    val optionId get() =
+        ScalarNode("optionId").also { doInit(it) }
+    val updatedAt get() =
+        ScalarNode("updatedAt").also { doInit(it) }
+}
+
+class ProjectV2ItemFieldTextValue(__name: String = "ProjectV2ItemFieldTextValue"): ObjectNode(__name) {
+    val createdAt get() =
+        ScalarNode("createdAt").also { doInit(it) }
+    fun creator(init: Actor.() -> Unit) =
+        Actor("creator").also { doInit(it, init) }
+    val databaseId get() =
+        ScalarNode("databaseId").also { doInit(it) }
+    fun field(init: ProjectV2FieldConfiguration.() -> Unit) =
+        ProjectV2FieldConfiguration("field").also { doInit(it, init) }
+    val id get() =
+        ScalarNode("id").also { doInit(it) }
+    fun item(init: ProjectV2Item.() -> Unit) =
+        ProjectV2Item("item").also { doInit(it, init) }
+    val text get() =
+        ScalarNode("text").also { doInit(it) }
+    val updatedAt get() =
+        ScalarNode("updatedAt").also { doInit(it) }
+}
+
+class ProjectV2ItemFieldUserValue(__name: String = "ProjectV2ItemFieldUserValue"): ObjectNode(__name) {
+    fun field(init: ProjectV2FieldConfiguration.() -> Unit) =
+        ProjectV2FieldConfiguration("field").also { doInit(it, init) }
+    fun users(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, init: UserConnection.() -> Unit) =
+        UserConnection("users").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.also { doInit(it, init) }
+}
+
+class ProjectV2ItemFieldValueConnection(__name: String = "ProjectV2ItemFieldValueConnection"): ObjectNode(__name) {
+    fun edges(init: ProjectV2ItemFieldValueEdge.() -> Unit) =
+        ProjectV2ItemFieldValueEdge("edges").also { doInit(it, init) }
+    fun nodes(init: ProjectV2ItemFieldValue.() -> Unit) =
+        ProjectV2ItemFieldValue("nodes").also { doInit(it, init) }
+    fun pageInfo(init: PageInfo.() -> Unit) =
+        PageInfo("pageInfo").also { doInit(it, init) }
+    val totalCount get() =
+        ScalarNode("totalCount").also { doInit(it) }
+}
+
+class ProjectV2ItemFieldValueEdge(__name: String = "ProjectV2ItemFieldValueEdge"): ObjectNode(__name) {
+    val cursor get() =
+        ScalarNode("cursor").also { doInit(it) }
+    fun node(init: ProjectV2ItemFieldValue.() -> Unit) =
+        ProjectV2ItemFieldValue("node").also { doInit(it, init) }
+}
+
+class ProjectV2IterationField(__name: String = "ProjectV2IterationField"): ObjectNode(__name) {
+    fun configuration(init: ProjectV2IterationFieldConfiguration.() -> Unit) =
+        ProjectV2IterationFieldConfiguration("configuration").also { doInit(it, init) }
+    val createdAt get() =
+        ScalarNode("createdAt").also { doInit(it) }
+    val dataType get() =
+        ScalarNode("dataType").also { doInit(it) }
+    val databaseId get() =
+        ScalarNode("databaseId").also { doInit(it) }
+    val id get() =
+        ScalarNode("id").also { doInit(it) }
+    val name get() =
+        ScalarNode("name").also { doInit(it) }
+    fun project(init: ProjectV2.() -> Unit) =
+        ProjectV2("project").also { doInit(it, init) }
+    val updatedAt get() =
+        ScalarNode("updatedAt").also { doInit(it) }
+}
+
+class ProjectV2IterationFieldConfiguration(__name: String = "ProjectV2IterationFieldConfiguration"): ObjectNode(__name) {
+    fun completedIterations(init: ProjectV2IterationFieldIteration.() -> Unit) =
+        ProjectV2IterationFieldIteration("completedIterations").also { doInit(it, init) }
+    val duration get() =
+        ScalarNode("duration").also { doInit(it) }
+    fun iterations(init: ProjectV2IterationFieldIteration.() -> Unit) =
+        ProjectV2IterationFieldIteration("iterations").also { doInit(it, init) }
+    val startDay get() =
+        ScalarNode("startDay").also { doInit(it) }
+}
+
+class ProjectV2IterationFieldIteration(__name: String = "ProjectV2IterationFieldIteration"): ObjectNode(__name) {
+    val duration get() =
+        ScalarNode("duration").also { doInit(it) }
+    val id get() =
+        ScalarNode("id").also { doInit(it) }
+    val startDate get() =
+        ScalarNode("startDate").also { doInit(it) }
+    val title get() =
+        ScalarNode("title").also { doInit(it) }
+    val titleHTML get() =
+        ScalarNode("titleHTML").also { doInit(it) }
+}
+
+class ProjectV2SingleSelectField(__name: String = "ProjectV2SingleSelectField"): ObjectNode(__name) {
+    val createdAt get() =
+        ScalarNode("createdAt").also { doInit(it) }
+    val dataType get() =
+        ScalarNode("dataType").also { doInit(it) }
+    val databaseId get() =
+        ScalarNode("databaseId").also { doInit(it) }
+    val id get() =
+        ScalarNode("id").also { doInit(it) }
+    val name get() =
+        ScalarNode("name").also { doInit(it) }
+    fun options(init: ProjectV2SingleSelectFieldOption.() -> Unit) =
+        ProjectV2SingleSelectFieldOption("options").also { doInit(it, init) }
+    fun project(init: ProjectV2.() -> Unit) =
+        ProjectV2("project").also { doInit(it, init) }
+    val updatedAt get() =
+        ScalarNode("updatedAt").also { doInit(it) }
+}
+
+class ProjectV2SingleSelectFieldOption(__name: String = "ProjectV2SingleSelectFieldOption"): ObjectNode(__name) {
+    val id get() =
+        ScalarNode("id").also { doInit(it) }
+    val name get() =
+        ScalarNode("name").also { doInit(it) }
+    val nameHTML get() =
+        ScalarNode("nameHTML").also { doInit(it) }
+}
+
+class ProjectV2SortBy(__name: String = "ProjectV2SortBy"): ObjectNode(__name) {
+    val direction get() =
+        ScalarNode("direction").also { doInit(it) }
+    fun field(init: ProjectV2Field.() -> Unit) =
+        ProjectV2Field("field").also { doInit(it, init) }
+}
+
+class ProjectV2SortByConnection(__name: String = "ProjectV2SortByConnection"): ObjectNode(__name) {
+    fun edges(init: ProjectV2SortByEdge.() -> Unit) =
+        ProjectV2SortByEdge("edges").also { doInit(it, init) }
+    fun nodes(init: ProjectV2SortBy.() -> Unit) =
+        ProjectV2SortBy("nodes").also { doInit(it, init) }
+    fun pageInfo(init: PageInfo.() -> Unit) =
+        PageInfo("pageInfo").also { doInit(it, init) }
+    val totalCount get() =
+        ScalarNode("totalCount").also { doInit(it) }
+}
+
+class ProjectV2SortByEdge(__name: String = "ProjectV2SortByEdge"): ObjectNode(__name) {
+    val cursor get() =
+        ScalarNode("cursor").also { doInit(it) }
+    fun node(init: ProjectV2SortBy.() -> Unit) =
+        ProjectV2SortBy("node").also { doInit(it, init) }
+}
+
+class ProjectV2SortByField(__name: String = "ProjectV2SortByField"): ObjectNode(__name) {
+    val direction get() =
+        ScalarNode("direction").also { doInit(it) }
+    fun field(init: ProjectV2FieldConfiguration.() -> Unit) =
+        ProjectV2FieldConfiguration("field").also { doInit(it, init) }
+}
+
+class ProjectV2SortByFieldConnection(__name: String = "ProjectV2SortByFieldConnection"): ObjectNode(__name) {
+    fun edges(init: ProjectV2SortByFieldEdge.() -> Unit) =
+        ProjectV2SortByFieldEdge("edges").also { doInit(it, init) }
+    fun nodes(init: ProjectV2SortByField.() -> Unit) =
+        ProjectV2SortByField("nodes").also { doInit(it, init) }
+    fun pageInfo(init: PageInfo.() -> Unit) =
+        PageInfo("pageInfo").also { doInit(it, init) }
+    val totalCount get() =
+        ScalarNode("totalCount").also { doInit(it) }
+}
+
+class ProjectV2SortByFieldEdge(__name: String = "ProjectV2SortByFieldEdge"): ObjectNode(__name) {
+    val cursor get() =
+        ScalarNode("cursor").also { doInit(it) }
+    fun node(init: ProjectV2SortByField.() -> Unit) =
+        ProjectV2SortByField("node").also { doInit(it, init) }
+}
+
+class ProjectV2View(__name: String = "ProjectV2View"): ObjectNode(__name) {
     val createdAt get() =
         ScalarNode("createdAt").also { doInit(it) }
     val databaseId get() =
         ScalarNode("databaseId").also { doInit(it) }
+    fun fields(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, orderBy: ProjectV2FieldOrder? = null, init: ProjectV2FieldConfigurationConnection.() -> Unit) =
+        ProjectV2FieldConfigurationConnection("fields").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.also { doInit(it, init) }
     val filter get() =
         ScalarNode("filter").also { doInit(it) }
-    val groupBy get() =
-        ScalarNode("groupBy").also { doInit(it) }
+    @Deprecated("The `ProjectV2View#order_by` API is deprecated in favour of the more capable `ProjectV2View#group_by_field` API. Check out the `ProjectV2View#group_by_fields` API as an example for the more capable alternative. Removal on 2023-04-01 UTC.")
+    fun groupBy(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, orderBy: ProjectV2FieldOrder? = null, init: ProjectV2FieldConnection.() -> Unit) =
+        ProjectV2FieldConnection("groupBy").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.also { doInit(it, init) }
+    fun groupByFields(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, orderBy: ProjectV2FieldOrder? = null, init: ProjectV2FieldConfigurationConnection.() -> Unit) =
+        ProjectV2FieldConfigurationConnection("groupByFields").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.also { doInit(it, init) }
     val id get() =
         ScalarNode("id").also { doInit(it) }
-    fun items(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, init: ProjectNextItemConnection.() -> Unit) =
-        ProjectNextItemConnection("items").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.also { doInit(it, init) }
     val layout get() =
         ScalarNode("layout").also { doInit(it) }
     val name get() =
         ScalarNode("name").also { doInit(it) }
     val number get() =
         ScalarNode("number").also { doInit(it) }
-    fun project(init: ProjectNext.() -> Unit) =
-        ProjectNext("project").also { doInit(it, init) }
-    fun sortBy(init: SortBy.() -> Unit) =
-        SortBy("sortBy").also { doInit(it, init) }
+    fun project(init: ProjectV2.() -> Unit) =
+        ProjectV2("project").also { doInit(it, init) }
+    @Deprecated("The `ProjectV2View#sort_by` API is deprecated in favour of the more capable `ProjectV2View#sort_by_fields` API. Check out the `ProjectV2View#sort_by_fields` API as an example for the more capable alternative. Removal on 2023-04-01 UTC.")
+    fun sortBy(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, init: ProjectV2SortByConnection.() -> Unit) =
+        ProjectV2SortByConnection("sortBy").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.also { doInit(it, init) }
+    fun sortByFields(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, init: ProjectV2SortByFieldConnection.() -> Unit) =
+        ProjectV2SortByFieldConnection("sortByFields").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.also { doInit(it, init) }
     val updatedAt get() =
         ScalarNode("updatedAt").also { doInit(it) }
+    @Deprecated("The `ProjectV2View#vertical_group_by` API is deprecated in favour of the more capable `ProjectV2View#vertical_group_by_fields` API. Check out the `ProjectV2View#vertical_group_by_fields` API as an example for the more capable alternative. Removal on 2023-04-01 UTC.")
+    fun verticalGroupBy(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, orderBy: ProjectV2FieldOrder? = null, init: ProjectV2FieldConnection.() -> Unit) =
+        ProjectV2FieldConnection("verticalGroupBy").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.also { doInit(it, init) }
+    fun verticalGroupByFields(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, orderBy: ProjectV2FieldOrder? = null, init: ProjectV2FieldConfigurationConnection.() -> Unit) =
+        ProjectV2FieldConfigurationConnection("verticalGroupByFields").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.also { doInit(it, init) }
+    @Deprecated("The `ProjectV2View#visibleFields` API is deprecated in favour of the more capable `ProjectV2View#fields` API. Check out the `ProjectV2View#fields` API as an example for the more capable alternative. Removal on 2023-01-01 UTC.")
+    fun visibleFields(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, orderBy: ProjectV2FieldOrder? = null, init: ProjectV2FieldConnection.() -> Unit) =
+        ProjectV2FieldConnection("visibleFields").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.also { doInit(it, init) }
+}
+
+class ProjectV2ViewConnection(__name: String = "ProjectV2ViewConnection"): ObjectNode(__name) {
+    fun edges(init: ProjectV2ViewEdge.() -> Unit) =
+        ProjectV2ViewEdge("edges").also { doInit(it, init) }
+    fun nodes(init: ProjectV2View.() -> Unit) =
+        ProjectV2View("nodes").also { doInit(it, init) }
+    fun pageInfo(init: PageInfo.() -> Unit) =
+        PageInfo("pageInfo").also { doInit(it, init) }
+    val totalCount get() =
+        ScalarNode("totalCount").also { doInit(it) }
+}
+
+class ProjectV2ViewEdge(__name: String = "ProjectV2ViewEdge"): ObjectNode(__name) {
+    val cursor get() =
+        ScalarNode("cursor").also { doInit(it) }
+    fun node(init: ProjectV2View.() -> Unit) =
+        ProjectV2View("node").also { doInit(it, init) }
+}
+
+class ProjectView(__name: String = "ProjectView"): ObjectNode(__name) {
+    @Deprecated("The `ProjectNext` API is deprecated in favour of the more capable `ProjectV2` API. Follow the ProjectV2 guide at https://github.blog/changelog/2022-06-23-the-new-github-issues-june-23rd-update/, to find a suitable replacement. Removal on 2023-01-01 UTC.")
+    val createdAt get() =
+        ScalarNode("createdAt").also { doInit(it) }
+    @Deprecated("The `ProjectNext` API is deprecated in favour of the more capable `ProjectV2` API. Follow the ProjectV2 guide at https://github.blog/changelog/2022-06-23-the-new-github-issues-june-23rd-update/, to find a suitable replacement. Removal on 2023-01-01 UTC.")
+    val databaseId get() =
+        ScalarNode("databaseId").also { doInit(it) }
+    @Deprecated("The `ProjectNext` API is deprecated in favour of the more capable `ProjectV2` API. Follow the ProjectV2 guide at https://github.blog/changelog/2022-06-23-the-new-github-issues-june-23rd-update/, to find a suitable replacement. Removal on 2023-01-01 UTC.")
+    val filter get() =
+        ScalarNode("filter").also { doInit(it) }
+    @Deprecated("The `ProjectNext` API is deprecated in favour of the more capable `ProjectV2` API. Follow the ProjectV2 guide at https://github.blog/changelog/2022-06-23-the-new-github-issues-june-23rd-update/, to find a suitable replacement. Removal on 2023-01-01 UTC.")
+    val groupBy get() =
+        ScalarNode("groupBy").also { doInit(it) }
+    val id get() =
+        ScalarNode("id").also { doInit(it) }
+    @Deprecated("The `ProjectNext` API is deprecated in favour of the more capable `ProjectV2` API. Follow the ProjectV2 guide at https://github.blog/changelog/2022-06-23-the-new-github-issues-june-23rd-update/, to find a suitable replacement. Removal on 2023-01-01 UTC.")
+    val layout get() =
+        ScalarNode("layout").also { doInit(it) }
+    @Deprecated("The `ProjectNext` API is deprecated in favour of the more capable `ProjectV2` API. Follow the ProjectV2 guide at https://github.blog/changelog/2022-06-23-the-new-github-issues-june-23rd-update/, to find a suitable replacement. Removal on 2023-01-01 UTC.")
+    val name get() =
+        ScalarNode("name").also { doInit(it) }
+    @Deprecated("The `ProjectNext` API is deprecated in favour of the more capable `ProjectV2` API. Follow the ProjectV2 guide at https://github.blog/changelog/2022-06-23-the-new-github-issues-june-23rd-update/, to find a suitable replacement. Removal on 2023-01-01 UTC.")
+    val number get() =
+        ScalarNode("number").also { doInit(it) }
+    @Deprecated("The `ProjectNext` API is deprecated in favour of the more capable `ProjectV2` API. Follow the ProjectV2 guide at https://github.blog/changelog/2022-06-23-the-new-github-issues-june-23rd-update/, to find a suitable replacement. Removal on 2023-01-01 UTC.")
+    fun project(init: ProjectNext.() -> Unit) =
+        ProjectNext("project").also { doInit(it, init) }
+    @Deprecated("The `ProjectNext` API is deprecated in favour of the more capable `ProjectV2` API. Follow the ProjectV2 guide at https://github.blog/changelog/2022-06-23-the-new-github-issues-june-23rd-update/, to find a suitable replacement. Removal on 2023-01-01 UTC.")
+    fun sortBy(init: SortBy.() -> Unit) =
+        SortBy("sortBy").also { doInit(it, init) }
+    @Deprecated("The `ProjectNext` API is deprecated in favour of the more capable `ProjectV2` API. Follow the ProjectV2 guide at https://github.blog/changelog/2022-06-23-the-new-github-issues-june-23rd-update/, to find a suitable replacement. Removal on 2023-01-01 UTC.")
+    val updatedAt get() =
+        ScalarNode("updatedAt").also { doInit(it) }
+    @Deprecated("The `ProjectNext` API is deprecated in favour of the more capable `ProjectV2` API. Follow the ProjectV2 guide at https://github.blog/changelog/2022-06-23-the-new-github-issues-june-23rd-update/, to find a suitable replacement. Removal on 2023-01-01 UTC.")
     val verticalGroupBy get() =
         ScalarNode("verticalGroupBy").also { doInit(it) }
+    @Deprecated("The `ProjectNext` API is deprecated in favour of the more capable `ProjectV2` API. Follow the ProjectV2 guide at https://github.blog/changelog/2022-06-23-the-new-github-issues-june-23rd-update/, to find a suitable replacement. Removal on 2023-01-01 UTC.")
     val visibleFields get() =
         ScalarNode("visibleFields").also { doInit(it) }
 }
@@ -8809,12 +9765,21 @@ class PullRequest(__name: String = "PullRequest"): ObjectNode(__name) {
         Commit("potentialMergeCommit").also { doInit(it, init) }
     fun projectCards(after: String? = null, archivedStates: ProjectCardArchivedState? = null, before: String? = null, first: Int? = null, last: Int? = null, init: ProjectCardConnection.() -> Unit) =
         ProjectCardConnection("projectCards").apply { addArgs("after", after) }.apply { addArgs("archivedStates", archivedStates) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.also { doInit(it, init) }
+    fun projectItems(after: String? = null, before: String? = null, first: Int? = null, includeArchived: Boolean? = null, last: Int? = null, init: ProjectV2ItemConnection.() -> Unit) =
+        ProjectV2ItemConnection("projectItems").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("includeArchived", includeArchived) }.apply { addArgs("last", last) }.also { doInit(it, init) }
+    @Deprecated("The `ProjectNext` API is deprecated in favour of the more capable `ProjectV2` API. Follow the ProjectV2 guide at https://github.blog/changelog/2022-06-23-the-new-github-issues-june-23rd-update/, to find a suitable replacement. Removal on 2023-01-01 UTC.")
     fun projectNext(number: Int, init: ProjectNext.() -> Unit) =
         ProjectNext("projectNext").apply { addArgs("number", number) }.also { doInit(it, init) }
+    @Deprecated("The `ProjectNext` API is deprecated in favour of the more capable `ProjectV2` API. Follow the ProjectV2 guide at https://github.blog/changelog/2022-06-23-the-new-github-issues-june-23rd-update/, to find a suitable replacement. Removal on 2023-01-01 UTC.")
     fun projectNextItems(after: String? = null, before: String? = null, first: Int? = null, includeArchived: Boolean? = null, last: Int? = null, init: ProjectNextItemConnection.() -> Unit) =
         ProjectNextItemConnection("projectNextItems").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("includeArchived", includeArchived) }.apply { addArgs("last", last) }.also { doInit(it, init) }
+    fun projectV2(number: Int, init: ProjectV2.() -> Unit) =
+        ProjectV2("projectV2").apply { addArgs("number", number) }.also { doInit(it, init) }
+    @Deprecated("The `ProjectNext` API is deprecated in favour of the more capable `ProjectV2` API. Follow the ProjectV2 guide at https://github.blog/changelog/2022-06-23-the-new-github-issues-june-23rd-update/, to find a suitable replacement. Removal on 2023-01-01 UTC.")
     fun projectsNext(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, query: String? = null, sortBy: ProjectNextOrderField? = null, init: ProjectNextConnection.() -> Unit) =
         ProjectNextConnection("projectsNext").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("query", query) }.apply { addArgs("sortBy", sortBy) }.also { doInit(it, init) }
+    fun projectsV2(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, orderBy: ProjectV2Order? = null, query: String? = null, init: ProjectV2Connection.() -> Unit) =
+        ProjectV2Connection("projectsV2").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.apply { addArgs("query", query) }.also { doInit(it, init) }
     val publishedAt get() =
         ScalarNode("publishedAt").also { doInit(it) }
     fun reactionGroups(init: ReactionGroup.() -> Unit) =
@@ -8862,6 +9827,8 @@ class PullRequest(__name: String = "PullRequest"): ObjectNode(__name) {
         ScalarNode("viewerCanDeleteHeadRef").also { doInit(it) }
     val viewerCanDisableAutoMerge get() =
         ScalarNode("viewerCanDisableAutoMerge").also { doInit(it) }
+    val viewerCanEditFiles get() =
+        ScalarNode("viewerCanEditFiles").also { doInit(it) }
     val viewerCanEnableAutoMerge get() =
         ScalarNode("viewerCanEnableAutoMerge").also { doInit(it) }
     val viewerCanMergeAsAdmin get() =
@@ -9264,6 +10231,39 @@ class PullRequestTemplate(__name: String = "PullRequestTemplate"): ObjectNode(__
         Repository("repository").also { doInit(it, init) }
 }
 
+class PullRequestThread(__name: String = "PullRequestThread"): ObjectNode(__name) {
+    fun comments(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, skip: Int? = null, init: PullRequestReviewCommentConnection.() -> Unit) =
+        PullRequestReviewCommentConnection("comments").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("skip", skip) }.also { doInit(it, init) }
+    val diffSide get() =
+        ScalarNode("diffSide").also { doInit(it) }
+    val id get() =
+        ScalarNode("id").also { doInit(it) }
+    val isCollapsed get() =
+        ScalarNode("isCollapsed").also { doInit(it) }
+    val isOutdated get() =
+        ScalarNode("isOutdated").also { doInit(it) }
+    val isResolved get() =
+        ScalarNode("isResolved").also { doInit(it) }
+    val line get() =
+        ScalarNode("line").also { doInit(it) }
+    fun pullRequest(init: PullRequest.() -> Unit) =
+        PullRequest("pullRequest").also { doInit(it, init) }
+    fun repository(init: Repository.() -> Unit) =
+        Repository("repository").also { doInit(it, init) }
+    fun resolvedBy(init: User.() -> Unit) =
+        User("resolvedBy").also { doInit(it, init) }
+    val startDiffSide get() =
+        ScalarNode("startDiffSide").also { doInit(it) }
+    val startLine get() =
+        ScalarNode("startLine").also { doInit(it) }
+    val viewerCanReply get() =
+        ScalarNode("viewerCanReply").also { doInit(it) }
+    val viewerCanResolve get() =
+        ScalarNode("viewerCanResolve").also { doInit(it) }
+    val viewerCanUnresolve get() =
+        ScalarNode("viewerCanUnresolve").also { doInit(it) }
+}
+
 class PullRequestTimelineConnection(__name: String = "PullRequestTimelineConnection"): ObjectNode(__name) {
     fun edges(init: PullRequestTimelineItemEdge.() -> Unit) =
         PullRequestTimelineItemEdge("edges").also { doInit(it, init) }
@@ -9533,6 +10533,8 @@ class Ref(__name: String = "Ref"): ObjectNode(__name) {
         PullRequestConnection("associatedPullRequests").apply { addArgs("after", after) }.apply { addArgs("baseRefName", baseRefName) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("headRefName", headRefName) }.apply { addArgs("labels", labels) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.apply { addArgs("states", states) }.also { doInit(it, init) }
     fun branchProtectionRule(init: BranchProtectionRule.() -> Unit) =
         BranchProtectionRule("branchProtectionRule").also { doInit(it, init) }
+    fun compare(headRef: String, init: Comparison.() -> Unit) =
+        Comparison("compare").apply { addArgs("headRef", headRef) }.also { doInit(it, init) }
     val id get() =
         ScalarNode("id").also { doInit(it) }
     val name get() =
@@ -10807,6 +11809,8 @@ class RepoRemoveTopicAuditEntry(__name: String = "RepoRemoveTopicAuditEntry"): O
 }
 
 class Repository(__name: String = "Repository"): ObjectNode(__name) {
+    val allowUpdateBranch get() =
+        ScalarNode("allowUpdateBranch").also { doInit(it) }
     fun assignableUsers(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, query: String? = null, init: UserConnection.() -> Unit) =
         UserConnection("assignableUsers").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("query", query) }.also { doInit(it, init) }
     val autoMergeAllowed get() =
@@ -10845,6 +11849,8 @@ class Repository(__name: String = "Repository"): ObjectNode(__name) {
         Discussion("discussion").apply { addArgs("number", number) }.also { doInit(it, init) }
     fun discussionCategories(after: String? = null, before: String? = null, filterByAssignable: Boolean? = null, first: Int? = null, last: Int? = null, init: DiscussionCategoryConnection.() -> Unit) =
         DiscussionCategoryConnection("discussionCategories").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("filterByAssignable", filterByAssignable) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.also { doInit(it, init) }
+    fun discussionCategory(slug: String, init: DiscussionCategory.() -> Unit) =
+        DiscussionCategory("discussionCategory").apply { addArgs("slug", slug) }.also { doInit(it, init) }
     fun discussions(after: String? = null, before: String? = null, categoryId: ID? = null, first: Int? = null, last: Int? = null, orderBy: DiscussionOrder? = null, init: DiscussionConnection.() -> Unit) =
         DiscussionConnection("discussions").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("categoryId", categoryId) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.also { doInit(it, init) }
     val diskUsage get() =
@@ -10861,6 +11867,8 @@ class Repository(__name: String = "Repository"): ObjectNode(__name) {
         RepositoryConnection("forks").apply { addArgs("affiliations", affiliations) }.apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("isLocked", isLocked) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.apply { addArgs("ownerAffiliations", ownerAffiliations) }.apply { addArgs("privacy", privacy) }.also { doInit(it, init) }
     fun fundingLinks(init: FundingLink.() -> Unit) =
         FundingLink("fundingLinks").also { doInit(it, init) }
+    val hasDiscussionsEnabled get() =
+        ScalarNode("hasDiscussionsEnabled").also { doInit(it) }
     val hasIssuesEnabled get() =
         ScalarNode("hasIssuesEnabled").also { doInit(it) }
     val hasProjectsEnabled get() =
@@ -10921,6 +11929,10 @@ class Repository(__name: String = "Repository"): ObjectNode(__name) {
         UserConnection("mentionableUsers").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("query", query) }.also { doInit(it, init) }
     val mergeCommitAllowed get() =
         ScalarNode("mergeCommitAllowed").also { doInit(it) }
+    val mergeCommitMessage get() =
+        ScalarNode("mergeCommitMessage").also { doInit(it) }
+    val mergeCommitTitle get() =
+        ScalarNode("mergeCommitTitle").also { doInit(it) }
     fun milestone(number: Int, init: Milestone.() -> Unit) =
         Milestone("milestone").apply { addArgs("number", number) }.also { doInit(it, init) }
     fun milestones(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, orderBy: MilestoneOrder? = null, query: String? = null, states: MilestoneState? = null, init: MilestoneConnection.() -> Unit) =
@@ -10949,16 +11961,22 @@ class Repository(__name: String = "Repository"): ObjectNode(__name) {
         Language("primaryLanguage").also { doInit(it, init) }
     fun project(number: Int, init: Project.() -> Unit) =
         Project("project").apply { addArgs("number", number) }.also { doInit(it, init) }
+    @Deprecated("The `ProjectNext` API is deprecated in favour of the more capable `ProjectV2` API. Follow the ProjectV2 guide at https://github.blog/changelog/2022-06-23-the-new-github-issues-june-23rd-update/, to find a suitable replacement. Removal on 2023-01-01 UTC.")
     fun projectNext(number: Int, init: ProjectNext.() -> Unit) =
         ProjectNext("projectNext").apply { addArgs("number", number) }.also { doInit(it, init) }
+    fun projectV2(number: Int, init: ProjectV2.() -> Unit) =
+        ProjectV2("projectV2").apply { addArgs("number", number) }.also { doInit(it, init) }
     fun projects(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, orderBy: ProjectOrder? = null, search: String? = null, states: ProjectState? = null, init: ProjectConnection.() -> Unit) =
         ProjectConnection("projects").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.apply { addArgs("search", search) }.apply { addArgs("states", states) }.also { doInit(it, init) }
+    @Deprecated("The `ProjectNext` API is deprecated in favour of the more capable `ProjectV2` API. Follow the ProjectV2 guide at https://github.blog/changelog/2022-06-23-the-new-github-issues-june-23rd-update/, to find a suitable replacement. Removal on 2023-01-01 UTC.")
     fun projectsNext(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, query: String? = null, sortBy: ProjectNextOrderField? = null, init: ProjectNextConnection.() -> Unit) =
         ProjectNextConnection("projectsNext").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("query", query) }.apply { addArgs("sortBy", sortBy) }.also { doInit(it, init) }
     val projectsResourcePath get() =
         ScalarNode("projectsResourcePath").also { doInit(it) }
     val projectsUrl get() =
         ScalarNode("projectsUrl").also { doInit(it) }
+    fun projectsV2(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, orderBy: ProjectV2Order? = null, query: String? = null, init: ProjectV2Connection.() -> Unit) =
+        ProjectV2Connection("projectsV2").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.apply { addArgs("query", query) }.also { doInit(it, init) }
     fun pullRequest(number: Int, init: PullRequest.() -> Unit) =
         PullRequest("pullRequest").apply { addArgs("number", number) }.also { doInit(it, init) }
     fun pullRequestTemplates(init: PullRequestTemplate.() -> Unit) =
@@ -10969,6 +11987,8 @@ class Repository(__name: String = "Repository"): ObjectNode(__name) {
         ScalarNode("pushedAt").also { doInit(it) }
     val rebaseMergeAllowed get() =
         ScalarNode("rebaseMergeAllowed").also { doInit(it) }
+    fun recentProjects(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, init: ProjectV2Connection.() -> Unit) =
+        ProjectV2Connection("recentProjects").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.also { doInit(it, init) }
     fun ref(qualifiedName: String, init: Ref.() -> Unit) =
         Ref("ref").apply { addArgs("qualifiedName", qualifiedName) }.also { doInit(it, init) }
     fun refs(after: String? = null, before: String? = null, direction: OrderDirection? = null, first: Int? = null, last: Int? = null, orderBy: RefOrder? = null, query: String? = null, refPrefix: String, init: RefConnection.() -> Unit) =
@@ -10989,6 +12009,10 @@ class Repository(__name: String = "Repository"): ObjectNode(__name) {
         ScalarNode("shortDescriptionHTML").also { doInit(it) }
     val squashMergeAllowed get() =
         ScalarNode("squashMergeAllowed").also { doInit(it) }
+    val squashMergeCommitMessage get() =
+        ScalarNode("squashMergeCommitMessage").also { doInit(it) }
+    val squashMergeCommitTitle get() =
+        ScalarNode("squashMergeCommitTitle").also { doInit(it) }
     val squashPrTitleUsedAsDefault get() =
         ScalarNode("squashPrTitleUsedAsDefault").also { doInit(it) }
     val sshUrl get() =
@@ -11031,10 +12055,12 @@ class Repository(__name: String = "Repository"): ObjectNode(__name) {
         ScalarNode("viewerSubscription").also { doInit(it) }
     val visibility get() =
         ScalarNode("visibility").also { doInit(it) }
-    fun vulnerabilityAlerts(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, states: RepositoryVulnerabilityAlertState? = null, init: RepositoryVulnerabilityAlertConnection.() -> Unit) =
-        RepositoryVulnerabilityAlertConnection("vulnerabilityAlerts").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("states", states) }.also { doInit(it, init) }
+    fun vulnerabilityAlerts(after: String? = null, before: String? = null, dependencyScopes: RepositoryVulnerabilityAlertDependencyScope? = null, first: Int? = null, last: Int? = null, states: RepositoryVulnerabilityAlertState? = null, init: RepositoryVulnerabilityAlertConnection.() -> Unit) =
+        RepositoryVulnerabilityAlertConnection("vulnerabilityAlerts").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("dependencyScopes", dependencyScopes) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("states", states) }.also { doInit(it, init) }
     fun watchers(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, init: UserConnection.() -> Unit) =
         UserConnection("watchers").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.also { doInit(it, init) }
+    val webCommitSignoffRequired get() =
+        ScalarNode("webCommitSignoffRequired").also { doInit(it) }
 }
 
 class RepositoryCodeowners(__name: String = "RepositoryCodeowners"): ObjectNode(__name) {
@@ -11159,6 +12185,8 @@ class RepositoryMigration(__name: String = "RepositoryMigration"): ObjectNode(__
         ScalarNode("continueOnError").also { doInit(it) }
     val createdAt get() =
         ScalarNode("createdAt").also { doInit(it) }
+    val databaseId get() =
+        ScalarNode("databaseId").also { doInit(it) }
     val failureReason get() =
         ScalarNode("failureReason").also { doInit(it) }
     val id get() =
@@ -11317,12 +12345,17 @@ class RepositoryVulnerabilityAlert(__name: String = "RepositoryVulnerabilityAler
         ScalarNode("createdAt").also { doInit(it) }
     fun dependabotUpdate(init: DependabotUpdate.() -> Unit) =
         DependabotUpdate("dependabotUpdate").also { doInit(it, init) }
+    val dependencyScope get() =
+        ScalarNode("dependencyScope").also { doInit(it) }
+    val dismissComment get() =
+        ScalarNode("dismissComment").also { doInit(it) }
     val dismissReason get() =
         ScalarNode("dismissReason").also { doInit(it) }
     val dismissedAt get() =
         ScalarNode("dismissedAt").also { doInit(it) }
     fun dismisser(init: User.() -> Unit) =
         User("dismisser").also { doInit(it, init) }
+    @Deprecated("The `fixReason` field is being removed. You can still use `fixedAt` and `dismissReason`. Removal on 2022-10-01 UTC.")
     val fixReason get() =
         ScalarNode("fixReason").also { doInit(it) }
     val fixedAt get() =
@@ -11374,6 +12407,24 @@ class RequestReviewsPayload(__name: String = "RequestReviewsPayload"): ObjectNod
         PullRequest("pullRequest").also { doInit(it, init) }
     fun requestedReviewersEdge(init: UserEdge.() -> Unit) =
         UserEdge("requestedReviewersEdge").also { doInit(it, init) }
+}
+
+class RequestedReviewerConnection(__name: String = "RequestedReviewerConnection"): ObjectNode(__name) {
+    fun edges(init: RequestedReviewerEdge.() -> Unit) =
+        RequestedReviewerEdge("edges").also { doInit(it, init) }
+    fun nodes(init: RequestedReviewer.() -> Unit) =
+        RequestedReviewer("nodes").also { doInit(it, init) }
+    fun pageInfo(init: PageInfo.() -> Unit) =
+        PageInfo("pageInfo").also { doInit(it, init) }
+    val totalCount get() =
+        ScalarNode("totalCount").also { doInit(it) }
+}
+
+class RequestedReviewerEdge(__name: String = "RequestedReviewerEdge"): ObjectNode(__name) {
+    val cursor get() =
+        ScalarNode("cursor").also { doInit(it) }
+    fun node(init: RequestedReviewer.() -> Unit) =
+        RequestedReviewer("node").also { doInit(it, init) }
 }
 
 class RequiredStatusCheckDescription(__name: String = "RequiredStatusCheckDescription"): ObjectNode(__name) {
@@ -11862,6 +12913,10 @@ class SponsorsListing(__name: String = "SponsorsListing"): ObjectNode(__name) {
         SponsorsGoal("activeGoal").also { doInit(it, init) }
     val createdAt get() =
         ScalarNode("createdAt").also { doInit(it) }
+    val dashboardResourcePath get() =
+        ScalarNode("dashboardResourcePath").also { doInit(it) }
+    val dashboardUrl get() =
+        ScalarNode("dashboardUrl").also { doInit(it) }
     val fullDescription get() =
         ScalarNode("fullDescription").also { doInit(it) }
     val fullDescriptionHTML get() =
@@ -11874,6 +12929,8 @@ class SponsorsListing(__name: String = "SponsorsListing"): ObjectNode(__name) {
         ScalarNode("name").also { doInit(it) }
     val nextPayoutDate get() =
         ScalarNode("nextPayoutDate").also { doInit(it) }
+    val resourcePath get() =
+        ScalarNode("resourcePath").also { doInit(it) }
     val shortDescription get() =
         ScalarNode("shortDescription").also { doInit(it) }
     val slug get() =
@@ -11882,6 +12939,8 @@ class SponsorsListing(__name: String = "SponsorsListing"): ObjectNode(__name) {
         Sponsorable("sponsorable").also { doInit(it, init) }
     fun tiers(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, orderBy: SponsorsTierOrder? = null, init: SponsorsTierConnection.() -> Unit) =
         SponsorsTierConnection("tiers").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.also { doInit(it, init) }
+    val url get() =
+        ScalarNode("url").also { doInit(it) }
 }
 
 class SponsorsTier(__name: String = "SponsorsTier"): ObjectNode(__name) {
@@ -12020,6 +13079,25 @@ class SponsorshipNewsletterEdge(__name: String = "SponsorshipNewsletterEdge"): O
         SponsorshipNewsletter("node").also { doInit(it, init) }
 }
 
+class SshSignature(__name: String = "SshSignature"): ObjectNode(__name) {
+    val email get() =
+        ScalarNode("email").also { doInit(it) }
+    val isValid get() =
+        ScalarNode("isValid").also { doInit(it) }
+    val keyFingerprint get() =
+        ScalarNode("keyFingerprint").also { doInit(it) }
+    val payload get() =
+        ScalarNode("payload").also { doInit(it) }
+    val signature get() =
+        ScalarNode("signature").also { doInit(it) }
+    fun signer(init: User.() -> Unit) =
+        User("signer").also { doInit(it, init) }
+    val state get() =
+        ScalarNode("state").also { doInit(it) }
+    val wasSignedByGitHub get() =
+        ScalarNode("wasSignedByGitHub").also { doInit(it) }
+}
+
 class StargazerConnection(__name: String = "StargazerConnection"): ObjectNode(__name) {
     fun edges(init: StargazerEdge.() -> Unit) =
         StargazerEdge("edges").also { doInit(it, init) }
@@ -12096,12 +13174,20 @@ class StatusCheckRollup(__name: String = "StatusCheckRollup"): ObjectNode(__name
 }
 
 class StatusCheckRollupContextConnection(__name: String = "StatusCheckRollupContextConnection"): ObjectNode(__name) {
+    val checkRunCount get() =
+        ScalarNode("checkRunCount").also { doInit(it) }
+    fun checkRunCountsByState(init: CheckRunStateCount.() -> Unit) =
+        CheckRunStateCount("checkRunCountsByState").also { doInit(it, init) }
     fun edges(init: StatusCheckRollupContextEdge.() -> Unit) =
         StatusCheckRollupContextEdge("edges").also { doInit(it, init) }
     fun nodes(init: StatusCheckRollupContext.() -> Unit) =
         StatusCheckRollupContext("nodes").also { doInit(it, init) }
     fun pageInfo(init: PageInfo.() -> Unit) =
         PageInfo("pageInfo").also { doInit(it, init) }
+    val statusContextCount get() =
+        ScalarNode("statusContextCount").also { doInit(it) }
+    fun statusContextCountsByState(init: StatusContextStateCount.() -> Unit) =
+        StatusContextStateCount("statusContextCountsByState").also { doInit(it, init) }
     val totalCount get() =
         ScalarNode("totalCount").also { doInit(it) }
 }
@@ -12138,6 +13224,13 @@ class StatusContext(__name: String = "StatusContext"): ObjectNode(__name) {
         ScalarNode("state").also { doInit(it) }
     val targetUrl get() =
         ScalarNode("targetUrl").also { doInit(it) }
+}
+
+class StatusContextStateCount(__name: String = "StatusContextStateCount"): ObjectNode(__name) {
+    val count get() =
+        ScalarNode("count").also { doInit(it) }
+    val state get() =
+        ScalarNode("state").also { doInit(it) }
 }
 
 class SubmitPullRequestReviewPayload(__name: String = "SubmitPullRequestReviewPayload"): ObjectNode(__name) {
@@ -12274,6 +13367,10 @@ class Team(__name: String = "Team"): ObjectNode(__name) {
         Team("parentTeam").also { doInit(it, init) }
     val privacy get() =
         ScalarNode("privacy").also { doInit(it) }
+    fun projectV2(number: Int, init: ProjectV2.() -> Unit) =
+        ProjectV2("projectV2").apply { addArgs("number", number) }.also { doInit(it, init) }
+    fun projectsV2(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, orderBy: ProjectV2Order? = null, init: ProjectV2Connection.() -> Unit) =
+        ProjectV2Connection("projectsV2").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.also { doInit(it, init) }
     fun repositories(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, orderBy: TeamRepositoryOrder? = null, query: String? = null, init: TeamRepositoryConnection.() -> Unit) =
         TeamRepositoryConnection("repositories").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.apply { addArgs("query", query) }.also { doInit(it, init) }
     val repositoriesResourcePath get() =
@@ -12892,6 +13989,8 @@ class TreeEntry(__name: String = "TreeEntry"): ObjectNode(__name) {
         ScalarNode("extension").also { doInit(it) }
     val isGenerated get() =
         ScalarNode("isGenerated").also { doInit(it) }
+    fun language(init: Language.() -> Unit) =
+        Language("language").also { doInit(it, init) }
     val lineCount get() =
         ScalarNode("lineCount").also { doInit(it) }
     val mode get() =
@@ -12906,10 +14005,19 @@ class TreeEntry(__name: String = "TreeEntry"): ObjectNode(__name) {
         ScalarNode("path").also { doInit(it) }
     fun repository(init: Repository.() -> Unit) =
         Repository("repository").also { doInit(it, init) }
+    val size get() =
+        ScalarNode("size").also { doInit(it) }
     fun submodule(init: Submodule.() -> Unit) =
         Submodule("submodule").also { doInit(it, init) }
     val type get() =
         ScalarNode("type").also { doInit(it) }
+}
+
+class UnarchiveProjectV2ItemPayload(__name: String = "UnarchiveProjectV2ItemPayload"): ObjectNode(__name) {
+    val clientMutationId get() =
+        ScalarNode("clientMutationId").also { doInit(it) }
+    fun item(init: ProjectV2Item.() -> Unit) =
+        ProjectV2Item("item").also { doInit(it, init) }
 }
 
 class UnarchiveRepositoryPayload(__name: String = "UnarchiveRepositoryPayload"): ObjectNode(__name) {
@@ -12977,6 +14085,13 @@ class UnlabeledEvent(__name: String = "UnlabeledEvent"): ObjectNode(__name) {
         Label("label").also { doInit(it, init) }
     fun labelable(init: Labelable.() -> Unit) =
         Labelable("labelable").also { doInit(it, init) }
+}
+
+class UnlinkProjectV2FromRepositoryPayload(__name: String = "UnlinkProjectV2FromRepositoryPayload"): ObjectNode(__name) {
+    val clientMutationId get() =
+        ScalarNode("clientMutationId").also { doInit(it) }
+    fun repository(init: Repository.() -> Unit) =
+        Repository("repository").also { doInit(it, init) }
 }
 
 class UnlinkRepositoryFromProjectPayload(__name: String = "UnlinkRepositoryFromProjectPayload"): ObjectNode(__name) {
@@ -13336,6 +14451,15 @@ class UpdateOrganizationAllowPrivateRepositoryForkingSettingPayload(__name: Stri
         Organization("organization").also { doInit(it, init) }
 }
 
+class UpdateOrganizationWebCommitSignoffSettingPayload(__name: String = "UpdateOrganizationWebCommitSignoffSettingPayload"): ObjectNode(__name) {
+    val clientMutationId get() =
+        ScalarNode("clientMutationId").also { doInit(it) }
+    val message get() =
+        ScalarNode("message").also { doInit(it) }
+    fun organization(init: Organization.() -> Unit) =
+        Organization("organization").also { doInit(it, init) }
+}
+
 class UpdateProjectCardPayload(__name: String = "UpdateProjectCardPayload"): ObjectNode(__name) {
     val clientMutationId get() =
         ScalarNode("clientMutationId").also { doInit(it) }
@@ -13360,6 +14484,7 @@ class UpdateProjectDraftIssuePayload(__name: String = "UpdateProjectDraftIssuePa
 class UpdateProjectNextItemFieldPayload(__name: String = "UpdateProjectNextItemFieldPayload"): ObjectNode(__name) {
     val clientMutationId get() =
         ScalarNode("clientMutationId").also { doInit(it) }
+    @Deprecated("The `ProjectNext` API is deprecated in favour of the more capable `ProjectV2` API. Follow the ProjectV2 guide at https://github.blog/changelog/2022-06-23-the-new-github-issues-june-23rd-update/, to find a suitable replacement. Removal on 2023-01-01 UTC.")
     fun projectNextItem(init: ProjectNextItem.() -> Unit) =
         ProjectNextItem("projectNextItem").also { doInit(it, init) }
 }
@@ -13367,6 +14492,7 @@ class UpdateProjectNextItemFieldPayload(__name: String = "UpdateProjectNextItemF
 class UpdateProjectNextPayload(__name: String = "UpdateProjectNextPayload"): ObjectNode(__name) {
     val clientMutationId get() =
         ScalarNode("clientMutationId").also { doInit(it) }
+    @Deprecated("The `ProjectNext` API is deprecated in favour of the more capable `ProjectV2` API. Follow the ProjectV2 guide at https://github.blog/changelog/2022-06-23-the-new-github-issues-june-23rd-update/, to find a suitable replacement. Removal on 2023-01-01 UTC.")
     fun projectNext(init: ProjectNext.() -> Unit) =
         ProjectNext("projectNext").also { doInit(it, init) }
 }
@@ -13376,6 +14502,34 @@ class UpdateProjectPayload(__name: String = "UpdateProjectPayload"): ObjectNode(
         ScalarNode("clientMutationId").also { doInit(it) }
     fun project(init: Project.() -> Unit) =
         Project("project").also { doInit(it, init) }
+}
+
+class UpdateProjectV2DraftIssuePayload(__name: String = "UpdateProjectV2DraftIssuePayload"): ObjectNode(__name) {
+    val clientMutationId get() =
+        ScalarNode("clientMutationId").also { doInit(it) }
+    fun draftIssue(init: DraftIssue.() -> Unit) =
+        DraftIssue("draftIssue").also { doInit(it, init) }
+}
+
+class UpdateProjectV2ItemFieldValuePayload(__name: String = "UpdateProjectV2ItemFieldValuePayload"): ObjectNode(__name) {
+    val clientMutationId get() =
+        ScalarNode("clientMutationId").also { doInit(it) }
+    fun projectV2Item(init: ProjectV2Item.() -> Unit) =
+        ProjectV2Item("projectV2Item").also { doInit(it, init) }
+}
+
+class UpdateProjectV2ItemPositionPayload(__name: String = "UpdateProjectV2ItemPositionPayload"): ObjectNode(__name) {
+    val clientMutationId get() =
+        ScalarNode("clientMutationId").also { doInit(it) }
+    fun items(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, init: ProjectV2ItemConnection.() -> Unit) =
+        ProjectV2ItemConnection("items").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.also { doInit(it, init) }
+}
+
+class UpdateProjectV2Payload(__name: String = "UpdateProjectV2Payload"): ObjectNode(__name) {
+    val clientMutationId get() =
+        ScalarNode("clientMutationId").also { doInit(it) }
+    fun projectV2(init: ProjectV2.() -> Unit) =
+        ProjectV2("projectV2").also { doInit(it, init) }
 }
 
 class UpdatePullRequestBranchPayload(__name: String = "UpdatePullRequestBranchPayload"): ObjectNode(__name) {
@@ -13423,6 +14577,15 @@ class UpdateRefsPayload(__name: String = "UpdateRefsPayload"): ObjectNode(__name
 class UpdateRepositoryPayload(__name: String = "UpdateRepositoryPayload"): ObjectNode(__name) {
     val clientMutationId get() =
         ScalarNode("clientMutationId").also { doInit(it) }
+    fun repository(init: Repository.() -> Unit) =
+        Repository("repository").also { doInit(it, init) }
+}
+
+class UpdateRepositoryWebCommitSignoffSettingPayload(__name: String = "UpdateRepositoryWebCommitSignoffSettingPayload"): ObjectNode(__name) {
+    val clientMutationId get() =
+        ScalarNode("clientMutationId").also { doInit(it) }
+    val message get() =
+        ScalarNode("message").also { doInit(it) }
     fun repository(init: Repository.() -> Unit) =
         Repository("repository").also { doInit(it, init) }
 }
@@ -13581,20 +14744,28 @@ class User(__name: String = "User"): ObjectNode(__name) {
         ScalarNode("pinnedItemsRemaining").also { doInit(it) }
     fun project(number: Int, init: Project.() -> Unit) =
         Project("project").apply { addArgs("number", number) }.also { doInit(it, init) }
+    @Deprecated("The `ProjectNext` API is deprecated in favour of the more capable `ProjectV2` API. Follow the ProjectV2 guide at https://github.blog/changelog/2022-06-23-the-new-github-issues-june-23rd-update/, to find a suitable replacement. Removal on 2023-01-01 UTC.")
     fun projectNext(number: Int, init: ProjectNext.() -> Unit) =
         ProjectNext("projectNext").apply { addArgs("number", number) }.also { doInit(it, init) }
+    fun projectV2(number: Int, init: ProjectV2.() -> Unit) =
+        ProjectV2("projectV2").apply { addArgs("number", number) }.also { doInit(it, init) }
     fun projects(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, orderBy: ProjectOrder? = null, search: String? = null, states: ProjectState? = null, init: ProjectConnection.() -> Unit) =
         ProjectConnection("projects").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.apply { addArgs("search", search) }.apply { addArgs("states", states) }.also { doInit(it, init) }
+    @Deprecated("The `ProjectNext` API is deprecated in favour of the more capable `ProjectV2` API. Follow the ProjectV2 guide at https://github.blog/changelog/2022-06-23-the-new-github-issues-june-23rd-update/, to find a suitable replacement. Removal on 2023-01-01 UTC.")
     fun projectsNext(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, query: String? = null, sortBy: ProjectNextOrderField? = null, init: ProjectNextConnection.() -> Unit) =
         ProjectNextConnection("projectsNext").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("query", query) }.apply { addArgs("sortBy", sortBy) }.also { doInit(it, init) }
     val projectsResourcePath get() =
         ScalarNode("projectsResourcePath").also { doInit(it) }
     val projectsUrl get() =
         ScalarNode("projectsUrl").also { doInit(it) }
+    fun projectsV2(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, orderBy: ProjectV2Order? = null, query: String? = null, init: ProjectV2Connection.() -> Unit) =
+        ProjectV2Connection("projectsV2").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.apply { addArgs("query", query) }.also { doInit(it, init) }
     fun publicKeys(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, init: PublicKeyConnection.() -> Unit) =
         PublicKeyConnection("publicKeys").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.also { doInit(it, init) }
     fun pullRequests(after: String? = null, baseRefName: String? = null, before: String? = null, first: Int? = null, headRefName: String? = null, labels: String? = null, last: Int? = null, orderBy: IssueOrder? = null, states: PullRequestState? = null, init: PullRequestConnection.() -> Unit) =
         PullRequestConnection("pullRequests").apply { addArgs("after", after) }.apply { addArgs("baseRefName", baseRefName) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("headRefName", headRefName) }.apply { addArgs("labels", labels) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.apply { addArgs("states", states) }.also { doInit(it, init) }
+    fun recentProjects(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, init: ProjectV2Connection.() -> Unit) =
+        ProjectV2Connection("recentProjects").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.also { doInit(it, init) }
     fun repositories(affiliations: RepositoryAffiliation? = null, after: String? = null, before: String? = null, first: Int? = null, isFork: Boolean? = null, isLocked: Boolean? = null, last: Int? = null, orderBy: RepositoryOrder? = null, ownerAffiliations: RepositoryAffiliation? = null, privacy: RepositoryPrivacy? = null, init: RepositoryConnection.() -> Unit) =
         RepositoryConnection("repositories").apply { addArgs("affiliations", affiliations) }.apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("isFork", isFork) }.apply { addArgs("isLocked", isLocked) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.apply { addArgs("ownerAffiliations", ownerAffiliations) }.apply { addArgs("privacy", privacy) }.also { doInit(it, init) }
     fun repositoriesContributedTo(after: String? = null, before: String? = null, contributionTypes: RepositoryContributionType? = null, first: Int? = null, includeUserRepositories: Boolean? = null, isLocked: Boolean? = null, last: Int? = null, orderBy: RepositoryOrder? = null, privacy: RepositoryPrivacy? = null, init: RepositoryConnection.() -> Unit) =
@@ -13613,8 +14784,8 @@ class User(__name: String = "User"): ObjectNode(__name) {
         SponsorConnection("sponsoring").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.also { doInit(it, init) }
     fun sponsors(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, orderBy: SponsorOrder? = null, tierId: ID? = null, init: SponsorConnection.() -> Unit) =
         SponsorConnection("sponsors").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.apply { addArgs("tierId", tierId) }.also { doInit(it, init) }
-    fun sponsorsActivities(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, orderBy: SponsorsActivityOrder? = null, period: SponsorsActivityPeriod? = null, init: SponsorsActivityConnection.() -> Unit) =
-        SponsorsActivityConnection("sponsorsActivities").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.apply { addArgs("period", period) }.also { doInit(it, init) }
+    fun sponsorsActivities(actions: SponsorsActivityAction? = null, after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, orderBy: SponsorsActivityOrder? = null, period: SponsorsActivityPeriod? = null, init: SponsorsActivityConnection.() -> Unit) =
+        SponsorsActivityConnection("sponsorsActivities").apply { addArgs("actions", actions) }.apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.apply { addArgs("period", period) }.also { doInit(it, init) }
     fun sponsorsListing(init: SponsorsListing.() -> Unit) =
         SponsorsListing("sponsorsListing").also { doInit(it, init) }
     fun sponsorshipForViewerAsSponsor(init: Sponsorship.() -> Unit) =
@@ -13851,6 +15022,8 @@ class Workflow(__name: String = "Workflow"): ObjectNode(__name) {
         ScalarNode("id").also { doInit(it) }
     val name get() =
         ScalarNode("name").also { doInit(it) }
+    fun runs(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, orderBy: WorkflowRunOrder? = null, init: WorkflowRunConnection.() -> Unit) =
+        WorkflowRunConnection("runs").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.also { doInit(it, init) }
     val updatedAt get() =
         ScalarNode("updatedAt").also { doInit(it) }
 }
@@ -13878,6 +15051,24 @@ class WorkflowRun(__name: String = "WorkflowRun"): ObjectNode(__name) {
         ScalarNode("url").also { doInit(it) }
     fun workflow(init: Workflow.() -> Unit) =
         Workflow("workflow").also { doInit(it, init) }
+}
+
+class WorkflowRunConnection(__name: String = "WorkflowRunConnection"): ObjectNode(__name) {
+    fun edges(init: WorkflowRunEdge.() -> Unit) =
+        WorkflowRunEdge("edges").also { doInit(it, init) }
+    fun nodes(init: WorkflowRun.() -> Unit) =
+        WorkflowRun("nodes").also { doInit(it, init) }
+    fun pageInfo(init: PageInfo.() -> Unit) =
+        PageInfo("pageInfo").also { doInit(it, init) }
+    val totalCount get() =
+        ScalarNode("totalCount").also { doInit(it) }
+}
+
+class WorkflowRunEdge(__name: String = "WorkflowRunEdge"): ObjectNode(__name) {
+    val cursor get() =
+        ScalarNode("cursor").also { doInit(it) }
+    fun node(init: WorkflowRun.() -> Unit) =
+        WorkflowRun("node").also { doInit(it, init) }
 }
 
 class Actor(__name: String = "Actor"): ObjectNode(__name) {
@@ -14070,6 +15261,8 @@ class Closable(__name: String = "Closable"): ObjectNode(__name) {
         Project("...on Project").also { doInit(it, init) }
     fun `on ProjectNext`(init: ProjectNext.() -> Unit) =
         ProjectNext("...on ProjectNext").also { doInit(it, init) }
+    fun `on ProjectV2`(init: ProjectV2.() -> Unit) =
+        ProjectV2("...on ProjectV2").also { doInit(it, init) }
     fun `on PullRequest`(init: PullRequest.() -> Unit) =
         PullRequest("...on PullRequest").also { doInit(it, init) }
 }
@@ -14246,6 +15439,8 @@ class GitSignature(__name: String = "GitSignature"): ObjectNode(__name) {
         GpgSignature("...on GpgSignature").also { doInit(it, init) }
     fun `on SmimeSignature`(init: SmimeSignature.() -> Unit) =
         SmimeSignature("...on SmimeSignature").also { doInit(it, init) }
+    fun `on SshSignature`(init: SshSignature.() -> Unit) =
+        SshSignature("...on SshSignature").also { doInit(it, init) }
     fun `on UnknownSignature`(init: UnknownSignature.() -> Unit) =
         UnknownSignature("...on UnknownSignature").also { doInit(it, init) }
 }
@@ -14305,6 +15500,8 @@ class Migration(__name: String = "Migration"): ObjectNode(__name) {
         ScalarNode("continueOnError").also { doInit(it) }
     val createdAt get() =
         ScalarNode("createdAt").also { doInit(it) }
+    val databaseId get() =
+        ScalarNode("databaseId").also { doInit(it) }
     val failureReason get() =
         ScalarNode("failureReason").also { doInit(it) }
     val id get() =
@@ -14397,6 +15594,8 @@ class Node(__name: String = "Node"): ObjectNode(__name) {
         CommitComment("...on CommitComment").also { doInit(it, init) }
     fun `on CommitCommentThread`(init: CommitCommentThread.() -> Unit) =
         CommitCommentThread("...on CommitCommentThread").also { doInit(it, init) }
+    fun `on Comparison`(init: Comparison.() -> Unit) =
+        Comparison("...on Comparison").also { doInit(it, init) }
     fun `on ConnectedEvent`(init: ConnectedEvent.() -> Unit) =
         ConnectedEvent("...on ConnectedEvent").also { doInit(it, init) }
     fun `on ConvertToDraftEvent`(init: ConvertToDraftEvent.() -> Unit) =
@@ -14431,6 +15630,10 @@ class Node(__name: String = "Node"): ObjectNode(__name) {
         DiscussionCategory("...on DiscussionCategory").also { doInit(it, init) }
     fun `on DiscussionComment`(init: DiscussionComment.() -> Unit) =
         DiscussionComment("...on DiscussionComment").also { doInit(it, init) }
+    fun `on DiscussionPoll`(init: DiscussionPoll.() -> Unit) =
+        DiscussionPoll("...on DiscussionPoll").also { doInit(it, init) }
+    fun `on DiscussionPollOption`(init: DiscussionPollOption.() -> Unit) =
+        DiscussionPollOption("...on DiscussionPollOption").also { doInit(it, init) }
     fun `on DraftIssue`(init: DraftIssue.() -> Unit) =
         DraftIssue("...on DraftIssue").also { doInit(it, init) }
     fun `on Enterprise`(init: Enterprise.() -> Unit) =
@@ -14479,6 +15682,8 @@ class Node(__name: String = "Node"): ObjectNode(__name) {
         Language("...on Language").also { doInit(it, init) }
     fun `on License`(init: License.() -> Unit) =
         License("...on License").also { doInit(it, init) }
+    fun `on LinkedBranch`(init: LinkedBranch.() -> Unit) =
+        LinkedBranch("...on LinkedBranch").also { doInit(it, init) }
     fun `on LockedEvent`(init: LockedEvent.() -> Unit) =
         LockedEvent("...on LockedEvent").also { doInit(it, init) }
     fun `on Mannequin`(init: Mannequin.() -> Unit) =
@@ -14601,6 +15806,28 @@ class Node(__name: String = "Node"): ObjectNode(__name) {
         ProjectNextItem("...on ProjectNextItem").also { doInit(it, init) }
     fun `on ProjectNextItemFieldValue`(init: ProjectNextItemFieldValue.() -> Unit) =
         ProjectNextItemFieldValue("...on ProjectNextItemFieldValue").also { doInit(it, init) }
+    fun `on ProjectV2`(init: ProjectV2.() -> Unit) =
+        ProjectV2("...on ProjectV2").also { doInit(it, init) }
+    fun `on ProjectV2Field`(init: ProjectV2Field.() -> Unit) =
+        ProjectV2Field("...on ProjectV2Field").also { doInit(it, init) }
+    fun `on ProjectV2Item`(init: ProjectV2Item.() -> Unit) =
+        ProjectV2Item("...on ProjectV2Item").also { doInit(it, init) }
+    fun `on ProjectV2ItemFieldDateValue`(init: ProjectV2ItemFieldDateValue.() -> Unit) =
+        ProjectV2ItemFieldDateValue("...on ProjectV2ItemFieldDateValue").also { doInit(it, init) }
+    fun `on ProjectV2ItemFieldIterationValue`(init: ProjectV2ItemFieldIterationValue.() -> Unit) =
+        ProjectV2ItemFieldIterationValue("...on ProjectV2ItemFieldIterationValue").also { doInit(it, init) }
+    fun `on ProjectV2ItemFieldNumberValue`(init: ProjectV2ItemFieldNumberValue.() -> Unit) =
+        ProjectV2ItemFieldNumberValue("...on ProjectV2ItemFieldNumberValue").also { doInit(it, init) }
+    fun `on ProjectV2ItemFieldSingleSelectValue`(init: ProjectV2ItemFieldSingleSelectValue.() -> Unit) =
+        ProjectV2ItemFieldSingleSelectValue("...on ProjectV2ItemFieldSingleSelectValue").also { doInit(it, init) }
+    fun `on ProjectV2ItemFieldTextValue`(init: ProjectV2ItemFieldTextValue.() -> Unit) =
+        ProjectV2ItemFieldTextValue("...on ProjectV2ItemFieldTextValue").also { doInit(it, init) }
+    fun `on ProjectV2IterationField`(init: ProjectV2IterationField.() -> Unit) =
+        ProjectV2IterationField("...on ProjectV2IterationField").also { doInit(it, init) }
+    fun `on ProjectV2SingleSelectField`(init: ProjectV2SingleSelectField.() -> Unit) =
+        ProjectV2SingleSelectField("...on ProjectV2SingleSelectField").also { doInit(it, init) }
+    fun `on ProjectV2View`(init: ProjectV2View.() -> Unit) =
+        ProjectV2View("...on ProjectV2View").also { doInit(it, init) }
     fun `on ProjectView`(init: ProjectView.() -> Unit) =
         ProjectView("...on ProjectView").also { doInit(it, init) }
     fun `on PublicKey`(init: PublicKey.() -> Unit) =
@@ -14617,6 +15844,8 @@ class Node(__name: String = "Node"): ObjectNode(__name) {
         PullRequestReviewComment("...on PullRequestReviewComment").also { doInit(it, init) }
     fun `on PullRequestReviewThread`(init: PullRequestReviewThread.() -> Unit) =
         PullRequestReviewThread("...on PullRequestReviewThread").also { doInit(it, init) }
+    fun `on PullRequestThread`(init: PullRequestThread.() -> Unit) =
+        PullRequestThread("...on PullRequestThread").also { doInit(it, init) }
     fun `on Push`(init: Push.() -> Unit) =
         Push("...on Push").also { doInit(it, init) }
     fun `on PushAllowance`(init: PushAllowance.() -> Unit) =
@@ -14968,20 +16197,28 @@ class ProfileOwner(__name: String = "ProfileOwner"): ObjectNode(__name) {
 }
 
 class ProjectNextFieldCommon(__name: String = "ProjectNextFieldCommon"): ObjectNode(__name) {
+    @Deprecated("The `ProjectNext` API is deprecated in favour of the more capable `ProjectV2` API. Follow the ProjectV2 guide at https://github.blog/changelog/2022-06-23-the-new-github-issues-june-23rd-update/, to find a suitable replacement. Removal on 2023-01-01 UTC.")
     val createdAt get() =
         ScalarNode("createdAt").also { doInit(it) }
+    @Deprecated("The `ProjectNext` API is deprecated in favour of the more capable `ProjectV2` API. Follow the ProjectV2 guide at https://github.blog/changelog/2022-06-23-the-new-github-issues-june-23rd-update/, to find a suitable replacement. Removal on 2023-01-01 UTC.")
     val dataType get() =
         ScalarNode("dataType").also { doInit(it) }
+    @Deprecated("The `ProjectNext` API is deprecated in favour of the more capable `ProjectV2` API. Follow the ProjectV2 guide at https://github.blog/changelog/2022-06-23-the-new-github-issues-june-23rd-update/, to find a suitable replacement. Removal on 2023-01-01 UTC.")
     val databaseId get() =
         ScalarNode("databaseId").also { doInit(it) }
+    @Deprecated("The `ProjectNext` API is deprecated in favour of the more capable `ProjectV2` API. Follow the ProjectV2 guide at https://github.blog/changelog/2022-06-23-the-new-github-issues-june-23rd-update/, to find a suitable replacement. Removal on 2023-01-01 UTC.")
     val id get() =
         ScalarNode("id").also { doInit(it) }
+    @Deprecated("The `ProjectNext` API is deprecated in favour of the more capable `ProjectV2` API. Follow the ProjectV2 guide at https://github.blog/changelog/2022-06-23-the-new-github-issues-june-23rd-update/, to find a suitable replacement. Removal on 2023-01-01 UTC.")
     val name get() =
         ScalarNode("name").also { doInit(it) }
+    @Deprecated("The `ProjectNext` API is deprecated in favour of the more capable `ProjectV2` API. Follow the ProjectV2 guide at https://github.blog/changelog/2022-06-23-the-new-github-issues-june-23rd-update/, to find a suitable replacement. Removal on 2023-01-01 UTC.")
     fun project(init: ProjectNext.() -> Unit) =
         ProjectNext("project").also { doInit(it, init) }
+    @Deprecated("The `ProjectNext` API is deprecated in favour of the more capable `ProjectV2` API. Follow the ProjectV2 guide at https://github.blog/changelog/2022-06-23-the-new-github-issues-june-23rd-update/, to find a suitable replacement. Removal on 2023-01-01 UTC.")
     val settings get() =
         ScalarNode("settings").also { doInit(it) }
+    @Deprecated("The `ProjectNext` API is deprecated in favour of the more capable `ProjectV2` API. Follow the ProjectV2 guide at https://github.blog/changelog/2022-06-23-the-new-github-issues-june-23rd-update/, to find a suitable replacement. Removal on 2023-01-01 UTC.")
     val updatedAt get() =
         ScalarNode("updatedAt").also { doInit(it) }
     fun `on ProjectNextField`(init: ProjectNextField.() -> Unit) =
@@ -14991,8 +16228,10 @@ class ProjectNextFieldCommon(__name: String = "ProjectNextFieldCommon"): ObjectN
 class ProjectNextOwner(__name: String = "ProjectNextOwner"): ObjectNode(__name) {
     val id get() =
         ScalarNode("id").also { doInit(it) }
+    @Deprecated("The `ProjectNext` API is deprecated in favour of the more capable `ProjectV2` API. Follow the ProjectV2 guide at https://github.blog/changelog/2022-06-23-the-new-github-issues-june-23rd-update/, to find a suitable replacement. Removal on 2023-01-01 UTC.")
     fun projectNext(number: Int, init: ProjectNext.() -> Unit) =
         ProjectNext("projectNext").apply { addArgs("number", number) }.also { doInit(it, init) }
+    @Deprecated("The `ProjectNext` API is deprecated in favour of the more capable `ProjectV2` API. Follow the ProjectV2 guide at https://github.blog/changelog/2022-06-23-the-new-github-issues-june-23rd-update/, to find a suitable replacement. Removal on 2023-01-01 UTC.")
     fun projectsNext(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, query: String? = null, sortBy: ProjectNextOrderField? = null, init: ProjectNextConnection.() -> Unit) =
         ProjectNextConnection("projectsNext").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("query", query) }.apply { addArgs("sortBy", sortBy) }.also { doInit(it, init) }
     fun `on Issue`(init: Issue.() -> Unit) =
@@ -15018,6 +16257,84 @@ class ProjectOwner(__name: String = "ProjectOwner"): ObjectNode(__name) {
         ScalarNode("projectsUrl").also { doInit(it) }
     val viewerCanCreateProjects get() =
         ScalarNode("viewerCanCreateProjects").also { doInit(it) }
+    fun `on Organization`(init: Organization.() -> Unit) =
+        Organization("...on Organization").also { doInit(it, init) }
+    fun `on Repository`(init: Repository.() -> Unit) =
+        Repository("...on Repository").also { doInit(it, init) }
+    fun `on User`(init: User.() -> Unit) =
+        User("...on User").also { doInit(it, init) }
+}
+
+class ProjectV2FieldCommon(__name: String = "ProjectV2FieldCommon"): ObjectNode(__name) {
+    val createdAt get() =
+        ScalarNode("createdAt").also { doInit(it) }
+    val dataType get() =
+        ScalarNode("dataType").also { doInit(it) }
+    val databaseId get() =
+        ScalarNode("databaseId").also { doInit(it) }
+    val id get() =
+        ScalarNode("id").also { doInit(it) }
+    val name get() =
+        ScalarNode("name").also { doInit(it) }
+    fun project(init: ProjectV2.() -> Unit) =
+        ProjectV2("project").also { doInit(it, init) }
+    val updatedAt get() =
+        ScalarNode("updatedAt").also { doInit(it) }
+    fun `on ProjectV2Field`(init: ProjectV2Field.() -> Unit) =
+        ProjectV2Field("...on ProjectV2Field").also { doInit(it, init) }
+    fun `on ProjectV2IterationField`(init: ProjectV2IterationField.() -> Unit) =
+        ProjectV2IterationField("...on ProjectV2IterationField").also { doInit(it, init) }
+    fun `on ProjectV2SingleSelectField`(init: ProjectV2SingleSelectField.() -> Unit) =
+        ProjectV2SingleSelectField("...on ProjectV2SingleSelectField").also { doInit(it, init) }
+}
+
+class ProjectV2ItemFieldValueCommon(__name: String = "ProjectV2ItemFieldValueCommon"): ObjectNode(__name) {
+    val createdAt get() =
+        ScalarNode("createdAt").also { doInit(it) }
+    fun creator(init: Actor.() -> Unit) =
+        Actor("creator").also { doInit(it, init) }
+    val databaseId get() =
+        ScalarNode("databaseId").also { doInit(it) }
+    fun field(init: ProjectV2FieldConfiguration.() -> Unit) =
+        ProjectV2FieldConfiguration("field").also { doInit(it, init) }
+    val id get() =
+        ScalarNode("id").also { doInit(it) }
+    fun item(init: ProjectV2Item.() -> Unit) =
+        ProjectV2Item("item").also { doInit(it, init) }
+    val updatedAt get() =
+        ScalarNode("updatedAt").also { doInit(it) }
+    fun `on ProjectV2ItemFieldDateValue`(init: ProjectV2ItemFieldDateValue.() -> Unit) =
+        ProjectV2ItemFieldDateValue("...on ProjectV2ItemFieldDateValue").also { doInit(it, init) }
+    fun `on ProjectV2ItemFieldIterationValue`(init: ProjectV2ItemFieldIterationValue.() -> Unit) =
+        ProjectV2ItemFieldIterationValue("...on ProjectV2ItemFieldIterationValue").also { doInit(it, init) }
+    fun `on ProjectV2ItemFieldNumberValue`(init: ProjectV2ItemFieldNumberValue.() -> Unit) =
+        ProjectV2ItemFieldNumberValue("...on ProjectV2ItemFieldNumberValue").also { doInit(it, init) }
+    fun `on ProjectV2ItemFieldSingleSelectValue`(init: ProjectV2ItemFieldSingleSelectValue.() -> Unit) =
+        ProjectV2ItemFieldSingleSelectValue("...on ProjectV2ItemFieldSingleSelectValue").also { doInit(it, init) }
+    fun `on ProjectV2ItemFieldTextValue`(init: ProjectV2ItemFieldTextValue.() -> Unit) =
+        ProjectV2ItemFieldTextValue("...on ProjectV2ItemFieldTextValue").also { doInit(it, init) }
+}
+
+class ProjectV2Owner(__name: String = "ProjectV2Owner"): ObjectNode(__name) {
+    val id get() =
+        ScalarNode("id").also { doInit(it) }
+    fun projectV2(number: Int, init: ProjectV2.() -> Unit) =
+        ProjectV2("projectV2").apply { addArgs("number", number) }.also { doInit(it, init) }
+    fun projectsV2(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, orderBy: ProjectV2Order? = null, query: String? = null, init: ProjectV2Connection.() -> Unit) =
+        ProjectV2Connection("projectsV2").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.apply { addArgs("query", query) }.also { doInit(it, init) }
+    fun `on Issue`(init: Issue.() -> Unit) =
+        Issue("...on Issue").also { doInit(it, init) }
+    fun `on Organization`(init: Organization.() -> Unit) =
+        Organization("...on Organization").also { doInit(it, init) }
+    fun `on PullRequest`(init: PullRequest.() -> Unit) =
+        PullRequest("...on PullRequest").also { doInit(it, init) }
+    fun `on User`(init: User.() -> Unit) =
+        User("...on User").also { doInit(it, init) }
+}
+
+class ProjectV2Recent(__name: String = "ProjectV2Recent"): ObjectNode(__name) {
+    fun recentProjects(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, init: ProjectV2Connection.() -> Unit) =
+        ProjectV2Connection("recentProjects").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.also { doInit(it, init) }
     fun `on Organization`(init: Organization.() -> Unit) =
         Organization("...on Organization").also { doInit(it, init) }
     fun `on Repository`(init: Repository.() -> Unit) =
@@ -15283,8 +16600,8 @@ class Sponsorable(__name: String = "Sponsorable"): ObjectNode(__name) {
         SponsorConnection("sponsoring").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.also { doInit(it, init) }
     fun sponsors(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, orderBy: SponsorOrder? = null, tierId: ID? = null, init: SponsorConnection.() -> Unit) =
         SponsorConnection("sponsors").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.apply { addArgs("tierId", tierId) }.also { doInit(it, init) }
-    fun sponsorsActivities(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, orderBy: SponsorsActivityOrder? = null, period: SponsorsActivityPeriod? = null, init: SponsorsActivityConnection.() -> Unit) =
-        SponsorsActivityConnection("sponsorsActivities").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.apply { addArgs("period", period) }.also { doInit(it, init) }
+    fun sponsorsActivities(actions: SponsorsActivityAction? = null, after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, orderBy: SponsorsActivityOrder? = null, period: SponsorsActivityPeriod? = null, init: SponsorsActivityConnection.() -> Unit) =
+        SponsorsActivityConnection("sponsorsActivities").apply { addArgs("actions", actions) }.apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.apply { addArgs("period", period) }.also { doInit(it, init) }
     fun sponsorsListing(init: SponsorsListing.() -> Unit) =
         SponsorsListing("sponsorsListing").also { doInit(it, init) }
     fun sponsorshipForViewerAsSponsor(init: Sponsorship.() -> Unit) =
@@ -15451,6 +16768,8 @@ class Updatable(__name: String = "Updatable"): ObjectNode(__name) {
         Project("...on Project").also { doInit(it, init) }
     fun `on ProjectNext`(init: ProjectNext.() -> Unit) =
         ProjectNext("...on ProjectNext").also { doInit(it, init) }
+    fun `on ProjectV2`(init: ProjectV2.() -> Unit) =
+        ProjectV2("...on ProjectV2").also { doInit(it, init) }
     fun `on PullRequest`(init: PullRequest.() -> Unit) =
         PullRequest("...on PullRequest").also { doInit(it, init) }
     fun `on PullRequestReview`(init: PullRequestReview.() -> Unit) =
@@ -15829,6 +17148,13 @@ class OrganizationAuditEntry(__name: String = "OrganizationAuditEntry"): ObjectN
         TeamRemoveRepositoryAuditEntry("...on TeamRemoveRepositoryAuditEntry").also { doInit(it, init) }
 }
 
+class OrganizationOrUser(__name: String = "OrganizationOrUser"): ObjectNode(__name) {
+    fun `on Organization`(init: Organization.() -> Unit) =
+        Organization("...on Organization").also { doInit(it, init) }
+    fun `on User`(init: User.() -> Unit) =
+        User("...on User").also { doInit(it, init) }
+}
+
 class PermissionGranter(__name: String = "PermissionGranter"): ObjectNode(__name) {
     fun `on Organization`(init: Organization.() -> Unit) =
         Organization("...on Organization").also { doInit(it, init) }
@@ -15859,6 +17185,49 @@ class ProjectNextItemContent(__name: String = "ProjectNextItemContent"): ObjectN
         Issue("...on Issue").also { doInit(it, init) }
     fun `on PullRequest`(init: PullRequest.() -> Unit) =
         PullRequest("...on PullRequest").also { doInit(it, init) }
+}
+
+class ProjectV2FieldConfiguration(__name: String = "ProjectV2FieldConfiguration"): ObjectNode(__name) {
+    fun `on ProjectV2Field`(init: ProjectV2Field.() -> Unit) =
+        ProjectV2Field("...on ProjectV2Field").also { doInit(it, init) }
+    fun `on ProjectV2IterationField`(init: ProjectV2IterationField.() -> Unit) =
+        ProjectV2IterationField("...on ProjectV2IterationField").also { doInit(it, init) }
+    fun `on ProjectV2SingleSelectField`(init: ProjectV2SingleSelectField.() -> Unit) =
+        ProjectV2SingleSelectField("...on ProjectV2SingleSelectField").also { doInit(it, init) }
+}
+
+class ProjectV2ItemContent(__name: String = "ProjectV2ItemContent"): ObjectNode(__name) {
+    fun `on DraftIssue`(init: DraftIssue.() -> Unit) =
+        DraftIssue("...on DraftIssue").also { doInit(it, init) }
+    fun `on Issue`(init: Issue.() -> Unit) =
+        Issue("...on Issue").also { doInit(it, init) }
+    fun `on PullRequest`(init: PullRequest.() -> Unit) =
+        PullRequest("...on PullRequest").also { doInit(it, init) }
+}
+
+class ProjectV2ItemFieldValue(__name: String = "ProjectV2ItemFieldValue"): ObjectNode(__name) {
+    fun `on ProjectV2ItemFieldDateValue`(init: ProjectV2ItemFieldDateValue.() -> Unit) =
+        ProjectV2ItemFieldDateValue("...on ProjectV2ItemFieldDateValue").also { doInit(it, init) }
+    fun `on ProjectV2ItemFieldIterationValue`(init: ProjectV2ItemFieldIterationValue.() -> Unit) =
+        ProjectV2ItemFieldIterationValue("...on ProjectV2ItemFieldIterationValue").also { doInit(it, init) }
+    fun `on ProjectV2ItemFieldLabelValue`(init: ProjectV2ItemFieldLabelValue.() -> Unit) =
+        ProjectV2ItemFieldLabelValue("...on ProjectV2ItemFieldLabelValue").also { doInit(it, init) }
+    fun `on ProjectV2ItemFieldMilestoneValue`(init: ProjectV2ItemFieldMilestoneValue.() -> Unit) =
+        ProjectV2ItemFieldMilestoneValue("...on ProjectV2ItemFieldMilestoneValue").also { doInit(it, init) }
+    fun `on ProjectV2ItemFieldNumberValue`(init: ProjectV2ItemFieldNumberValue.() -> Unit) =
+        ProjectV2ItemFieldNumberValue("...on ProjectV2ItemFieldNumberValue").also { doInit(it, init) }
+    fun `on ProjectV2ItemFieldPullRequestValue`(init: ProjectV2ItemFieldPullRequestValue.() -> Unit) =
+        ProjectV2ItemFieldPullRequestValue("...on ProjectV2ItemFieldPullRequestValue").also { doInit(it, init) }
+    fun `on ProjectV2ItemFieldRepositoryValue`(init: ProjectV2ItemFieldRepositoryValue.() -> Unit) =
+        ProjectV2ItemFieldRepositoryValue("...on ProjectV2ItemFieldRepositoryValue").also { doInit(it, init) }
+    fun `on ProjectV2ItemFieldReviewerValue`(init: ProjectV2ItemFieldReviewerValue.() -> Unit) =
+        ProjectV2ItemFieldReviewerValue("...on ProjectV2ItemFieldReviewerValue").also { doInit(it, init) }
+    fun `on ProjectV2ItemFieldSingleSelectValue`(init: ProjectV2ItemFieldSingleSelectValue.() -> Unit) =
+        ProjectV2ItemFieldSingleSelectValue("...on ProjectV2ItemFieldSingleSelectValue").also { doInit(it, init) }
+    fun `on ProjectV2ItemFieldTextValue`(init: ProjectV2ItemFieldTextValue.() -> Unit) =
+        ProjectV2ItemFieldTextValue("...on ProjectV2ItemFieldTextValue").also { doInit(it, init) }
+    fun `on ProjectV2ItemFieldUserValue`(init: ProjectV2ItemFieldUserValue.() -> Unit) =
+        ProjectV2ItemFieldUserValue("...on ProjectV2ItemFieldUserValue").also { doInit(it, init) }
 }
 
 class PullRequestTimelineItem(__name: String = "PullRequestTimelineItem"): ObjectNode(__name) {
@@ -16168,6 +17537,10 @@ class AddDiscussionCommentInput(val body: String, val clientMutationId: String? 
     override fun toString() = "{ body: \"$body\", clientMutationId: \"$clientMutationId\", discussionId: \"$discussionId\", replyToId: \"$replyToId\" }"
 }
 
+class AddDiscussionPollVoteInput(val clientMutationId: String? = null, val pollOptionId: ID) {
+    override fun toString() = "{ clientMutationId: \"$clientMutationId\", pollOptionId: \"$pollOptionId\" }"
+}
+
 class AddEnterpriseSupportEntitlementInput(val clientMutationId: String? = null, val enterpriseId: ID, val login: String) {
     override fun toString() = "{ clientMutationId: \"$clientMutationId\", enterpriseId: \"$enterpriseId\", login: \"$login\" }"
 }
@@ -16184,11 +17557,19 @@ class AddProjectColumnInput(val clientMutationId: String? = null, val name: Stri
     override fun toString() = "{ clientMutationId: \"$clientMutationId\", name: \"$name\", projectId: \"$projectId\" }"
 }
 
-class AddProjectDraftIssueInput(val assigneeIds: ID? = null, val body: String? = null, val clientMutationId: String? = null, val projectId: ID, val title: String) {
+class AddProjectDraftIssueInput(val assigneeIds: ID? = null, val body: String? = null, val clientMutationId: String? = null, val projectId: ID? = null, val title: String? = null) {
     override fun toString() = "{ assigneeIds: \"$assigneeIds\", body: \"$body\", clientMutationId: \"$clientMutationId\", projectId: \"$projectId\", title: \"$title\" }"
 }
 
-class AddProjectNextItemInput(val clientMutationId: String? = null, val contentId: ID, val projectId: ID) {
+class AddProjectNextItemInput(val clientMutationId: String? = null, val contentId: ID? = null, val projectId: ID? = null) {
+    override fun toString() = "{ clientMutationId: \"$clientMutationId\", contentId: \"$contentId\", projectId: \"$projectId\" }"
+}
+
+class AddProjectV2DraftIssueInput(val assigneeIds: ID? = null, val body: String? = null, val clientMutationId: String? = null, val projectId: ID, val title: String) {
+    override fun toString() = "{ assigneeIds: \"$assigneeIds\", body: \"$body\", clientMutationId: \"$clientMutationId\", projectId: \"$projectId\", title: \"$title\" }"
+}
+
+class AddProjectV2ItemByIdInput(val clientMutationId: String? = null, val contentId: ID, val projectId: ID) {
     override fun toString() = "{ clientMutationId: \"$clientMutationId\", contentId: \"$contentId\", projectId: \"$projectId\" }"
 }
 
@@ -16228,6 +17609,10 @@ class ApproveVerifiableDomainInput(val clientMutationId: String? = null, val id:
     override fun toString() = "{ clientMutationId: \"$clientMutationId\", id: \"$id\" }"
 }
 
+class ArchiveProjectV2ItemInput(val clientMutationId: String? = null, val itemId: ID, val projectId: ID) {
+    override fun toString() = "{ clientMutationId: \"$clientMutationId\", itemId: \"$itemId\", projectId: \"$projectId\" }"
+}
+
 class ArchiveRepositoryInput(val clientMutationId: String? = null, val repositoryId: ID) {
     override fun toString() = "{ clientMutationId: \"$clientMutationId\", repositoryId: \"$repositoryId\" }"
 }
@@ -16260,8 +17645,8 @@ class CheckRunAction(val description: String, val identifier: String, val label:
     override fun toString() = "{ description: \"$description\", identifier: \"$identifier\", label: \"$label\" }"
 }
 
-class CheckRunFilter(val appId: Int? = null, val checkName: String? = null, val checkType: CheckRunType? = null, val status: CheckStatusState? = null) {
-    override fun toString() = "{ appId: $appId, checkName: \"$checkName\", checkType: $checkType, status: $status }"
+class CheckRunFilter(val appId: Int? = null, val checkName: String? = null, val checkType: CheckRunType? = null, val conclusions: CheckConclusionState? = null, val status: CheckStatusState? = null, val statuses: CheckStatusState? = null) {
+    override fun toString() = "{ appId: $appId, checkName: \"$checkName\", checkType: $checkType, conclusions: $conclusions, status: $status, statuses: $statuses }"
 }
 
 class CheckRunOutput(val annotations: CheckAnnotationData? = null, val images: CheckRunOutputImage? = null, val summary: String, val text: String? = null, val title: String) {
@@ -16282,6 +17667,10 @@ class CheckSuiteFilter(val appId: Int? = null, val checkName: String? = null) {
 
 class ClearLabelsFromLabelableInput(val clientMutationId: String? = null, val labelableId: ID) {
     override fun toString() = "{ clientMutationId: \"$clientMutationId\", labelableId: \"$labelableId\" }"
+}
+
+class ClearProjectV2ItemFieldValueInput(val clientMutationId: String? = null, val fieldId: ID, val itemId: ID, val projectId: ID) {
+    override fun toString() = "{ clientMutationId: \"$clientMutationId\", fieldId: \"$fieldId\", itemId: \"$itemId\", projectId: \"$projectId\" }"
 }
 
 class CloneProjectInput(val body: String? = null, val clientMutationId: String? = null, val includeWorkflows: Boolean, val name: String, val public: Boolean? = null, val sourceId: ID, val targetOwnerId: ID) {
@@ -16328,8 +17717,8 @@ class ConvertPullRequestToDraftInput(val clientMutationId: String? = null, val p
     override fun toString() = "{ clientMutationId: \"$clientMutationId\", pullRequestId: \"$pullRequestId\" }"
 }
 
-class CreateBranchProtectionRuleInput(val allowsDeletions: Boolean? = null, val allowsForcePushes: Boolean? = null, val blocksCreations: Boolean? = null, val bypassForcePushActorIds: ID? = null, val bypassPullRequestActorIds: ID? = null, val clientMutationId: String? = null, val dismissesStaleReviews: Boolean? = null, val isAdminEnforced: Boolean? = null, val pattern: String, val pushActorIds: ID? = null, val repositoryId: ID, val requiredApprovingReviewCount: Int? = null, val requiredStatusCheckContexts: String? = null, val requiredStatusChecks: RequiredStatusCheckInput? = null, val requiresApprovingReviews: Boolean? = null, val requiresCodeOwnerReviews: Boolean? = null, val requiresCommitSignatures: Boolean? = null, val requiresConversationResolution: Boolean? = null, val requiresLinearHistory: Boolean? = null, val requiresStatusChecks: Boolean? = null, val requiresStrictStatusChecks: Boolean? = null, val restrictsPushes: Boolean? = null, val restrictsReviewDismissals: Boolean? = null, val reviewDismissalActorIds: ID? = null) {
-    override fun toString() = "{ allowsDeletions: $allowsDeletions, allowsForcePushes: $allowsForcePushes, blocksCreations: $blocksCreations, bypassForcePushActorIds: \"$bypassForcePushActorIds\", bypassPullRequestActorIds: \"$bypassPullRequestActorIds\", clientMutationId: \"$clientMutationId\", dismissesStaleReviews: $dismissesStaleReviews, isAdminEnforced: $isAdminEnforced, pattern: \"$pattern\", pushActorIds: \"$pushActorIds\", repositoryId: \"$repositoryId\", requiredApprovingReviewCount: $requiredApprovingReviewCount, requiredStatusCheckContexts: \"$requiredStatusCheckContexts\", requiredStatusChecks: $requiredStatusChecks, requiresApprovingReviews: $requiresApprovingReviews, requiresCodeOwnerReviews: $requiresCodeOwnerReviews, requiresCommitSignatures: $requiresCommitSignatures, requiresConversationResolution: $requiresConversationResolution, requiresLinearHistory: $requiresLinearHistory, requiresStatusChecks: $requiresStatusChecks, requiresStrictStatusChecks: $requiresStrictStatusChecks, restrictsPushes: $restrictsPushes, restrictsReviewDismissals: $restrictsReviewDismissals, reviewDismissalActorIds: \"$reviewDismissalActorIds\" }"
+class CreateBranchProtectionRuleInput(val allowsDeletions: Boolean? = null, val allowsForcePushes: Boolean? = null, val blocksCreations: Boolean? = null, val bypassForcePushActorIds: ID? = null, val bypassPullRequestActorIds: ID? = null, val clientMutationId: String? = null, val dismissesStaleReviews: Boolean? = null, val isAdminEnforced: Boolean? = null, val lockAllowsFetchAndMerge: Boolean? = null, val lockBranch: Boolean? = null, val pattern: String, val pushActorIds: ID? = null, val repositoryId: ID, val requireLastPushApproval: Boolean? = null, val requiredApprovingReviewCount: Int? = null, val requiredStatusCheckContexts: String? = null, val requiredStatusChecks: RequiredStatusCheckInput? = null, val requiresApprovingReviews: Boolean? = null, val requiresCodeOwnerReviews: Boolean? = null, val requiresCommitSignatures: Boolean? = null, val requiresConversationResolution: Boolean? = null, val requiresLinearHistory: Boolean? = null, val requiresStatusChecks: Boolean? = null, val requiresStrictStatusChecks: Boolean? = null, val restrictsPushes: Boolean? = null, val restrictsReviewDismissals: Boolean? = null, val reviewDismissalActorIds: ID? = null) {
+    override fun toString() = "{ allowsDeletions: $allowsDeletions, allowsForcePushes: $allowsForcePushes, blocksCreations: $blocksCreations, bypassForcePushActorIds: \"$bypassForcePushActorIds\", bypassPullRequestActorIds: \"$bypassPullRequestActorIds\", clientMutationId: \"$clientMutationId\", dismissesStaleReviews: $dismissesStaleReviews, isAdminEnforced: $isAdminEnforced, lockAllowsFetchAndMerge: $lockAllowsFetchAndMerge, lockBranch: $lockBranch, pattern: \"$pattern\", pushActorIds: \"$pushActorIds\", repositoryId: \"$repositoryId\", requireLastPushApproval: $requireLastPushApproval, requiredApprovingReviewCount: $requiredApprovingReviewCount, requiredStatusCheckContexts: \"$requiredStatusCheckContexts\", requiredStatusChecks: $requiredStatusChecks, requiresApprovingReviews: $requiresApprovingReviews, requiresCodeOwnerReviews: $requiresCodeOwnerReviews, requiresCommitSignatures: $requiresCommitSignatures, requiresConversationResolution: $requiresConversationResolution, requiresLinearHistory: $requiresLinearHistory, requiresStatusChecks: $requiresStatusChecks, requiresStrictStatusChecks: $requiresStrictStatusChecks, restrictsPushes: $restrictsPushes, restrictsReviewDismissals: $restrictsReviewDismissals, reviewDismissalActorIds: \"$reviewDismissalActorIds\" }"
 }
 
 class CreateCheckRunInput(val actions: CheckRunAction? = null, val clientMutationId: String? = null, val completedAt: DateTime? = null, val conclusion: CheckConclusionState? = null, val detailsUrl: URI? = null, val externalId: String? = null, val headSha: GitObjectID, val name: String, val output: CheckRunOutput? = null, val repositoryId: ID, val startedAt: DateTime? = null, val status: RequestableCheckStatusState? = null) {
@@ -16376,12 +17765,20 @@ class CreateLabelInput(val clientMutationId: String? = null, val color: String, 
     override fun toString() = "{ clientMutationId: \"$clientMutationId\", color: \"$color\", description: \"$description\", name: \"$name\", repositoryId: \"$repositoryId\" }"
 }
 
+class CreateLinkedBranchInput(val clientMutationId: String? = null, val issueId: ID, val name: String? = null, val oid: GitObjectID, val repositoryId: ID? = null) {
+    override fun toString() = "{ clientMutationId: \"$clientMutationId\", issueId: \"$issueId\", name: \"$name\", oid: \"$oid\", repositoryId: \"$repositoryId\" }"
+}
+
 class CreateMigrationSourceInput(val accessToken: String? = null, val clientMutationId: String? = null, val githubPat: String? = null, val name: String, val ownerId: ID, val type: MigrationSourceType, val url: String) {
     override fun toString() = "{ accessToken: \"$accessToken\", clientMutationId: \"$clientMutationId\", githubPat: \"$githubPat\", name: \"$name\", ownerId: \"$ownerId\", type: $type, url: \"$url\" }"
 }
 
 class CreateProjectInput(val body: String? = null, val clientMutationId: String? = null, val name: String, val ownerId: ID, val repositoryIds: ID? = null, val template: ProjectTemplate? = null) {
     override fun toString() = "{ body: \"$body\", clientMutationId: \"$clientMutationId\", name: \"$name\", ownerId: \"$ownerId\", repositoryIds: \"$repositoryIds\", template: $template }"
+}
+
+class CreateProjectV2Input(val clientMutationId: String? = null, val ownerId: ID, val title: String) {
+    override fun toString() = "{ clientMutationId: \"$clientMutationId\", ownerId: \"$ownerId\", title: \"$title\" }"
 }
 
 class CreatePullRequestInput(val baseRefName: String, val body: String? = null, val clientMutationId: String? = null, val draft: Boolean? = null, val headRefName: String, val maintainerCanModify: Boolean? = null, val repositoryId: ID, val title: String) {
@@ -16452,6 +17849,10 @@ class DeleteLabelInput(val clientMutationId: String? = null, val id: ID) {
     override fun toString() = "{ clientMutationId: \"$clientMutationId\", id: \"$id\" }"
 }
 
+class DeleteLinkedBranchInput(val clientMutationId: String? = null, val linkedBranchId: ID) {
+    override fun toString() = "{ clientMutationId: \"$clientMutationId\", linkedBranchId: \"$linkedBranchId\" }"
+}
+
 class DeletePackageVersionInput(val clientMutationId: String? = null, val packageVersionId: ID) {
     override fun toString() = "{ clientMutationId: \"$clientMutationId\", packageVersionId: \"$packageVersionId\" }"
 }
@@ -16468,7 +17869,11 @@ class DeleteProjectInput(val clientMutationId: String? = null, val projectId: ID
     override fun toString() = "{ clientMutationId: \"$clientMutationId\", projectId: \"$projectId\" }"
 }
 
-class DeleteProjectNextItemInput(val clientMutationId: String? = null, val itemId: ID, val projectId: ID) {
+class DeleteProjectNextItemInput(val clientMutationId: String? = null, val itemId: ID? = null, val projectId: ID? = null) {
+    override fun toString() = "{ clientMutationId: \"$clientMutationId\", itemId: \"$itemId\", projectId: \"$projectId\" }"
+}
+
+class DeleteProjectV2ItemInput(val clientMutationId: String? = null, val itemId: ID, val projectId: ID) {
     override fun toString() = "{ clientMutationId: \"$clientMutationId\", itemId: \"$itemId\", projectId: \"$projectId\" }"
 }
 
@@ -16505,6 +17910,10 @@ class DisablePullRequestAutoMergeInput(val clientMutationId: String? = null, val
 }
 
 class DiscussionOrder(val direction: OrderDirection, val field: DiscussionOrderField) {
+    override fun toString() = "{ direction: $direction, field: $field }"
+}
+
+class DiscussionPollOptionOrder(val direction: OrderDirection, val field: DiscussionPollOptionOrderField) {
     override fun toString() = "{ direction: $direction, field: $field }"
 }
 
@@ -16616,6 +18025,10 @@ class LanguageOrder(val direction: OrderDirection, val field: LanguageOrderField
     override fun toString() = "{ direction: $direction, field: $field }"
 }
 
+class LinkProjectV2ToRepositoryInput(val clientMutationId: String? = null, val projectId: ID, val repositoryId: ID) {
+    override fun toString() = "{ clientMutationId: \"$clientMutationId\", projectId: \"$projectId\", repositoryId: \"$repositoryId\" }"
+}
+
 class LinkRepositoryToProjectInput(val clientMutationId: String? = null, val projectId: ID, val repositoryId: ID) {
     override fun toString() = "{ clientMutationId: \"$clientMutationId\", projectId: \"$projectId\", repositoryId: \"$repositoryId\" }"
 }
@@ -16693,6 +18106,30 @@ class ProjectColumnImport(val columnName: String, val issues: ProjectCardImport?
 }
 
 class ProjectOrder(val direction: OrderDirection, val field: ProjectOrderField) {
+    override fun toString() = "{ direction: $direction, field: $field }"
+}
+
+class ProjectV2FieldOrder(val direction: OrderDirection, val field: ProjectV2FieldOrderField) {
+    override fun toString() = "{ direction: $direction, field: $field }"
+}
+
+class ProjectV2FieldValue(val date: Date? = null, val iterationId: String? = null, val number: Float? = null, val singleSelectOptionId: String? = null, val text: String? = null) {
+    override fun toString() = "{ date: \"$date\", iterationId: \"$iterationId\", number: $number, singleSelectOptionId: \"$singleSelectOptionId\", text: \"$text\" }"
+}
+
+class ProjectV2ItemFieldValueOrder(val direction: OrderDirection, val field: ProjectV2ItemFieldValueOrderField) {
+    override fun toString() = "{ direction: $direction, field: $field }"
+}
+
+class ProjectV2ItemOrder(val direction: OrderDirection, val field: ProjectV2ItemOrderField) {
+    override fun toString() = "{ direction: $direction, field: $field }"
+}
+
+class ProjectV2Order(val direction: OrderDirection, val field: ProjectV2OrderField) {
+    override fun toString() = "{ direction: $direction, field: $field }"
+}
+
+class ProjectV2ViewOrder(val direction: OrderDirection, val field: ProjectV2ViewOrderField) {
     override fun toString() = "{ direction: $direction, field: $field }"
 }
 
@@ -16872,8 +18309,8 @@ class StarOrder(val direction: OrderDirection, val field: StarOrderField) {
     override fun toString() = "{ direction: $direction, field: $field }"
 }
 
-class StartRepositoryMigrationInput(val accessToken: String, val clientMutationId: String? = null, val continueOnError: Boolean? = null, val gitArchiveUrl: String? = null, val githubPat: String? = null, val metadataArchiveUrl: String? = null, val ownerId: ID, val repositoryName: String, val skipReleases: Boolean? = null, val sourceId: ID, val sourceRepositoryUrl: URI) {
-    override fun toString() = "{ accessToken: \"$accessToken\", clientMutationId: \"$clientMutationId\", continueOnError: $continueOnError, gitArchiveUrl: \"$gitArchiveUrl\", githubPat: \"$githubPat\", metadataArchiveUrl: \"$metadataArchiveUrl\", ownerId: \"$ownerId\", repositoryName: \"$repositoryName\", skipReleases: $skipReleases, sourceId: \"$sourceId\", sourceRepositoryUrl: \"$sourceRepositoryUrl\" }"
+class StartRepositoryMigrationInput(val accessToken: String, val clientMutationId: String? = null, val continueOnError: Boolean? = null, val gitArchiveUrl: String? = null, val githubPat: String? = null, val lockSource: Boolean? = null, val metadataArchiveUrl: String? = null, val ownerId: ID, val repositoryName: String, val skipReleases: Boolean? = null, val sourceId: ID, val sourceRepositoryUrl: URI, val targetRepoVisibility: String? = null) {
+    override fun toString() = "{ accessToken: \"$accessToken\", clientMutationId: \"$clientMutationId\", continueOnError: $continueOnError, gitArchiveUrl: \"$gitArchiveUrl\", githubPat: \"$githubPat\", lockSource: $lockSource, metadataArchiveUrl: \"$metadataArchiveUrl\", ownerId: \"$ownerId\", repositoryName: \"$repositoryName\", skipReleases: $skipReleases, sourceId: \"$sourceId\", sourceRepositoryUrl: \"$sourceRepositoryUrl\", targetRepoVisibility: \"$targetRepoVisibility\" }"
 }
 
 class SubmitPullRequestReviewInput(val body: String? = null, val clientMutationId: String? = null, val event: PullRequestReviewEvent, val pullRequestId: ID? = null, val pullRequestReviewId: ID? = null) {
@@ -16900,8 +18337,12 @@ class TeamRepositoryOrder(val direction: OrderDirection, val field: TeamReposito
     override fun toString() = "{ direction: $direction, field: $field }"
 }
 
-class TransferIssueInput(val clientMutationId: String? = null, val issueId: ID, val repositoryId: ID) {
-    override fun toString() = "{ clientMutationId: \"$clientMutationId\", issueId: \"$issueId\", repositoryId: \"$repositoryId\" }"
+class TransferIssueInput(val clientMutationId: String? = null, val createLabelsIfMissing: Boolean? = null, val issueId: ID, val repositoryId: ID) {
+    override fun toString() = "{ clientMutationId: \"$clientMutationId\", createLabelsIfMissing: $createLabelsIfMissing, issueId: \"$issueId\", repositoryId: \"$repositoryId\" }"
+}
+
+class UnarchiveProjectV2ItemInput(val clientMutationId: String? = null, val itemId: ID, val projectId: ID) {
+    override fun toString() = "{ clientMutationId: \"$clientMutationId\", itemId: \"$itemId\", projectId: \"$projectId\" }"
 }
 
 class UnarchiveRepositoryInput(val clientMutationId: String? = null, val repositoryId: ID) {
@@ -16914,6 +18355,10 @@ class UnfollowOrganizationInput(val clientMutationId: String? = null, val organi
 
 class UnfollowUserInput(val clientMutationId: String? = null, val userId: ID) {
     override fun toString() = "{ clientMutationId: \"$clientMutationId\", userId: \"$userId\" }"
+}
+
+class UnlinkProjectV2FromRepositoryInput(val clientMutationId: String? = null, val projectId: ID, val repositoryId: ID) {
+    override fun toString() = "{ clientMutationId: \"$clientMutationId\", projectId: \"$projectId\", repositoryId: \"$repositoryId\" }"
 }
 
 class UnlinkRepositoryFromProjectInput(val clientMutationId: String? = null, val projectId: ID, val repositoryId: ID) {
@@ -16948,8 +18393,8 @@ class UnresolveReviewThreadInput(val clientMutationId: String? = null, val threa
     override fun toString() = "{ clientMutationId: \"$clientMutationId\", threadId: \"$threadId\" }"
 }
 
-class UpdateBranchProtectionRuleInput(val allowsDeletions: Boolean? = null, val allowsForcePushes: Boolean? = null, val blocksCreations: Boolean? = null, val branchProtectionRuleId: ID, val bypassForcePushActorIds: ID? = null, val bypassPullRequestActorIds: ID? = null, val clientMutationId: String? = null, val dismissesStaleReviews: Boolean? = null, val isAdminEnforced: Boolean? = null, val pattern: String? = null, val pushActorIds: ID? = null, val requiredApprovingReviewCount: Int? = null, val requiredStatusCheckContexts: String? = null, val requiredStatusChecks: RequiredStatusCheckInput? = null, val requiresApprovingReviews: Boolean? = null, val requiresCodeOwnerReviews: Boolean? = null, val requiresCommitSignatures: Boolean? = null, val requiresConversationResolution: Boolean? = null, val requiresLinearHistory: Boolean? = null, val requiresStatusChecks: Boolean? = null, val requiresStrictStatusChecks: Boolean? = null, val restrictsPushes: Boolean? = null, val restrictsReviewDismissals: Boolean? = null, val reviewDismissalActorIds: ID? = null) {
-    override fun toString() = "{ allowsDeletions: $allowsDeletions, allowsForcePushes: $allowsForcePushes, blocksCreations: $blocksCreations, branchProtectionRuleId: \"$branchProtectionRuleId\", bypassForcePushActorIds: \"$bypassForcePushActorIds\", bypassPullRequestActorIds: \"$bypassPullRequestActorIds\", clientMutationId: \"$clientMutationId\", dismissesStaleReviews: $dismissesStaleReviews, isAdminEnforced: $isAdminEnforced, pattern: \"$pattern\", pushActorIds: \"$pushActorIds\", requiredApprovingReviewCount: $requiredApprovingReviewCount, requiredStatusCheckContexts: \"$requiredStatusCheckContexts\", requiredStatusChecks: $requiredStatusChecks, requiresApprovingReviews: $requiresApprovingReviews, requiresCodeOwnerReviews: $requiresCodeOwnerReviews, requiresCommitSignatures: $requiresCommitSignatures, requiresConversationResolution: $requiresConversationResolution, requiresLinearHistory: $requiresLinearHistory, requiresStatusChecks: $requiresStatusChecks, requiresStrictStatusChecks: $requiresStrictStatusChecks, restrictsPushes: $restrictsPushes, restrictsReviewDismissals: $restrictsReviewDismissals, reviewDismissalActorIds: \"$reviewDismissalActorIds\" }"
+class UpdateBranchProtectionRuleInput(val allowsDeletions: Boolean? = null, val allowsForcePushes: Boolean? = null, val blocksCreations: Boolean? = null, val branchProtectionRuleId: ID, val bypassForcePushActorIds: ID? = null, val bypassPullRequestActorIds: ID? = null, val clientMutationId: String? = null, val dismissesStaleReviews: Boolean? = null, val isAdminEnforced: Boolean? = null, val lockAllowsFetchAndMerge: Boolean? = null, val lockBranch: Boolean? = null, val pattern: String? = null, val pushActorIds: ID? = null, val requireLastPushApproval: Boolean? = null, val requiredApprovingReviewCount: Int? = null, val requiredStatusCheckContexts: String? = null, val requiredStatusChecks: RequiredStatusCheckInput? = null, val requiresApprovingReviews: Boolean? = null, val requiresCodeOwnerReviews: Boolean? = null, val requiresCommitSignatures: Boolean? = null, val requiresConversationResolution: Boolean? = null, val requiresLinearHistory: Boolean? = null, val requiresStatusChecks: Boolean? = null, val requiresStrictStatusChecks: Boolean? = null, val restrictsPushes: Boolean? = null, val restrictsReviewDismissals: Boolean? = null, val reviewDismissalActorIds: ID? = null) {
+    override fun toString() = "{ allowsDeletions: $allowsDeletions, allowsForcePushes: $allowsForcePushes, blocksCreations: $blocksCreations, branchProtectionRuleId: \"$branchProtectionRuleId\", bypassForcePushActorIds: \"$bypassForcePushActorIds\", bypassPullRequestActorIds: \"$bypassPullRequestActorIds\", clientMutationId: \"$clientMutationId\", dismissesStaleReviews: $dismissesStaleReviews, isAdminEnforced: $isAdminEnforced, lockAllowsFetchAndMerge: $lockAllowsFetchAndMerge, lockBranch: $lockBranch, pattern: \"$pattern\", pushActorIds: \"$pushActorIds\", requireLastPushApproval: $requireLastPushApproval, requiredApprovingReviewCount: $requiredApprovingReviewCount, requiredStatusCheckContexts: \"$requiredStatusCheckContexts\", requiredStatusChecks: $requiredStatusChecks, requiresApprovingReviews: $requiresApprovingReviews, requiresCodeOwnerReviews: $requiresCodeOwnerReviews, requiresCommitSignatures: $requiresCommitSignatures, requiresConversationResolution: $requiresConversationResolution, requiresLinearHistory: $requiresLinearHistory, requiresStatusChecks: $requiresStatusChecks, requiresStrictStatusChecks: $requiresStrictStatusChecks, restrictsPushes: $restrictsPushes, restrictsReviewDismissals: $restrictsReviewDismissals, reviewDismissalActorIds: \"$reviewDismissalActorIds\" }"
 }
 
 class UpdateCheckRunInput(val actions: CheckRunAction? = null, val checkRunId: ID, val clientMutationId: String? = null, val completedAt: DateTime? = null, val conclusion: CheckConclusionState? = null, val detailsUrl: URI? = null, val externalId: String? = null, val name: String? = null, val output: CheckRunOutput? = null, val repositoryId: ID, val startedAt: DateTime? = null, val status: RequestableCheckStatusState? = null) {
@@ -16972,8 +18417,8 @@ class UpdateEnterpriseAdministratorRoleInput(val clientMutationId: String? = nul
     override fun toString() = "{ clientMutationId: \"$clientMutationId\", enterpriseId: \"$enterpriseId\", login: \"$login\", role: $role }"
 }
 
-class UpdateEnterpriseAllowPrivateRepositoryForkingSettingInput(val clientMutationId: String? = null, val enterpriseId: ID, val settingValue: EnterpriseEnabledDisabledSettingValue) {
-    override fun toString() = "{ clientMutationId: \"$clientMutationId\", enterpriseId: \"$enterpriseId\", settingValue: $settingValue }"
+class UpdateEnterpriseAllowPrivateRepositoryForkingSettingInput(val clientMutationId: String? = null, val enterpriseId: ID, val policyValue: EnterpriseAllowPrivateRepositoryForkingPolicyValue? = null, val settingValue: EnterpriseEnabledDisabledSettingValue) {
+    override fun toString() = "{ clientMutationId: \"$clientMutationId\", enterpriseId: \"$enterpriseId\", policyValue: $policyValue, settingValue: $settingValue }"
 }
 
 class UpdateEnterpriseDefaultRepositoryPermissionSettingInput(val clientMutationId: String? = null, val enterpriseId: ID, val settingValue: EnterpriseDefaultRepositoryPermissionSettingValue) {
@@ -17072,6 +18517,10 @@ class UpdateOrganizationAllowPrivateRepositoryForkingSettingInput(val clientMuta
     override fun toString() = "{ clientMutationId: \"$clientMutationId\", forkingEnabled: $forkingEnabled, organizationId: \"$organizationId\" }"
 }
 
+class UpdateOrganizationWebCommitSignoffSettingInput(val clientMutationId: String? = null, val organizationId: ID, val webCommitSignoffRequired: Boolean) {
+    override fun toString() = "{ clientMutationId: \"$clientMutationId\", organizationId: \"$organizationId\", webCommitSignoffRequired: $webCommitSignoffRequired }"
+}
+
 class UpdateProjectCardInput(val clientMutationId: String? = null, val isArchived: Boolean? = null, val note: String? = null, val projectCardId: ID) {
     override fun toString() = "{ clientMutationId: \"$clientMutationId\", isArchived: $isArchived, note: \"$note\", projectCardId: \"$projectCardId\" }"
 }
@@ -17088,12 +18537,28 @@ class UpdateProjectInput(val body: String? = null, val clientMutationId: String?
     override fun toString() = "{ body: \"$body\", clientMutationId: \"$clientMutationId\", name: \"$name\", projectId: \"$projectId\", public: $public, state: $state }"
 }
 
-class UpdateProjectNextInput(val clientMutationId: String? = null, val closed: Boolean? = null, val description: String? = null, val projectId: ID, val public: Boolean? = null, val shortDescription: String? = null, val title: String? = null) {
+class UpdateProjectNextInput(val clientMutationId: String? = null, val closed: Boolean? = null, val description: String? = null, val projectId: ID? = null, val public: Boolean? = null, val shortDescription: String? = null, val title: String? = null) {
     override fun toString() = "{ clientMutationId: \"$clientMutationId\", closed: $closed, description: \"$description\", projectId: \"$projectId\", public: $public, shortDescription: \"$shortDescription\", title: \"$title\" }"
 }
 
-class UpdateProjectNextItemFieldInput(val clientMutationId: String? = null, val fieldId: ID? = null, val itemId: ID, val projectId: ID, val value: String) {
+class UpdateProjectNextItemFieldInput(val clientMutationId: String? = null, val fieldId: ID? = null, val itemId: ID? = null, val projectId: ID? = null, val value: String? = null) {
     override fun toString() = "{ clientMutationId: \"$clientMutationId\", fieldId: \"$fieldId\", itemId: \"$itemId\", projectId: \"$projectId\", value: \"$value\" }"
+}
+
+class UpdateProjectV2DraftIssueInput(val assigneeIds: ID? = null, val body: String? = null, val clientMutationId: String? = null, val draftIssueId: ID, val title: String? = null) {
+    override fun toString() = "{ assigneeIds: \"$assigneeIds\", body: \"$body\", clientMutationId: \"$clientMutationId\", draftIssueId: \"$draftIssueId\", title: \"$title\" }"
+}
+
+class UpdateProjectV2Input(val clientMutationId: String? = null, val closed: Boolean? = null, val projectId: ID, val public: Boolean? = null, val readme: String? = null, val shortDescription: String? = null, val title: String? = null) {
+    override fun toString() = "{ clientMutationId: \"$clientMutationId\", closed: $closed, projectId: \"$projectId\", public: $public, readme: \"$readme\", shortDescription: \"$shortDescription\", title: \"$title\" }"
+}
+
+class UpdateProjectV2ItemFieldValueInput(val clientMutationId: String? = null, val fieldId: ID, val itemId: ID, val projectId: ID, val value: ProjectV2FieldValue) {
+    override fun toString() = "{ clientMutationId: \"$clientMutationId\", fieldId: \"$fieldId\", itemId: \"$itemId\", projectId: \"$projectId\", value: $value }"
+}
+
+class UpdateProjectV2ItemPositionInput(val afterId: ID? = null, val clientMutationId: String? = null, val itemId: ID, val projectId: ID) {
+    override fun toString() = "{ afterId: \"$afterId\", clientMutationId: \"$clientMutationId\", itemId: \"$itemId\", projectId: \"$projectId\" }"
 }
 
 class UpdatePullRequestBranchInput(val clientMutationId: String? = null, val expectedHeadOid: GitObjectID? = null, val pullRequestId: ID) {
@@ -17120,8 +18585,12 @@ class UpdateRefsInput(val clientMutationId: String? = null, val refUpdates: RefU
     override fun toString() = "{ clientMutationId: \"$clientMutationId\", refUpdates: $refUpdates, repositoryId: \"$repositoryId\" }"
 }
 
-class UpdateRepositoryInput(val clientMutationId: String? = null, val description: String? = null, val hasIssuesEnabled: Boolean? = null, val hasProjectsEnabled: Boolean? = null, val hasWikiEnabled: Boolean? = null, val homepageUrl: URI? = null, val name: String? = null, val repositoryId: ID, val template: Boolean? = null) {
-    override fun toString() = "{ clientMutationId: \"$clientMutationId\", description: \"$description\", hasIssuesEnabled: $hasIssuesEnabled, hasProjectsEnabled: $hasProjectsEnabled, hasWikiEnabled: $hasWikiEnabled, homepageUrl: \"$homepageUrl\", name: \"$name\", repositoryId: \"$repositoryId\", template: $template }"
+class UpdateRepositoryInput(val clientMutationId: String? = null, val description: String? = null, val hasDiscussionsEnabled: Boolean? = null, val hasIssuesEnabled: Boolean? = null, val hasProjectsEnabled: Boolean? = null, val hasWikiEnabled: Boolean? = null, val homepageUrl: URI? = null, val name: String? = null, val repositoryId: ID, val template: Boolean? = null) {
+    override fun toString() = "{ clientMutationId: \"$clientMutationId\", description: \"$description\", hasDiscussionsEnabled: $hasDiscussionsEnabled, hasIssuesEnabled: $hasIssuesEnabled, hasProjectsEnabled: $hasProjectsEnabled, hasWikiEnabled: $hasWikiEnabled, homepageUrl: \"$homepageUrl\", name: \"$name\", repositoryId: \"$repositoryId\", template: $template }"
+}
+
+class UpdateRepositoryWebCommitSignoffSettingInput(val clientMutationId: String? = null, val repositoryId: ID, val webCommitSignoffRequired: Boolean) {
+    override fun toString() = "{ clientMutationId: \"$clientMutationId\", repositoryId: \"$repositoryId\", webCommitSignoffRequired: $webCommitSignoffRequired }"
 }
 
 class UpdateSponsorshipPreferencesInput(val clientMutationId: String? = null, val privacyLevel: SponsorshipPrivacy? = null, val receiveEmails: Boolean? = null, val sponsorId: ID? = null, val sponsorLogin: String? = null, val sponsorableId: ID? = null, val sponsorableLogin: String? = null) {
@@ -17162,4 +18631,8 @@ class VerifiableDomainOrder(val direction: OrderDirection, val field: Verifiable
 
 class VerifyVerifiableDomainInput(val clientMutationId: String? = null, val id: ID) {
     override fun toString() = "{ clientMutationId: \"$clientMutationId\", id: \"$id\" }"
+}
+
+class WorkflowRunOrder(val direction: OrderDirection, val field: WorkflowRunOrderField) {
+    override fun toString() = "{ direction: $direction, field: $field }"
 }
