@@ -7,6 +7,7 @@ fun mutation(init: Mutation.() -> Unit) = Mutation().apply(init)
 
 typealias ID = String
 typealias Base64String = String
+typealias BigInt = String
 typealias Date = String
 typealias DateTime = String
 typealias GitObjectID = String
@@ -208,6 +209,7 @@ enum class DependencyGraphEcosystem {
     PUB,
     RUBYGEMS,
     RUST,
+    SWIFT,
     ;
 }
 
@@ -238,6 +240,7 @@ enum class DeploymentState {
     IN_PROGRESS,
     PENDING,
     QUEUED,
+    SUCCESS,
     WAITING,
     ;
 }
@@ -260,6 +263,13 @@ enum class DiffSide {
     ;
 }
 
+enum class DiscussionCloseReason {
+    DUPLICATE,
+    OUTDATED,
+    RESOLVED,
+    ;
+}
+
 enum class DiscussionOrderField {
     CREATED_AT,
     UPDATED_AT,
@@ -269,6 +279,20 @@ enum class DiscussionOrderField {
 enum class DiscussionPollOptionOrderField {
     AUTHORED_ORDER,
     VOTE_COUNT,
+    ;
+}
+
+enum class DiscussionState {
+    CLOSED,
+    OPEN,
+    ;
+}
+
+enum class DiscussionStateReason {
+    DUPLICATE,
+    OUTDATED,
+    REOPENED,
+    RESOLVED,
     ;
 }
 
@@ -345,6 +369,19 @@ enum class EnterpriseMembersCanMakePurchasesSettingValue {
     ;
 }
 
+enum class EnterpriseMembershipType {
+    ADMIN,
+    ALL,
+    BILLING_MANAGER,
+    ORG_MEMBERSHIP,
+    ;
+}
+
+enum class EnterpriseOrderField {
+    NAME,
+    ;
+}
+
 enum class EnterpriseServerInstallationOrderField {
     CREATED_AT,
     CUSTOMER_NAME,
@@ -385,6 +422,11 @@ enum class EnterpriseUserAccountMembershipRole {
 enum class EnterpriseUserDeployment {
     CLOUD,
     SERVER,
+    ;
+}
+
+enum class EnvironmentOrderField {
+    NAME,
     ;
 }
 
@@ -571,6 +613,21 @@ enum class MergeCommitMessage {
 enum class MergeCommitTitle {
     MERGE_MESSAGE,
     PR_TITLE,
+    ;
+}
+
+enum class MergeQueueEntryState {
+    AWAITING_CHECKS,
+    LOCKED,
+    MERGEABLE,
+    QUEUED,
+    UNMERGEABLE,
+    ;
+}
+
+enum class MergeQueueMergingStrategy {
+    ALLGREEN,
+    HEADGREEN,
     ;
 }
 
@@ -782,8 +839,10 @@ enum class OrganizationMembersCanCreateRepositoriesSettingValue {
 
 enum class OrganizationMigrationState {
     FAILED,
+    FAILED_VALIDATION,
     IN_PROGRESS,
     NOT_STARTED,
+    PENDING_VALIDATION,
     POST_REPO_MIGRATION,
     PRE_REPO_MIGRATION,
     QUEUED,
@@ -906,6 +965,14 @@ enum class ProjectTemplate {
     ;
 }
 
+enum class ProjectV2CustomFieldType {
+    DATE,
+    NUMBER,
+    SINGLE_SELECT,
+    TEXT,
+    ;
+}
+
 enum class ProjectV2FieldOrderField {
     CREATED_AT,
     NAME,
@@ -957,6 +1024,26 @@ enum class ProjectV2OrderField {
     ;
 }
 
+enum class ProjectV2Roles {
+    ADMIN,
+    NONE,
+    READER,
+    WRITER,
+    ;
+}
+
+enum class ProjectV2SingleSelectFieldOptionColor {
+    BLUE,
+    GRAY,
+    GREEN,
+    ORANGE,
+    PINK,
+    PURPLE,
+    RED,
+    YELLOW,
+    ;
+}
+
 enum class ProjectV2State {
     CLOSED,
     OPEN,
@@ -965,6 +1052,7 @@ enum class ProjectV2State {
 
 enum class ProjectV2ViewLayout {
     BOARD_LAYOUT,
+    ROADMAP_LAYOUT,
     TABLE_LAYOUT,
     ;
 }
@@ -981,6 +1069,12 @@ enum class ProjectV2WorkflowsOrderField {
     NAME,
     NUMBER,
     UPDATED_AT,
+    ;
+}
+
+enum class PullRequestBranchUpdateMethod {
+    MERGE,
+    REBASE,
     ;
 }
 
@@ -1024,6 +1118,12 @@ enum class PullRequestReviewState {
     COMMENTED,
     DISMISSED,
     PENDING,
+    ;
+}
+
+enum class PullRequestReviewThreadSubjectType {
+    FILE,
+    LINE,
     ;
 }
 
@@ -1279,6 +1379,36 @@ enum class RepositoryPrivacy {
     ;
 }
 
+enum class RepositoryRuleType {
+    BRANCH_NAME_PATTERN,
+    COMMITTER_EMAIL_PATTERN,
+    COMMIT_AUTHOR_EMAIL_PATTERN,
+    COMMIT_MESSAGE_PATTERN,
+    CREATION,
+    DELETION,
+    NON_FAST_FORWARD,
+    PULL_REQUEST,
+    REQUIRED_DEPLOYMENTS,
+    REQUIRED_LINEAR_HISTORY,
+    REQUIRED_SIGNATURES,
+    REQUIRED_STATUS_CHECKS,
+    TAG_NAME_PATTERN,
+    UPDATE,
+    ;
+}
+
+enum class RepositoryRulesetBypassActorBypassMode {
+    ALWAYS,
+    PULL_REQUEST,
+    ;
+}
+
+enum class RepositoryRulesetTarget {
+    BRANCH,
+    TAG,
+    ;
+}
+
 enum class RepositoryVisibility {
     INTERNAL,
     PRIVATE,
@@ -1293,6 +1423,7 @@ enum class RepositoryVulnerabilityAlertDependencyScope {
 }
 
 enum class RepositoryVulnerabilityAlertState {
+    AUTO_DISMISSED,
     DISMISSED,
     FIXED,
     OPEN,
@@ -1312,6 +1443,13 @@ enum class RoleInOrganization {
     DIRECT_MEMBER,
     OWNER,
     UNAFFILIATED,
+    ;
+}
+
+enum class RuleEnforcement {
+    ACTIVE,
+    DISABLED,
+    EVALUATE,
     ;
 }
 
@@ -1362,6 +1500,7 @@ enum class SecurityAdvisoryEcosystem {
     PUB,
     RUBYGEMS,
     RUST,
+    SWIFT,
     ;
 }
 
@@ -1387,6 +1526,20 @@ enum class SecurityAdvisorySeverity {
 
 enum class SecurityVulnerabilityOrderField {
     UPDATED_AT,
+    ;
+}
+
+enum class SocialAccountProvider {
+    FACEBOOK,
+    GENERIC,
+    HOMETOWN,
+    INSTAGRAM,
+    LINKEDIN,
+    MASTODON,
+    REDDIT,
+    TWITCH,
+    TWITTER,
+    YOUTUBE,
     ;
 }
 
@@ -1771,6 +1924,12 @@ enum class TeamMembershipType {
     ;
 }
 
+enum class TeamNotificationSetting {
+    NOTIFICATIONS_DISABLED,
+    NOTIFICATIONS_ENABLED,
+    ;
+}
+
 enum class TeamOrderField {
     NAME,
     ;
@@ -1801,6 +1960,26 @@ enum class TeamReviewAssignmentAlgorithm {
 enum class TeamRole {
     ADMIN,
     MEMBER,
+    ;
+}
+
+enum class ThreadSubscriptionFormAction {
+    NONE,
+    SUBSCRIBE,
+    UNSUBSCRIBE,
+    ;
+}
+
+enum class ThreadSubscriptionState {
+    DISABLED,
+    IGNORING_LIST,
+    IGNORING_THREAD,
+    NONE,
+    SUBSCRIBED_TO_LIST,
+    SUBSCRIBED_TO_THREAD,
+    SUBSCRIBED_TO_THREAD_EVENTS,
+    SUBSCRIBED_TO_THREAD_TYPE,
+    UNAVAILABLE,
     ;
 }
 
@@ -1840,6 +2019,15 @@ enum class VerifiableDomainOrderField {
 
 enum class WorkflowRunOrderField {
     CREATED_AT,
+    ;
+}
+
+enum class WorkflowState {
+    ACTIVE,
+    DELETED,
+    DISABLED_FORK,
+    DISABLED_INACTIVITY,
+    DISABLED_MANUALLY,
     ;
 }
 
@@ -1990,6 +2178,13 @@ class AddPullRequestReviewThreadPayload(__name: String = "AddPullRequestReviewTh
         PullRequestReviewThread("thread").also { doInit(it, init) }
 }
 
+class AddPullRequestReviewThreadReplyPayload(__name: String = "AddPullRequestReviewThreadReplyPayload"): ObjectNode(__name) {
+    val clientMutationId get() =
+        ScalarNode("clientMutationId").also { doInit(it) }
+    fun comment(init: PullRequestReviewComment.() -> Unit) =
+        PullRequestReviewComment("comment").also { doInit(it, init) }
+}
+
 class AddReactionPayload(__name: String = "AddReactionPayload"): ObjectNode(__name) {
     val clientMutationId get() =
         ScalarNode("clientMutationId").also { doInit(it) }
@@ -2020,6 +2215,21 @@ class AddVerifiableDomainPayload(__name: String = "AddVerifiableDomainPayload"):
         ScalarNode("clientMutationId").also { doInit(it) }
     fun domain(init: VerifiableDomain.() -> Unit) =
         VerifiableDomain("domain").also { doInit(it, init) }
+}
+
+class AddedToMergeQueueEvent(__name: String = "AddedToMergeQueueEvent"): ObjectNode(__name) {
+    fun actor(init: Actor.() -> Unit) =
+        Actor("actor").also { doInit(it, init) }
+    val createdAt get() =
+        ScalarNode("createdAt").also { doInit(it) }
+    fun enqueuer(init: User.() -> Unit) =
+        User("enqueuer").also { doInit(it, init) }
+    val id get() =
+        ScalarNode("id").also { doInit(it) }
+    fun mergeQueue(init: MergeQueue.() -> Unit) =
+        MergeQueue("mergeQueue").also { doInit(it, init) }
+    fun pullRequest(init: PullRequest.() -> Unit) =
+        PullRequest("pullRequest").also { doInit(it, init) }
 }
 
 class AddedToProjectEvent(__name: String = "AddedToProjectEvent"): ObjectNode(__name) {
@@ -2320,6 +2530,17 @@ class Bot(__name: String = "Bot"): ObjectNode(__name) {
         ScalarNode("url").also { doInit(it) }
 }
 
+class BranchNamePatternParameters(__name: String = "BranchNamePatternParameters"): ObjectNode(__name) {
+    val name get() =
+        ScalarNode("name").also { doInit(it) }
+    val negate get() =
+        ScalarNode("negate").also { doInit(it) }
+    val operator get() =
+        ScalarNode("operator").also { doInit(it) }
+    val pattern get() =
+        ScalarNode("pattern").also { doInit(it) }
+}
+
 class BranchProtectionRule(__name: String = "BranchProtectionRule"): ObjectNode(__name) {
     val allowsDeletions get() =
         ScalarNode("allowsDeletions").also { doInit(it) }
@@ -2359,6 +2580,8 @@ class BranchProtectionRule(__name: String = "BranchProtectionRule"): ObjectNode(
         ScalarNode("requireLastPushApproval").also { doInit(it) }
     val requiredApprovingReviewCount get() =
         ScalarNode("requiredApprovingReviewCount").also { doInit(it) }
+    val requiredDeploymentEnvironments get() =
+        ScalarNode("requiredDeploymentEnvironments").also { doInit(it) }
     val requiredStatusCheckContexts get() =
         ScalarNode("requiredStatusCheckContexts").also { doInit(it) }
     fun requiredStatusChecks(init: RequiredStatusCheckDescription.() -> Unit) =
@@ -2371,6 +2594,8 @@ class BranchProtectionRule(__name: String = "BranchProtectionRule"): ObjectNode(
         ScalarNode("requiresCommitSignatures").also { doInit(it) }
     val requiresConversationResolution get() =
         ScalarNode("requiresConversationResolution").also { doInit(it) }
+    val requiresDeployments get() =
+        ScalarNode("requiresDeployments").also { doInit(it) }
     val requiresLinearHistory get() =
         ScalarNode("requiresLinearHistory").also { doInit(it) }
     val requiresStatusChecks get() =
@@ -2790,6 +3015,13 @@ class CloneTemplateRepositoryPayload(__name: String = "CloneTemplateRepositoryPa
         Repository("repository").also { doInit(it, init) }
 }
 
+class CloseDiscussionPayload(__name: String = "CloseDiscussionPayload"): ObjectNode(__name) {
+    val clientMutationId get() =
+        ScalarNode("clientMutationId").also { doInit(it) }
+    fun discussion(init: Discussion.() -> Unit) =
+        Discussion("discussion").also { doInit(it, init) }
+}
+
 class CloseIssuePayload(__name: String = "CloseIssuePayload"): ObjectNode(__name) {
     val clientMutationId get() =
         ScalarNode("clientMutationId").also { doInit(it) }
@@ -2913,6 +3145,7 @@ class Commit(__name: String = "Commit"): ObjectNode(__name) {
         Organization("onBehalfOf").also { doInit(it, init) }
     fun parents(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, init: CommitConnection.() -> Unit) =
         CommitConnection("parents").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.also { doInit(it, init) }
+    @Deprecated("`pushedDate` is no longer supported. Removal on 2023-07-01 UTC.")
     val pushedDate get() =
         ScalarNode("pushedDate").also { doInit(it) }
     fun repository(init: Repository.() -> Unit) =
@@ -2943,6 +3176,17 @@ class Commit(__name: String = "Commit"): ObjectNode(__name) {
         ScalarNode("viewerSubscription").also { doInit(it) }
     val zipballUrl get() =
         ScalarNode("zipballUrl").also { doInit(it) }
+}
+
+class CommitAuthorEmailPatternParameters(__name: String = "CommitAuthorEmailPatternParameters"): ObjectNode(__name) {
+    val name get() =
+        ScalarNode("name").also { doInit(it) }
+    val negate get() =
+        ScalarNode("negate").also { doInit(it) }
+    val operator get() =
+        ScalarNode("operator").also { doInit(it) }
+    val pattern get() =
+        ScalarNode("pattern").also { doInit(it) }
 }
 
 class CommitComment(__name: String = "CommitComment"): ObjectNode(__name) {
@@ -3083,6 +3327,28 @@ class CommitHistoryConnection(__name: String = "CommitHistoryConnection"): Objec
         ScalarNode("totalCount").also { doInit(it) }
 }
 
+class CommitMessagePatternParameters(__name: String = "CommitMessagePatternParameters"): ObjectNode(__name) {
+    val name get() =
+        ScalarNode("name").also { doInit(it) }
+    val negate get() =
+        ScalarNode("negate").also { doInit(it) }
+    val operator get() =
+        ScalarNode("operator").also { doInit(it) }
+    val pattern get() =
+        ScalarNode("pattern").also { doInit(it) }
+}
+
+class CommitterEmailPatternParameters(__name: String = "CommitterEmailPatternParameters"): ObjectNode(__name) {
+    val name get() =
+        ScalarNode("name").also { doInit(it) }
+    val negate get() =
+        ScalarNode("negate").also { doInit(it) }
+    val operator get() =
+        ScalarNode("operator").also { doInit(it) }
+    val pattern get() =
+        ScalarNode("pattern").also { doInit(it) }
+}
+
 class Comparison(__name: String = "Comparison"): ObjectNode(__name) {
     val aheadBy get() =
         ScalarNode("aheadBy").also { doInit(it) }
@@ -3126,6 +3392,15 @@ class ConnectedEvent(__name: String = "ConnectedEvent"): ObjectNode(__name) {
         ReferencedSubject("source").also { doInit(it, init) }
     fun subject(init: ReferencedSubject.() -> Unit) =
         ReferencedSubject("subject").also { doInit(it, init) }
+}
+
+class ContributingGuidelines(__name: String = "ContributingGuidelines"): ObjectNode(__name) {
+    val body get() =
+        ScalarNode("body").also { doInit(it) }
+    val resourcePath get() =
+        ScalarNode("resourcePath").also { doInit(it) }
+    val url get() =
+        ScalarNode("url").also { doInit(it) }
 }
 
 class ContributionCalendar(__name: String = "ContributionCalendar"): ObjectNode(__name) {
@@ -3429,6 +3704,8 @@ class CreateLabelPayload(__name: String = "CreateLabelPayload"): ObjectNode(__na
 class CreateLinkedBranchPayload(__name: String = "CreateLinkedBranchPayload"): ObjectNode(__name) {
     val clientMutationId get() =
         ScalarNode("clientMutationId").also { doInit(it) }
+    fun issue(init: Issue.() -> Unit) =
+        Issue("issue").also { doInit(it, init) }
     fun linkedBranch(init: LinkedBranch.() -> Unit) =
         LinkedBranch("linkedBranch").also { doInit(it, init) }
 }
@@ -3445,6 +3722,13 @@ class CreateProjectPayload(__name: String = "CreateProjectPayload"): ObjectNode(
         ScalarNode("clientMutationId").also { doInit(it) }
     fun project(init: Project.() -> Unit) =
         Project("project").also { doInit(it, init) }
+}
+
+class CreateProjectV2FieldPayload(__name: String = "CreateProjectV2FieldPayload"): ObjectNode(__name) {
+    val clientMutationId get() =
+        ScalarNode("clientMutationId").also { doInit(it) }
+    fun projectV2Field(init: ProjectV2FieldConfiguration.() -> Unit) =
+        ProjectV2FieldConfiguration("projectV2Field").also { doInit(it, init) }
 }
 
 class CreateProjectV2Payload(__name: String = "CreateProjectV2Payload"): ObjectNode(__name) {
@@ -3475,6 +3759,13 @@ class CreateRepositoryPayload(__name: String = "CreateRepositoryPayload"): Objec
         Repository("repository").also { doInit(it, init) }
 }
 
+class CreateRepositoryRulesetPayload(__name: String = "CreateRepositoryRulesetPayload"): ObjectNode(__name) {
+    val clientMutationId get() =
+        ScalarNode("clientMutationId").also { doInit(it) }
+    fun ruleset(init: RepositoryRuleset.() -> Unit) =
+        RepositoryRuleset("ruleset").also { doInit(it, init) }
+}
+
 class CreateSponsorsListingPayload(__name: String = "CreateSponsorsListingPayload"): ObjectNode(__name) {
     val clientMutationId get() =
         ScalarNode("clientMutationId").also { doInit(it) }
@@ -3496,9 +3787,17 @@ class CreateSponsorshipPayload(__name: String = "CreateSponsorshipPayload"): Obj
         Sponsorship("sponsorship").also { doInit(it, init) }
 }
 
+class CreateSponsorshipsPayload(__name: String = "CreateSponsorshipsPayload"): ObjectNode(__name) {
+    val clientMutationId get() =
+        ScalarNode("clientMutationId").also { doInit(it) }
+    fun sponsorables(init: Sponsorable.() -> Unit) =
+        Sponsorable("sponsorables").also { doInit(it, init) }
+}
+
 class CreateTeamDiscussionCommentPayload(__name: String = "CreateTeamDiscussionCommentPayload"): ObjectNode(__name) {
     val clientMutationId get() =
         ScalarNode("clientMutationId").also { doInit(it) }
+    @Deprecated("The Team Discussions feature is deprecated in favor of Organization Discussions. Follow the guide at https://github.blog/changelog/2023-02-08-sunset-notice-team-discussions/ to find a suitable replacement. Removal on 2024-07-01 UTC.")
     fun teamDiscussionComment(init: TeamDiscussionComment.() -> Unit) =
         TeamDiscussionComment("teamDiscussionComment").also { doInit(it, init) }
 }
@@ -3506,6 +3805,7 @@ class CreateTeamDiscussionCommentPayload(__name: String = "CreateTeamDiscussionC
 class CreateTeamDiscussionPayload(__name: String = "CreateTeamDiscussionPayload"): ObjectNode(__name) {
     val clientMutationId get() =
         ScalarNode("clientMutationId").also { doInit(it) }
+    @Deprecated("The Team Discussions feature is deprecated in favor of Organization Discussions. Follow the guide at https://github.blog/changelog/2023-02-08-sunset-notice-team-discussions/ to find a suitable replacement. Removal on 2024-07-01 UTC.")
     fun teamDiscussion(init: TeamDiscussion.() -> Unit) =
         TeamDiscussion("teamDiscussion").also { doInit(it, init) }
 }
@@ -3803,6 +4103,13 @@ class DeleteProjectPayload(__name: String = "DeleteProjectPayload"): ObjectNode(
         ProjectOwner("owner").also { doInit(it, init) }
 }
 
+class DeleteProjectV2FieldPayload(__name: String = "DeleteProjectV2FieldPayload"): ObjectNode(__name) {
+    val clientMutationId get() =
+        ScalarNode("clientMutationId").also { doInit(it) }
+    fun projectV2Field(init: ProjectV2FieldConfiguration.() -> Unit) =
+        ProjectV2FieldConfiguration("projectV2Field").also { doInit(it, init) }
+}
+
 class DeleteProjectV2ItemPayload(__name: String = "DeleteProjectV2ItemPayload"): ObjectNode(__name) {
     val clientMutationId get() =
         ScalarNode("clientMutationId").also { doInit(it) }
@@ -3813,6 +4120,15 @@ class DeleteProjectV2ItemPayload(__name: String = "DeleteProjectV2ItemPayload"):
 class DeleteProjectV2Payload(__name: String = "DeleteProjectV2Payload"): ObjectNode(__name) {
     val clientMutationId get() =
         ScalarNode("clientMutationId").also { doInit(it) }
+    fun projectV2(init: ProjectV2.() -> Unit) =
+        ProjectV2("projectV2").also { doInit(it, init) }
+}
+
+class DeleteProjectV2WorkflowPayload(__name: String = "DeleteProjectV2WorkflowPayload"): ObjectNode(__name) {
+    val clientMutationId get() =
+        ScalarNode("clientMutationId").also { doInit(it) }
+    val deletedWorkflowId get() =
+        ScalarNode("deletedWorkflowId").also { doInit(it) }
     fun projectV2(init: ProjectV2.() -> Unit) =
         ProjectV2("projectV2").also { doInit(it, init) }
 }
@@ -3834,6 +4150,11 @@ class DeletePullRequestReviewPayload(__name: String = "DeletePullRequestReviewPa
 }
 
 class DeleteRefPayload(__name: String = "DeleteRefPayload"): ObjectNode(__name) {
+    val clientMutationId get() =
+        ScalarNode("clientMutationId").also { doInit(it) }
+}
+
+class DeleteRepositoryRulesetPayload(__name: String = "DeleteRepositoryRulesetPayload"): ObjectNode(__name) {
     val clientMutationId get() =
         ScalarNode("clientMutationId").also { doInit(it) }
 }
@@ -4080,6 +4401,8 @@ class DeploymentEnvironmentChangedEvent(__name: String = "DeploymentEnvironmentC
 class DeploymentProtectionRule(__name: String = "DeploymentProtectionRule"): ObjectNode(__name) {
     val databaseId get() =
         ScalarNode("databaseId").also { doInit(it) }
+    val preventSelfReview get() =
+        ScalarNode("preventSelfReview").also { doInit(it) }
     fun reviewers(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, init: DeploymentReviewerConnection.() -> Unit) =
         DeploymentReviewerConnection("reviewers").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.also { doInit(it, init) }
     val timeout get() =
@@ -4229,6 +4552,13 @@ class DeploymentStatusEdge(__name: String = "DeploymentStatusEdge"): ObjectNode(
         DeploymentStatus("node").also { doInit(it, init) }
 }
 
+class DequeuePullRequestPayload(__name: String = "DequeuePullRequestPayload"): ObjectNode(__name) {
+    val clientMutationId get() =
+        ScalarNode("clientMutationId").also { doInit(it) }
+    fun mergeQueueEntry(init: MergeQueueEntry.() -> Unit) =
+        MergeQueueEntry("mergeQueueEntry").also { doInit(it, init) }
+}
+
 class DisablePullRequestAutoMergePayload(__name: String = "DisablePullRequestAutoMergePayload"): ObjectNode(__name) {
     fun actor(init: Actor.() -> Unit) =
         Actor("actor").also { doInit(it, init) }
@@ -4292,6 +4622,8 @@ class Discussion(__name: String = "Discussion"): ObjectNode(__name) {
         ScalarNode("id").also { doInit(it) }
     val includesCreatedEdit get() =
         ScalarNode("includesCreatedEdit").also { doInit(it) }
+    val isAnswered get() =
+        ScalarNode("isAnswered").also { doInit(it) }
     fun labels(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, orderBy: LabelOrder? = null, init: LabelConnection.() -> Unit) =
         LabelConnection("labels").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.also { doInit(it, init) }
     val lastEditedAt get() =
@@ -4312,6 +4644,8 @@ class Discussion(__name: String = "Discussion"): ObjectNode(__name) {
         Repository("repository").also { doInit(it, init) }
     val resourcePath get() =
         ScalarNode("resourcePath").also { doInit(it) }
+    val stateReason get() =
+        ScalarNode("stateReason").also { doInit(it) }
     val title get() =
         ScalarNode("title").also { doInit(it) }
     val updatedAt get() =
@@ -4322,10 +4656,14 @@ class Discussion(__name: String = "Discussion"): ObjectNode(__name) {
         ScalarNode("url").also { doInit(it) }
     fun userContentEdits(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, init: UserContentEditConnection.() -> Unit) =
         UserContentEditConnection("userContentEdits").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.also { doInit(it, init) }
+    val viewerCanClose get() =
+        ScalarNode("viewerCanClose").also { doInit(it) }
     val viewerCanDelete get() =
         ScalarNode("viewerCanDelete").also { doInit(it) }
     val viewerCanReact get() =
         ScalarNode("viewerCanReact").also { doInit(it) }
+    val viewerCanReopen get() =
+        ScalarNode("viewerCanReopen").also { doInit(it) }
     val viewerCanSubscribe get() =
         ScalarNode("viewerCanSubscribe").also { doInit(it) }
     val viewerCanUpdate get() =
@@ -4590,6 +4928,13 @@ class EnablePullRequestAutoMergePayload(__name: String = "EnablePullRequestAutoM
         PullRequest("pullRequest").also { doInit(it, init) }
 }
 
+class EnqueuePullRequestPayload(__name: String = "EnqueuePullRequestPayload"): ObjectNode(__name) {
+    val clientMutationId get() =
+        ScalarNode("clientMutationId").also { doInit(it) }
+    fun mergeQueueEntry(init: MergeQueueEntry.() -> Unit) =
+        MergeQueueEntry("mergeQueueEntry").also { doInit(it, init) }
+}
+
 class Enterprise(__name: String = "Enterprise"): ObjectNode(__name) {
     val announcement get() =
         ScalarNode("announcement").also { doInit(it) }
@@ -4711,6 +5056,24 @@ class EnterpriseBillingInfo(__name: String = "EnterpriseBillingInfo"): ObjectNod
         ScalarNode("totalAvailableLicenses").also { doInit(it) }
     val totalLicenses get() =
         ScalarNode("totalLicenses").also { doInit(it) }
+}
+
+class EnterpriseConnection(__name: String = "EnterpriseConnection"): ObjectNode(__name) {
+    fun edges(init: EnterpriseEdge.() -> Unit) =
+        EnterpriseEdge("edges").also { doInit(it, init) }
+    fun nodes(init: Enterprise.() -> Unit) =
+        Enterprise("nodes").also { doInit(it, init) }
+    fun pageInfo(init: PageInfo.() -> Unit) =
+        PageInfo("pageInfo").also { doInit(it, init) }
+    val totalCount get() =
+        ScalarNode("totalCount").also { doInit(it) }
+}
+
+class EnterpriseEdge(__name: String = "EnterpriseEdge"): ObjectNode(__name) {
+    val cursor get() =
+        ScalarNode("cursor").also { doInit(it) }
+    fun node(init: Enterprise.() -> Unit) =
+        Enterprise("node").also { doInit(it, init) }
 }
 
 class EnterpriseFailedInvitationConnection(__name: String = "EnterpriseFailedInvitationConnection"): ObjectNode(__name) {
@@ -5003,6 +5366,26 @@ class EnterpriseServerInstallationEdge(__name: String = "EnterpriseServerInstall
         EnterpriseServerInstallation("node").also { doInit(it, init) }
 }
 
+class EnterpriseServerInstallationMembershipConnection(__name: String = "EnterpriseServerInstallationMembershipConnection"): ObjectNode(__name) {
+    fun edges(init: EnterpriseServerInstallationMembershipEdge.() -> Unit) =
+        EnterpriseServerInstallationMembershipEdge("edges").also { doInit(it, init) }
+    fun nodes(init: EnterpriseServerInstallation.() -> Unit) =
+        EnterpriseServerInstallation("nodes").also { doInit(it, init) }
+    fun pageInfo(init: PageInfo.() -> Unit) =
+        PageInfo("pageInfo").also { doInit(it, init) }
+    val totalCount get() =
+        ScalarNode("totalCount").also { doInit(it) }
+}
+
+class EnterpriseServerInstallationMembershipEdge(__name: String = "EnterpriseServerInstallationMembershipEdge"): ObjectNode(__name) {
+    val cursor get() =
+        ScalarNode("cursor").also { doInit(it) }
+    fun node(init: EnterpriseServerInstallation.() -> Unit) =
+        EnterpriseServerInstallation("node").also { doInit(it, init) }
+    val role get() =
+        ScalarNode("role").also { doInit(it) }
+}
+
 class EnterpriseServerUserAccount(__name: String = "EnterpriseServerUserAccount"): ObjectNode(__name) {
     val createdAt get() =
         ScalarNode("createdAt").also { doInit(it) }
@@ -5121,6 +5504,8 @@ class EnterpriseUserAccount(__name: String = "EnterpriseUserAccount"): ObjectNod
         ScalarNode("createdAt").also { doInit(it) }
     fun enterprise(init: Enterprise.() -> Unit) =
         Enterprise("enterprise").also { doInit(it, init) }
+    fun enterpriseInstallations(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, orderBy: EnterpriseServerInstallationOrder? = null, query: String? = null, role: EnterpriseUserAccountMembershipRole? = null, init: EnterpriseServerInstallationMembershipConnection.() -> Unit) =
+        EnterpriseServerInstallationMembershipConnection("enterpriseInstallations").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.apply { addArgs("query", query) }.apply { addArgs("role", role) }.also { doInit(it, init) }
     val id get() =
         ScalarNode("id").also { doInit(it) }
     val login get() =
@@ -5473,6 +5858,8 @@ class GitHubMetadata(__name: String = "GitHubMetadata"): ObjectNode(__name) {
         ScalarNode("gitHubServicesSha").also { doInit(it) }
     val gitIpAddresses get() =
         ScalarNode("gitIpAddresses").also { doInit(it) }
+    val githubEnterpriseImporterIpAddresses get() =
+        ScalarNode("githubEnterpriseImporterIpAddresses").also { doInit(it) }
     val hookIpAddresses get() =
         ScalarNode("hookIpAddresses").also { doInit(it) }
     val importerIpAddresses get() =
@@ -5646,6 +6033,8 @@ class Issue(__name: String = "Issue"): ObjectNode(__name) {
         ScalarNode("databaseId").also { doInit(it) }
     fun editor(init: Actor.() -> Unit) =
         Actor("editor").also { doInit(it, init) }
+    val fullDatabaseId get() =
+        ScalarNode("fullDatabaseId").also { doInit(it) }
     fun hovercard(includeNotificationContexts: Boolean? = null, init: Hovercard.() -> Unit) =
         Hovercard("hovercard").apply { addArgs("includeNotificationContexts", includeNotificationContexts) }.also { doInit(it, init) }
     val id get() =
@@ -5715,8 +6104,14 @@ class Issue(__name: String = "Issue"): ObjectNode(__name) {
         ScalarNode("url").also { doInit(it) }
     fun userContentEdits(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, init: UserContentEditConnection.() -> Unit) =
         UserContentEditConnection("userContentEdits").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.also { doInit(it, init) }
+    val viewerCanClose get() =
+        ScalarNode("viewerCanClose").also { doInit(it) }
+    val viewerCanDelete get() =
+        ScalarNode("viewerCanDelete").also { doInit(it) }
     val viewerCanReact get() =
         ScalarNode("viewerCanReact").also { doInit(it) }
+    val viewerCanReopen get() =
+        ScalarNode("viewerCanReopen").also { doInit(it) }
     val viewerCanSubscribe get() =
         ScalarNode("viewerCanSubscribe").also { doInit(it) }
     val viewerCanUpdate get() =
@@ -5727,6 +6122,10 @@ class Issue(__name: String = "Issue"): ObjectNode(__name) {
         ScalarNode("viewerDidAuthor").also { doInit(it) }
     val viewerSubscription get() =
         ScalarNode("viewerSubscription").also { doInit(it) }
+    val viewerThreadSubscriptionFormAction get() =
+        ScalarNode("viewerThreadSubscriptionFormAction").also { doInit(it) }
+    val viewerThreadSubscriptionStatus get() =
+        ScalarNode("viewerThreadSubscriptionStatus").also { doInit(it) }
 }
 
 class IssueComment(__name: String = "IssueComment"): ObjectNode(__name) {
@@ -5748,6 +6147,8 @@ class IssueComment(__name: String = "IssueComment"): ObjectNode(__name) {
         ScalarNode("databaseId").also { doInit(it) }
     fun editor(init: Actor.() -> Unit) =
         Actor("editor").also { doInit(it, init) }
+    val fullDatabaseId get() =
+        ScalarNode("fullDatabaseId").also { doInit(it) }
     val id get() =
         ScalarNode("id").also { doInit(it) }
     val includesCreatedEdit get() =
@@ -5838,10 +6239,14 @@ class IssueEdge(__name: String = "IssueEdge"): ObjectNode(__name) {
 class IssueTemplate(__name: String = "IssueTemplate"): ObjectNode(__name) {
     val about get() =
         ScalarNode("about").also { doInit(it) }
+    fun assignees(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, init: UserConnection.() -> Unit) =
+        UserConnection("assignees").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.also { doInit(it, init) }
     val body get() =
         ScalarNode("body").also { doInit(it) }
     val filename get() =
         ScalarNode("filename").also { doInit(it) }
+    fun labels(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, orderBy: LabelOrder? = null, init: LabelConnection.() -> Unit) =
+        LabelConnection("labels").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.also { doInit(it, init) }
     val name get() =
         ScalarNode("name").also { doInit(it) }
     val title get() =
@@ -6159,6 +6564,13 @@ class MarkFileAsViewedPayload(__name: String = "MarkFileAsViewedPayload"): Objec
         ScalarNode("clientMutationId").also { doInit(it) }
     fun pullRequest(init: PullRequest.() -> Unit) =
         PullRequest("pullRequest").also { doInit(it, init) }
+}
+
+class MarkProjectV2AsTemplatePayload(__name: String = "MarkProjectV2AsTemplatePayload"): ObjectNode(__name) {
+    val clientMutationId get() =
+        ScalarNode("clientMutationId").also { doInit(it) }
+    fun projectV2(init: ProjectV2.() -> Unit) =
+        ProjectV2("projectV2").also { doInit(it, init) }
 }
 
 class MarkPullRequestReadyForReviewPayload(__name: String = "MarkPullRequestReadyForReviewPayload"): ObjectNode(__name) {
@@ -6501,6 +6913,85 @@ class MergePullRequestPayload(__name: String = "MergePullRequestPayload"): Objec
         PullRequest("pullRequest").also { doInit(it, init) }
 }
 
+class MergeQueue(__name: String = "MergeQueue"): ObjectNode(__name) {
+    fun configuration(init: MergeQueueConfiguration.() -> Unit) =
+        MergeQueueConfiguration("configuration").also { doInit(it, init) }
+    fun entries(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, init: MergeQueueEntryConnection.() -> Unit) =
+        MergeQueueEntryConnection("entries").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.also { doInit(it, init) }
+    val id get() =
+        ScalarNode("id").also { doInit(it) }
+    val nextEntryEstimatedTimeToMerge get() =
+        ScalarNode("nextEntryEstimatedTimeToMerge").also { doInit(it) }
+    fun repository(init: Repository.() -> Unit) =
+        Repository("repository").also { doInit(it, init) }
+    val resourcePath get() =
+        ScalarNode("resourcePath").also { doInit(it) }
+    val url get() =
+        ScalarNode("url").also { doInit(it) }
+}
+
+class MergeQueueConfiguration(__name: String = "MergeQueueConfiguration"): ObjectNode(__name) {
+    val checkResponseTimeout get() =
+        ScalarNode("checkResponseTimeout").also { doInit(it) }
+    val maximumEntriesToBuild get() =
+        ScalarNode("maximumEntriesToBuild").also { doInit(it) }
+    val maximumEntriesToMerge get() =
+        ScalarNode("maximumEntriesToMerge").also { doInit(it) }
+    val mergeMethod get() =
+        ScalarNode("mergeMethod").also { doInit(it) }
+    val mergingStrategy get() =
+        ScalarNode("mergingStrategy").also { doInit(it) }
+    val minimumEntriesToMerge get() =
+        ScalarNode("minimumEntriesToMerge").also { doInit(it) }
+    val minimumEntriesToMergeWaitTime get() =
+        ScalarNode("minimumEntriesToMergeWaitTime").also { doInit(it) }
+}
+
+class MergeQueueEntry(__name: String = "MergeQueueEntry"): ObjectNode(__name) {
+    fun baseCommit(init: Commit.() -> Unit) =
+        Commit("baseCommit").also { doInit(it, init) }
+    val enqueuedAt get() =
+        ScalarNode("enqueuedAt").also { doInit(it) }
+    fun enqueuer(init: Actor.() -> Unit) =
+        Actor("enqueuer").also { doInit(it, init) }
+    val estimatedTimeToMerge get() =
+        ScalarNode("estimatedTimeToMerge").also { doInit(it) }
+    fun headCommit(init: Commit.() -> Unit) =
+        Commit("headCommit").also { doInit(it, init) }
+    val id get() =
+        ScalarNode("id").also { doInit(it) }
+    val jump get() =
+        ScalarNode("jump").also { doInit(it) }
+    fun mergeQueue(init: MergeQueue.() -> Unit) =
+        MergeQueue("mergeQueue").also { doInit(it, init) }
+    val position get() =
+        ScalarNode("position").also { doInit(it) }
+    fun pullRequest(init: PullRequest.() -> Unit) =
+        PullRequest("pullRequest").also { doInit(it, init) }
+    val solo get() =
+        ScalarNode("solo").also { doInit(it) }
+    val state get() =
+        ScalarNode("state").also { doInit(it) }
+}
+
+class MergeQueueEntryConnection(__name: String = "MergeQueueEntryConnection"): ObjectNode(__name) {
+    fun edges(init: MergeQueueEntryEdge.() -> Unit) =
+        MergeQueueEntryEdge("edges").also { doInit(it, init) }
+    fun nodes(init: MergeQueueEntry.() -> Unit) =
+        MergeQueueEntry("nodes").also { doInit(it, init) }
+    fun pageInfo(init: PageInfo.() -> Unit) =
+        PageInfo("pageInfo").also { doInit(it, init) }
+    val totalCount get() =
+        ScalarNode("totalCount").also { doInit(it) }
+}
+
+class MergeQueueEntryEdge(__name: String = "MergeQueueEntryEdge"): ObjectNode(__name) {
+    val cursor get() =
+        ScalarNode("cursor").also { doInit(it) }
+    fun node(init: MergeQueueEntry.() -> Unit) =
+        MergeQueueEntry("node").also { doInit(it, init) }
+}
+
 class MergedEvent(__name: String = "MergedEvent"): ObjectNode(__name) {
     fun actor(init: Actor.() -> Unit) =
         Actor("actor").also { doInit(it, init) }
@@ -6568,6 +7059,10 @@ class Milestone(__name: String = "Milestone"): ObjectNode(__name) {
         ScalarNode("updatedAt").also { doInit(it) }
     val url get() =
         ScalarNode("url").also { doInit(it) }
+    val viewerCanClose get() =
+        ScalarNode("viewerCanClose").also { doInit(it) }
+    val viewerCanReopen get() =
+        ScalarNode("viewerCanReopen").also { doInit(it) }
 }
 
 class MilestoneConnection(__name: String = "MilestoneConnection"): ObjectNode(__name) {
@@ -6676,6 +7171,8 @@ class Mutation(__name: String = "mutation"): ObjectNode(__name) {
         AddPullRequestReviewCommentPayload("addPullRequestReviewComment").apply { addArgs("input", input) }.also { doInit(it, init) }
     fun addPullRequestReviewThread(input: AddPullRequestReviewThreadInput, init: AddPullRequestReviewThreadPayload.() -> Unit) =
         AddPullRequestReviewThreadPayload("addPullRequestReviewThread").apply { addArgs("input", input) }.also { doInit(it, init) }
+    fun addPullRequestReviewThreadReply(input: AddPullRequestReviewThreadReplyInput, init: AddPullRequestReviewThreadReplyPayload.() -> Unit) =
+        AddPullRequestReviewThreadReplyPayload("addPullRequestReviewThreadReply").apply { addArgs("input", input) }.also { doInit(it, init) }
     fun addReaction(input: AddReactionInput, init: AddReactionPayload.() -> Unit) =
         AddReactionPayload("addReaction").apply { addArgs("input", input) }.also { doInit(it, init) }
     fun addStar(input: AddStarInput, init: AddStarPayload.() -> Unit) =
@@ -6706,6 +7203,8 @@ class Mutation(__name: String = "mutation"): ObjectNode(__name) {
         CloneProjectPayload("cloneProject").apply { addArgs("input", input) }.also { doInit(it, init) }
     fun cloneTemplateRepository(input: CloneTemplateRepositoryInput, init: CloneTemplateRepositoryPayload.() -> Unit) =
         CloneTemplateRepositoryPayload("cloneTemplateRepository").apply { addArgs("input", input) }.also { doInit(it, init) }
+    fun closeDiscussion(input: CloseDiscussionInput, init: CloseDiscussionPayload.() -> Unit) =
+        CloseDiscussionPayload("closeDiscussion").apply { addArgs("input", input) }.also { doInit(it, init) }
     fun closeIssue(input: CloseIssueInput, init: CloseIssuePayload.() -> Unit) =
         CloseIssuePayload("closeIssue").apply { addArgs("input", input) }.also { doInit(it, init) }
     fun closePullRequest(input: ClosePullRequestInput, init: ClosePullRequestPayload.() -> Unit) =
@@ -6750,18 +7249,24 @@ class Mutation(__name: String = "mutation"): ObjectNode(__name) {
         CreateProjectPayload("createProject").apply { addArgs("input", input) }.also { doInit(it, init) }
     fun createProjectV2(input: CreateProjectV2Input, init: CreateProjectV2Payload.() -> Unit) =
         CreateProjectV2Payload("createProjectV2").apply { addArgs("input", input) }.also { doInit(it, init) }
+    fun createProjectV2Field(input: CreateProjectV2FieldInput, init: CreateProjectV2FieldPayload.() -> Unit) =
+        CreateProjectV2FieldPayload("createProjectV2Field").apply { addArgs("input", input) }.also { doInit(it, init) }
     fun createPullRequest(input: CreatePullRequestInput, init: CreatePullRequestPayload.() -> Unit) =
         CreatePullRequestPayload("createPullRequest").apply { addArgs("input", input) }.also { doInit(it, init) }
     fun createRef(input: CreateRefInput, init: CreateRefPayload.() -> Unit) =
         CreateRefPayload("createRef").apply { addArgs("input", input) }.also { doInit(it, init) }
     fun createRepository(input: CreateRepositoryInput, init: CreateRepositoryPayload.() -> Unit) =
         CreateRepositoryPayload("createRepository").apply { addArgs("input", input) }.also { doInit(it, init) }
+    fun createRepositoryRuleset(input: CreateRepositoryRulesetInput, init: CreateRepositoryRulesetPayload.() -> Unit) =
+        CreateRepositoryRulesetPayload("createRepositoryRuleset").apply { addArgs("input", input) }.also { doInit(it, init) }
     fun createSponsorsListing(input: CreateSponsorsListingInput, init: CreateSponsorsListingPayload.() -> Unit) =
         CreateSponsorsListingPayload("createSponsorsListing").apply { addArgs("input", input) }.also { doInit(it, init) }
     fun createSponsorsTier(input: CreateSponsorsTierInput, init: CreateSponsorsTierPayload.() -> Unit) =
         CreateSponsorsTierPayload("createSponsorsTier").apply { addArgs("input", input) }.also { doInit(it, init) }
     fun createSponsorship(input: CreateSponsorshipInput, init: CreateSponsorshipPayload.() -> Unit) =
         CreateSponsorshipPayload("createSponsorship").apply { addArgs("input", input) }.also { doInit(it, init) }
+    fun createSponsorships(input: CreateSponsorshipsInput, init: CreateSponsorshipsPayload.() -> Unit) =
+        CreateSponsorshipsPayload("createSponsorships").apply { addArgs("input", input) }.also { doInit(it, init) }
     fun createTeamDiscussion(input: CreateTeamDiscussionInput, init: CreateTeamDiscussionPayload.() -> Unit) =
         CreateTeamDiscussionPayload("createTeamDiscussion").apply { addArgs("input", input) }.also { doInit(it, init) }
     fun createTeamDiscussionComment(input: CreateTeamDiscussionCommentInput, init: CreateTeamDiscussionCommentPayload.() -> Unit) =
@@ -6798,20 +7303,28 @@ class Mutation(__name: String = "mutation"): ObjectNode(__name) {
         DeleteProjectColumnPayload("deleteProjectColumn").apply { addArgs("input", input) }.also { doInit(it, init) }
     fun deleteProjectV2(input: DeleteProjectV2Input, init: DeleteProjectV2Payload.() -> Unit) =
         DeleteProjectV2Payload("deleteProjectV2").apply { addArgs("input", input) }.also { doInit(it, init) }
+    fun deleteProjectV2Field(input: DeleteProjectV2FieldInput, init: DeleteProjectV2FieldPayload.() -> Unit) =
+        DeleteProjectV2FieldPayload("deleteProjectV2Field").apply { addArgs("input", input) }.also { doInit(it, init) }
     fun deleteProjectV2Item(input: DeleteProjectV2ItemInput, init: DeleteProjectV2ItemPayload.() -> Unit) =
         DeleteProjectV2ItemPayload("deleteProjectV2Item").apply { addArgs("input", input) }.also { doInit(it, init) }
+    fun deleteProjectV2Workflow(input: DeleteProjectV2WorkflowInput, init: DeleteProjectV2WorkflowPayload.() -> Unit) =
+        DeleteProjectV2WorkflowPayload("deleteProjectV2Workflow").apply { addArgs("input", input) }.also { doInit(it, init) }
     fun deletePullRequestReview(input: DeletePullRequestReviewInput, init: DeletePullRequestReviewPayload.() -> Unit) =
         DeletePullRequestReviewPayload("deletePullRequestReview").apply { addArgs("input", input) }.also { doInit(it, init) }
     fun deletePullRequestReviewComment(input: DeletePullRequestReviewCommentInput, init: DeletePullRequestReviewCommentPayload.() -> Unit) =
         DeletePullRequestReviewCommentPayload("deletePullRequestReviewComment").apply { addArgs("input", input) }.also { doInit(it, init) }
     fun deleteRef(input: DeleteRefInput, init: DeleteRefPayload.() -> Unit) =
         DeleteRefPayload("deleteRef").apply { addArgs("input", input) }.also { doInit(it, init) }
+    fun deleteRepositoryRuleset(input: DeleteRepositoryRulesetInput, init: DeleteRepositoryRulesetPayload.() -> Unit) =
+        DeleteRepositoryRulesetPayload("deleteRepositoryRuleset").apply { addArgs("input", input) }.also { doInit(it, init) }
     fun deleteTeamDiscussion(input: DeleteTeamDiscussionInput, init: DeleteTeamDiscussionPayload.() -> Unit) =
         DeleteTeamDiscussionPayload("deleteTeamDiscussion").apply { addArgs("input", input) }.also { doInit(it, init) }
     fun deleteTeamDiscussionComment(input: DeleteTeamDiscussionCommentInput, init: DeleteTeamDiscussionCommentPayload.() -> Unit) =
         DeleteTeamDiscussionCommentPayload("deleteTeamDiscussionComment").apply { addArgs("input", input) }.also { doInit(it, init) }
     fun deleteVerifiableDomain(input: DeleteVerifiableDomainInput, init: DeleteVerifiableDomainPayload.() -> Unit) =
         DeleteVerifiableDomainPayload("deleteVerifiableDomain").apply { addArgs("input", input) }.also { doInit(it, init) }
+    fun dequeuePullRequest(input: DequeuePullRequestInput, init: DequeuePullRequestPayload.() -> Unit) =
+        DequeuePullRequestPayload("dequeuePullRequest").apply { addArgs("input", input) }.also { doInit(it, init) }
     fun disablePullRequestAutoMerge(input: DisablePullRequestAutoMergeInput, init: DisablePullRequestAutoMergePayload.() -> Unit) =
         DisablePullRequestAutoMergePayload("disablePullRequestAutoMerge").apply { addArgs("input", input) }.also { doInit(it, init) }
     fun dismissPullRequestReview(input: DismissPullRequestReviewInput, init: DismissPullRequestReviewPayload.() -> Unit) =
@@ -6820,6 +7333,8 @@ class Mutation(__name: String = "mutation"): ObjectNode(__name) {
         DismissRepositoryVulnerabilityAlertPayload("dismissRepositoryVulnerabilityAlert").apply { addArgs("input", input) }.also { doInit(it, init) }
     fun enablePullRequestAutoMerge(input: EnablePullRequestAutoMergeInput, init: EnablePullRequestAutoMergePayload.() -> Unit) =
         EnablePullRequestAutoMergePayload("enablePullRequestAutoMerge").apply { addArgs("input", input) }.also { doInit(it, init) }
+    fun enqueuePullRequest(input: EnqueuePullRequestInput, init: EnqueuePullRequestPayload.() -> Unit) =
+        EnqueuePullRequestPayload("enqueuePullRequest").apply { addArgs("input", input) }.also { doInit(it, init) }
     fun followOrganization(input: FollowOrganizationInput, init: FollowOrganizationPayload.() -> Unit) =
         FollowOrganizationPayload("followOrganization").apply { addArgs("input", input) }.also { doInit(it, init) }
     fun followUser(input: FollowUserInput, init: FollowUserPayload.() -> Unit) =
@@ -6844,6 +7359,8 @@ class Mutation(__name: String = "mutation"): ObjectNode(__name) {
         MarkDiscussionCommentAsAnswerPayload("markDiscussionCommentAsAnswer").apply { addArgs("input", input) }.also { doInit(it, init) }
     fun markFileAsViewed(input: MarkFileAsViewedInput, init: MarkFileAsViewedPayload.() -> Unit) =
         MarkFileAsViewedPayload("markFileAsViewed").apply { addArgs("input", input) }.also { doInit(it, init) }
+    fun markProjectV2AsTemplate(input: MarkProjectV2AsTemplateInput, init: MarkProjectV2AsTemplatePayload.() -> Unit) =
+        MarkProjectV2AsTemplatePayload("markProjectV2AsTemplate").apply { addArgs("input", input) }.also { doInit(it, init) }
     fun markPullRequestReadyForReview(input: MarkPullRequestReadyForReviewInput, init: MarkPullRequestReadyForReviewPayload.() -> Unit) =
         MarkPullRequestReadyForReviewPayload("markPullRequestReadyForReview").apply { addArgs("input", input) }.also { doInit(it, init) }
     fun mergeBranch(input: MergeBranchInput, init: MergeBranchPayload.() -> Unit) =
@@ -6888,6 +7405,8 @@ class Mutation(__name: String = "mutation"): ObjectNode(__name) {
         RemoveStarPayload("removeStar").apply { addArgs("input", input) }.also { doInit(it, init) }
     fun removeUpvote(input: RemoveUpvoteInput, init: RemoveUpvotePayload.() -> Unit) =
         RemoveUpvotePayload("removeUpvote").apply { addArgs("input", input) }.also { doInit(it, init) }
+    fun reopenDiscussion(input: ReopenDiscussionInput, init: ReopenDiscussionPayload.() -> Unit) =
+        ReopenDiscussionPayload("reopenDiscussion").apply { addArgs("input", input) }.also { doInit(it, init) }
     fun reopenIssue(input: ReopenIssueInput, init: ReopenIssuePayload.() -> Unit) =
         ReopenIssuePayload("reopenIssue").apply { addArgs("input", input) }.also { doInit(it, init) }
     fun reopenPullRequest(input: ReopenPullRequestInput, init: ReopenPullRequestPayload.() -> Unit) =
@@ -6946,6 +7465,8 @@ class Mutation(__name: String = "mutation"): ObjectNode(__name) {
         UnmarkFileAsViewedPayload("unmarkFileAsViewed").apply { addArgs("input", input) }.also { doInit(it, init) }
     fun unmarkIssueAsDuplicate(input: UnmarkIssueAsDuplicateInput, init: UnmarkIssueAsDuplicatePayload.() -> Unit) =
         UnmarkIssueAsDuplicatePayload("unmarkIssueAsDuplicate").apply { addArgs("input", input) }.also { doInit(it, init) }
+    fun unmarkProjectV2AsTemplate(input: UnmarkProjectV2AsTemplateInput, init: UnmarkProjectV2AsTemplatePayload.() -> Unit) =
+        UnmarkProjectV2AsTemplatePayload("unmarkProjectV2AsTemplate").apply { addArgs("input", input) }.also { doInit(it, init) }
     fun unminimizeComment(input: UnminimizeCommentInput, init: UnminimizeCommentPayload.() -> Unit) =
         UnminimizeCommentPayload("unminimizeComment").apply { addArgs("input", input) }.also { doInit(it, init) }
     fun unpinIssue(input: UnpinIssueInput, init: UnpinIssuePayload.() -> Unit) =
@@ -7024,6 +7545,8 @@ class Mutation(__name: String = "mutation"): ObjectNode(__name) {
         UpdateProjectColumnPayload("updateProjectColumn").apply { addArgs("input", input) }.also { doInit(it, init) }
     fun updateProjectV2(input: UpdateProjectV2Input, init: UpdateProjectV2Payload.() -> Unit) =
         UpdateProjectV2Payload("updateProjectV2").apply { addArgs("input", input) }.also { doInit(it, init) }
+    fun updateProjectV2Collaborators(input: UpdateProjectV2CollaboratorsInput, init: UpdateProjectV2CollaboratorsPayload.() -> Unit) =
+        UpdateProjectV2CollaboratorsPayload("updateProjectV2Collaborators").apply { addArgs("input", input) }.also { doInit(it, init) }
     fun updateProjectV2DraftIssue(input: UpdateProjectV2DraftIssueInput, init: UpdateProjectV2DraftIssuePayload.() -> Unit) =
         UpdateProjectV2DraftIssuePayload("updateProjectV2DraftIssue").apply { addArgs("input", input) }.also { doInit(it, init) }
     fun updateProjectV2ItemFieldValue(input: UpdateProjectV2ItemFieldValueInput, init: UpdateProjectV2ItemFieldValuePayload.() -> Unit) =
@@ -7044,6 +7567,8 @@ class Mutation(__name: String = "mutation"): ObjectNode(__name) {
         UpdateRefsPayload("updateRefs").apply { addArgs("input", input) }.also { doInit(it, init) }
     fun updateRepository(input: UpdateRepositoryInput, init: UpdateRepositoryPayload.() -> Unit) =
         UpdateRepositoryPayload("updateRepository").apply { addArgs("input", input) }.also { doInit(it, init) }
+    fun updateRepositoryRuleset(input: UpdateRepositoryRulesetInput, init: UpdateRepositoryRulesetPayload.() -> Unit) =
+        UpdateRepositoryRulesetPayload("updateRepositoryRuleset").apply { addArgs("input", input) }.also { doInit(it, init) }
     fun updateRepositoryWebCommitSignoffSetting(input: UpdateRepositoryWebCommitSignoffSettingInput, init: UpdateRepositoryWebCommitSignoffSettingPayload.() -> Unit) =
         UpdateRepositoryWebCommitSignoffSettingPayload("updateRepositoryWebCommitSignoffSetting").apply { addArgs("input", input) }.also { doInit(it, init) }
     fun updateSponsorshipPreferences(input: UpdateSponsorshipPreferencesInput, init: UpdateSponsorshipPreferencesPayload.() -> Unit) =
@@ -7761,6 +8286,51 @@ class OrgOauthAppAccessApprovedAuditEntry(__name: String = "OrgOauthAppAccessApp
         ScalarNode("userUrl").also { doInit(it) }
 }
 
+class OrgOauthAppAccessBlockedAuditEntry(__name: String = "OrgOauthAppAccessBlockedAuditEntry"): ObjectNode(__name) {
+    val action get() =
+        ScalarNode("action").also { doInit(it) }
+    fun actor(init: AuditEntryActor.() -> Unit) =
+        AuditEntryActor("actor").also { doInit(it, init) }
+    val actorIp get() =
+        ScalarNode("actorIp").also { doInit(it) }
+    fun actorLocation(init: ActorLocation.() -> Unit) =
+        ActorLocation("actorLocation").also { doInit(it, init) }
+    val actorLogin get() =
+        ScalarNode("actorLogin").also { doInit(it) }
+    val actorResourcePath get() =
+        ScalarNode("actorResourcePath").also { doInit(it) }
+    val actorUrl get() =
+        ScalarNode("actorUrl").also { doInit(it) }
+    val createdAt get() =
+        ScalarNode("createdAt").also { doInit(it) }
+    val id get() =
+        ScalarNode("id").also { doInit(it) }
+    val oauthApplicationName get() =
+        ScalarNode("oauthApplicationName").also { doInit(it) }
+    val oauthApplicationResourcePath get() =
+        ScalarNode("oauthApplicationResourcePath").also { doInit(it) }
+    val oauthApplicationUrl get() =
+        ScalarNode("oauthApplicationUrl").also { doInit(it) }
+    val operationType get() =
+        ScalarNode("operationType").also { doInit(it) }
+    fun organization(init: Organization.() -> Unit) =
+        Organization("organization").also { doInit(it, init) }
+    val organizationName get() =
+        ScalarNode("organizationName").also { doInit(it) }
+    val organizationResourcePath get() =
+        ScalarNode("organizationResourcePath").also { doInit(it) }
+    val organizationUrl get() =
+        ScalarNode("organizationUrl").also { doInit(it) }
+    fun user(init: User.() -> Unit) =
+        User("user").also { doInit(it, init) }
+    val userLogin get() =
+        ScalarNode("userLogin").also { doInit(it) }
+    val userResourcePath get() =
+        ScalarNode("userResourcePath").also { doInit(it) }
+    val userUrl get() =
+        ScalarNode("userUrl").also { doInit(it) }
+}
+
 class OrgOauthAppAccessDeniedAuditEntry(__name: String = "OrgOauthAppAccessDeniedAuditEntry"): ObjectNode(__name) {
     val action get() =
         ScalarNode("action").also { doInit(it) }
@@ -7807,6 +8377,51 @@ class OrgOauthAppAccessDeniedAuditEntry(__name: String = "OrgOauthAppAccessDenie
 }
 
 class OrgOauthAppAccessRequestedAuditEntry(__name: String = "OrgOauthAppAccessRequestedAuditEntry"): ObjectNode(__name) {
+    val action get() =
+        ScalarNode("action").also { doInit(it) }
+    fun actor(init: AuditEntryActor.() -> Unit) =
+        AuditEntryActor("actor").also { doInit(it, init) }
+    val actorIp get() =
+        ScalarNode("actorIp").also { doInit(it) }
+    fun actorLocation(init: ActorLocation.() -> Unit) =
+        ActorLocation("actorLocation").also { doInit(it, init) }
+    val actorLogin get() =
+        ScalarNode("actorLogin").also { doInit(it) }
+    val actorResourcePath get() =
+        ScalarNode("actorResourcePath").also { doInit(it) }
+    val actorUrl get() =
+        ScalarNode("actorUrl").also { doInit(it) }
+    val createdAt get() =
+        ScalarNode("createdAt").also { doInit(it) }
+    val id get() =
+        ScalarNode("id").also { doInit(it) }
+    val oauthApplicationName get() =
+        ScalarNode("oauthApplicationName").also { doInit(it) }
+    val oauthApplicationResourcePath get() =
+        ScalarNode("oauthApplicationResourcePath").also { doInit(it) }
+    val oauthApplicationUrl get() =
+        ScalarNode("oauthApplicationUrl").also { doInit(it) }
+    val operationType get() =
+        ScalarNode("operationType").also { doInit(it) }
+    fun organization(init: Organization.() -> Unit) =
+        Organization("organization").also { doInit(it, init) }
+    val organizationName get() =
+        ScalarNode("organizationName").also { doInit(it) }
+    val organizationResourcePath get() =
+        ScalarNode("organizationResourcePath").also { doInit(it) }
+    val organizationUrl get() =
+        ScalarNode("organizationUrl").also { doInit(it) }
+    fun user(init: User.() -> Unit) =
+        User("user").also { doInit(it, init) }
+    val userLogin get() =
+        ScalarNode("userLogin").also { doInit(it) }
+    val userResourcePath get() =
+        ScalarNode("userResourcePath").also { doInit(it) }
+    val userUrl get() =
+        ScalarNode("userUrl").also { doInit(it) }
+}
+
+class OrgOauthAppAccessUnblockedAuditEntry(__name: String = "OrgOauthAppAccessUnblockedAuditEntry"): ObjectNode(__name) {
     val action get() =
         ScalarNode("action").also { doInit(it) }
     fun actor(init: AuditEntryActor.() -> Unit) =
@@ -8292,6 +8907,8 @@ class Organization(__name: String = "Organization"): ObjectNode(__name) {
         ScalarWithArgsNode("anyPinnableItems", mapOf("type" to type)).also { doInit(it) }
     val anyPinnableItems get() =
         ScalarNode("anyPinnableItems").also { doInit(it) }
+    val archivedAt get() =
+        ScalarNode("archivedAt").also { doInit(it) }
     fun auditLog(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, orderBy: AuditLogOrder? = null, query: String? = null, init: OrganizationAuditEntryConnection.() -> Unit) =
         OrganizationAuditEntryConnection("auditLog").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.apply { addArgs("query", query) }.also { doInit(it, init) }
     fun avatarUrl(size: Int? = null) =
@@ -8338,8 +8955,8 @@ class Organization(__name: String = "Organization"): ObjectNode(__name) {
         ScalarNode("location").also { doInit(it) }
     val login get() =
         ScalarNode("login").also { doInit(it) }
-    fun mannequins(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, orderBy: MannequinOrder? = null, init: MannequinConnection.() -> Unit) =
-        MannequinConnection("mannequins").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.also { doInit(it, init) }
+    fun mannequins(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, login: String? = null, orderBy: MannequinOrder? = null, init: MannequinConnection.() -> Unit) =
+        MannequinConnection("mannequins").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("login", login) }.apply { addArgs("orderBy", orderBy) }.also { doInit(it, init) }
     fun memberStatuses(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, orderBy: UserStatusOrder? = null, init: UserStatusConnection.() -> Unit) =
         UserStatusConnection("memberStatuses").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.also { doInit(it, init) }
     val membersCanForkPrivateRepositories get() =
@@ -8382,28 +8999,32 @@ class Organization(__name: String = "Organization"): ObjectNode(__name) {
         ProjectV2Connection("projectsV2").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.apply { addArgs("query", query) }.also { doInit(it, init) }
     fun recentProjects(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, init: ProjectV2Connection.() -> Unit) =
         ProjectV2Connection("recentProjects").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.also { doInit(it, init) }
-    fun repositories(affiliations: RepositoryAffiliation? = null, after: String? = null, before: String? = null, first: Int? = null, isFork: Boolean? = null, isLocked: Boolean? = null, last: Int? = null, orderBy: RepositoryOrder? = null, ownerAffiliations: RepositoryAffiliation? = null, privacy: RepositoryPrivacy? = null, init: RepositoryConnection.() -> Unit) =
-        RepositoryConnection("repositories").apply { addArgs("affiliations", affiliations) }.apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("isFork", isFork) }.apply { addArgs("isLocked", isLocked) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.apply { addArgs("ownerAffiliations", ownerAffiliations) }.apply { addArgs("privacy", privacy) }.also { doInit(it, init) }
+    fun repositories(affiliations: RepositoryAffiliation? = null, after: String? = null, before: String? = null, first: Int? = null, hasIssuesEnabled: Boolean? = null, isArchived: Boolean? = null, isFork: Boolean? = null, isLocked: Boolean? = null, last: Int? = null, orderBy: RepositoryOrder? = null, ownerAffiliations: RepositoryAffiliation? = null, privacy: RepositoryPrivacy? = null, init: RepositoryConnection.() -> Unit) =
+        RepositoryConnection("repositories").apply { addArgs("affiliations", affiliations) }.apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("hasIssuesEnabled", hasIssuesEnabled) }.apply { addArgs("isArchived", isArchived) }.apply { addArgs("isFork", isFork) }.apply { addArgs("isLocked", isLocked) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.apply { addArgs("ownerAffiliations", ownerAffiliations) }.apply { addArgs("privacy", privacy) }.also { doInit(it, init) }
     fun repository(followRenames: Boolean? = null, name: String, init: Repository.() -> Unit) =
         Repository("repository").apply { addArgs("followRenames", followRenames) }.apply { addArgs("name", name) }.also { doInit(it, init) }
     fun repositoryDiscussionComments(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, onlyAnswers: Boolean? = null, repositoryId: ID? = null, init: DiscussionCommentConnection.() -> Unit) =
         DiscussionCommentConnection("repositoryDiscussionComments").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("onlyAnswers", onlyAnswers) }.apply { addArgs("repositoryId", repositoryId) }.also { doInit(it, init) }
-    fun repositoryDiscussions(after: String? = null, answered: Boolean? = null, before: String? = null, first: Int? = null, last: Int? = null, orderBy: DiscussionOrder? = null, repositoryId: ID? = null, init: DiscussionConnection.() -> Unit) =
-        DiscussionConnection("repositoryDiscussions").apply { addArgs("after", after) }.apply { addArgs("answered", answered) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.apply { addArgs("repositoryId", repositoryId) }.also { doInit(it, init) }
+    fun repositoryDiscussions(after: String? = null, answered: Boolean? = null, before: String? = null, first: Int? = null, last: Int? = null, orderBy: DiscussionOrder? = null, repositoryId: ID? = null, states: DiscussionState? = null, init: DiscussionConnection.() -> Unit) =
+        DiscussionConnection("repositoryDiscussions").apply { addArgs("after", after) }.apply { addArgs("answered", answered) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.apply { addArgs("repositoryId", repositoryId) }.apply { addArgs("states", states) }.also { doInit(it, init) }
     fun repositoryMigrations(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, orderBy: RepositoryMigrationOrder? = null, repositoryName: String? = null, state: MigrationState? = null, init: RepositoryMigrationConnection.() -> Unit) =
         RepositoryMigrationConnection("repositoryMigrations").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.apply { addArgs("repositoryName", repositoryName) }.apply { addArgs("state", state) }.also { doInit(it, init) }
     val requiresTwoFactorAuthentication get() =
         ScalarNode("requiresTwoFactorAuthentication").also { doInit(it) }
     val resourcePath get() =
         ScalarNode("resourcePath").also { doInit(it) }
+    fun ruleset(databaseId: Int, init: RepositoryRuleset.() -> Unit) =
+        RepositoryRuleset("ruleset").apply { addArgs("databaseId", databaseId) }.also { doInit(it, init) }
+    fun rulesets(after: String? = null, before: String? = null, first: Int? = null, includeParents: Boolean? = null, last: Int? = null, init: RepositoryRulesetConnection.() -> Unit) =
+        RepositoryRulesetConnection("rulesets").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("includeParents", includeParents) }.apply { addArgs("last", last) }.also { doInit(it, init) }
     fun samlIdentityProvider(init: OrganizationIdentityProvider.() -> Unit) =
         OrganizationIdentityProvider("samlIdentityProvider").also { doInit(it, init) }
     fun sponsoring(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, orderBy: SponsorOrder? = null, init: SponsorConnection.() -> Unit) =
         SponsorConnection("sponsoring").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.also { doInit(it, init) }
     fun sponsors(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, orderBy: SponsorOrder? = null, tierId: ID? = null, init: SponsorConnection.() -> Unit) =
         SponsorConnection("sponsors").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.apply { addArgs("tierId", tierId) }.also { doInit(it, init) }
-    fun sponsorsActivities(actions: SponsorsActivityAction? = null, after: String? = null, before: String? = null, first: Int? = null, includeAsSponsor: Boolean? = null, last: Int? = null, orderBy: SponsorsActivityOrder? = null, period: SponsorsActivityPeriod? = null, since: DateTime? = null, until: DateTime? = null, init: SponsorsActivityConnection.() -> Unit) =
-        SponsorsActivityConnection("sponsorsActivities").apply { addArgs("actions", actions) }.apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("includeAsSponsor", includeAsSponsor) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.apply { addArgs("period", period) }.apply { addArgs("since", since) }.apply { addArgs("until", until) }.also { doInit(it, init) }
+    fun sponsorsActivities(actions: SponsorsActivityAction? = null, after: String? = null, before: String? = null, first: Int? = null, includeAsSponsor: Boolean? = null, includePrivate: Boolean? = null, last: Int? = null, orderBy: SponsorsActivityOrder? = null, period: SponsorsActivityPeriod? = null, since: DateTime? = null, until: DateTime? = null, init: SponsorsActivityConnection.() -> Unit) =
+        SponsorsActivityConnection("sponsorsActivities").apply { addArgs("actions", actions) }.apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("includeAsSponsor", includeAsSponsor) }.apply { addArgs("includePrivate", includePrivate) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.apply { addArgs("period", period) }.apply { addArgs("since", since) }.apply { addArgs("until", until) }.also { doInit(it, init) }
     fun sponsorsListing(init: SponsorsListing.() -> Unit) =
         SponsorsListing("sponsorsListing").also { doInit(it, init) }
     fun sponsorshipForViewerAsSponsor(activeOnly: Boolean? = null, init: Sponsorship.() -> Unit) =
@@ -8418,8 +9039,8 @@ class Organization(__name: String = "Organization"): ObjectNode(__name) {
         SponsorshipConnection("sponsorshipsAsSponsor").apply { addArgs("activeOnly", activeOnly) }.apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("maintainerLogins", maintainerLogins) }.apply { addArgs("orderBy", orderBy) }.also { doInit(it, init) }
     fun team(slug: String, init: Team.() -> Unit) =
         Team("team").apply { addArgs("slug", slug) }.also { doInit(it, init) }
-    fun teams(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, ldapMapped: Boolean? = null, orderBy: TeamOrder? = null, privacy: TeamPrivacy? = null, query: String? = null, role: TeamRole? = null, rootTeamsOnly: Boolean? = null, userLogins: String? = null, init: TeamConnection.() -> Unit) =
-        TeamConnection("teams").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("ldapMapped", ldapMapped) }.apply { addArgs("orderBy", orderBy) }.apply { addArgs("privacy", privacy) }.apply { addArgs("query", query) }.apply { addArgs("role", role) }.apply { addArgs("rootTeamsOnly", rootTeamsOnly) }.apply { addArgs("userLogins", userLogins) }.also { doInit(it, init) }
+    fun teams(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, ldapMapped: Boolean? = null, notificationSetting: TeamNotificationSetting? = null, orderBy: TeamOrder? = null, privacy: TeamPrivacy? = null, query: String? = null, role: TeamRole? = null, rootTeamsOnly: Boolean? = null, userLogins: String? = null, init: TeamConnection.() -> Unit) =
+        TeamConnection("teams").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("ldapMapped", ldapMapped) }.apply { addArgs("notificationSetting", notificationSetting) }.apply { addArgs("orderBy", orderBy) }.apply { addArgs("privacy", privacy) }.apply { addArgs("query", query) }.apply { addArgs("role", role) }.apply { addArgs("rootTeamsOnly", rootTeamsOnly) }.apply { addArgs("userLogins", userLogins) }.also { doInit(it, init) }
     val teamsResourcePath get() =
         ScalarNode("teamsResourcePath").also { doInit(it) }
     val teamsUrl get() =
@@ -8879,6 +9500,8 @@ class PinnedEvent(__name: String = "PinnedEvent"): ObjectNode(__name) {
 class PinnedIssue(__name: String = "PinnedIssue"): ObjectNode(__name) {
     val databaseId get() =
         ScalarNode("databaseId").also { doInit(it) }
+    val fullDatabaseId get() =
+        ScalarNode("fullDatabaseId").also { doInit(it) }
     val id get() =
         ScalarNode("id").also { doInit(it) }
     fun issue(init: Issue.() -> Unit) =
@@ -9057,6 +9680,10 @@ class Project(__name: String = "Project"): ObjectNode(__name) {
         ScalarNode("updatedAt").also { doInit(it) }
     val url get() =
         ScalarNode("url").also { doInit(it) }
+    val viewerCanClose get() =
+        ScalarNode("viewerCanClose").also { doInit(it) }
+    val viewerCanReopen get() =
+        ScalarNode("viewerCanReopen").also { doInit(it) }
     val viewerCanUpdate get() =
         ScalarNode("viewerCanUpdate").also { doInit(it) }
 }
@@ -9219,6 +9846,8 @@ class ProjectV2(__name: String = "ProjectV2"): ObjectNode(__name) {
         ScalarNode("shortDescription").also { doInit(it) }
     fun teams(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, orderBy: TeamOrder? = null, init: TeamConnection.() -> Unit) =
         TeamConnection("teams").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.also { doInit(it, init) }
+    val template get() =
+        ScalarNode("template").also { doInit(it) }
     val title get() =
         ScalarNode("title").also { doInit(it) }
     val updatedAt get() =
@@ -9227,6 +9856,10 @@ class ProjectV2(__name: String = "ProjectV2"): ObjectNode(__name) {
         ScalarNode("url").also { doInit(it) }
     fun view(number: Int, init: ProjectV2View.() -> Unit) =
         ProjectV2View("view").apply { addArgs("number", number) }.also { doInit(it, init) }
+    val viewerCanClose get() =
+        ScalarNode("viewerCanClose").also { doInit(it) }
+    val viewerCanReopen get() =
+        ScalarNode("viewerCanReopen").also { doInit(it) }
     val viewerCanUpdate get() =
         ScalarNode("viewerCanUpdate").also { doInit(it) }
     fun views(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, orderBy: ProjectV2ViewOrder? = null, init: ProjectV2ViewConnection.() -> Unit) =
@@ -9235,6 +9868,24 @@ class ProjectV2(__name: String = "ProjectV2"): ObjectNode(__name) {
         ProjectV2Workflow("workflow").apply { addArgs("number", number) }.also { doInit(it, init) }
     fun workflows(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, orderBy: ProjectV2WorkflowOrder? = null, init: ProjectV2WorkflowConnection.() -> Unit) =
         ProjectV2WorkflowConnection("workflows").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.also { doInit(it, init) }
+}
+
+class ProjectV2ActorConnection(__name: String = "ProjectV2ActorConnection"): ObjectNode(__name) {
+    fun edges(init: ProjectV2ActorEdge.() -> Unit) =
+        ProjectV2ActorEdge("edges").also { doInit(it, init) }
+    fun nodes(init: ProjectV2Actor.() -> Unit) =
+        ProjectV2Actor("nodes").also { doInit(it, init) }
+    fun pageInfo(init: PageInfo.() -> Unit) =
+        PageInfo("pageInfo").also { doInit(it, init) }
+    val totalCount get() =
+        ScalarNode("totalCount").also { doInit(it) }
+}
+
+class ProjectV2ActorEdge(__name: String = "ProjectV2ActorEdge"): ObjectNode(__name) {
+    val cursor get() =
+        ScalarNode("cursor").also { doInit(it) }
+    fun node(init: ProjectV2Actor.() -> Unit) =
+        ProjectV2Actor("node").also { doInit(it, init) }
 }
 
 class ProjectV2Connection(__name: String = "ProjectV2Connection"): ObjectNode(__name) {
@@ -9452,12 +10103,18 @@ class ProjectV2ItemFieldReviewerValue(__name: String = "ProjectV2ItemFieldReview
 }
 
 class ProjectV2ItemFieldSingleSelectValue(__name: String = "ProjectV2ItemFieldSingleSelectValue"): ObjectNode(__name) {
+    val color get() =
+        ScalarNode("color").also { doInit(it) }
     val createdAt get() =
         ScalarNode("createdAt").also { doInit(it) }
     fun creator(init: Actor.() -> Unit) =
         Actor("creator").also { doInit(it, init) }
     val databaseId get() =
         ScalarNode("databaseId").also { doInit(it) }
+    val description get() =
+        ScalarNode("description").also { doInit(it) }
+    val descriptionHTML get() =
+        ScalarNode("descriptionHTML").also { doInit(it) }
     fun field(init: ProjectV2FieldConfiguration.() -> Unit) =
         ProjectV2FieldConfiguration("field").also { doInit(it, init) }
     val id get() =
@@ -9572,8 +10229,8 @@ class ProjectV2SingleSelectField(__name: String = "ProjectV2SingleSelectField"):
         ScalarNode("id").also { doInit(it) }
     val name get() =
         ScalarNode("name").also { doInit(it) }
-    fun options(init: ProjectV2SingleSelectFieldOption.() -> Unit) =
-        ProjectV2SingleSelectFieldOption("options").also { doInit(it, init) }
+    fun options(names: String? = null, init: ProjectV2SingleSelectFieldOption.() -> Unit) =
+        ProjectV2SingleSelectFieldOption("options").apply { addArgs("names", names) }.also { doInit(it, init) }
     fun project(init: ProjectV2.() -> Unit) =
         ProjectV2("project").also { doInit(it, init) }
     val updatedAt get() =
@@ -9581,6 +10238,12 @@ class ProjectV2SingleSelectField(__name: String = "ProjectV2SingleSelectField"):
 }
 
 class ProjectV2SingleSelectFieldOption(__name: String = "ProjectV2SingleSelectFieldOption"): ObjectNode(__name) {
+    val color get() =
+        ScalarNode("color").also { doInit(it) }
+    val description get() =
+        ScalarNode("description").also { doInit(it) }
+    val descriptionHTML get() =
+        ScalarNode("descriptionHTML").also { doInit(it) }
     val id get() =
         ScalarNode("id").also { doInit(it) }
     val name get() =
@@ -9870,6 +10533,8 @@ class PullRequest(__name: String = "PullRequest"): ObjectNode(__name) {
         ScalarNode("maintainerCanModify").also { doInit(it) }
     fun mergeCommit(init: Commit.() -> Unit) =
         Commit("mergeCommit").also { doInit(it, init) }
+    fun mergeQueueEntry(init: MergeQueueEntry.() -> Unit) =
+        MergeQueueEntry("mergeQueueEntry").also { doInit(it, init) }
     val mergeStateStatus get() =
         ScalarNode("mergeStateStatus").also { doInit(it) }
     val mergeable get() =
@@ -9943,6 +10608,8 @@ class PullRequest(__name: String = "PullRequest"): ObjectNode(__name) {
         UserContentEditConnection("userContentEdits").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.also { doInit(it, init) }
     val viewerCanApplySuggestion get() =
         ScalarNode("viewerCanApplySuggestion").also { doInit(it) }
+    val viewerCanClose get() =
+        ScalarNode("viewerCanClose").also { doInit(it) }
     val viewerCanDeleteHeadRef get() =
         ScalarNode("viewerCanDeleteHeadRef").also { doInit(it) }
     val viewerCanDisableAutoMerge get() =
@@ -9955,10 +10622,14 @@ class PullRequest(__name: String = "PullRequest"): ObjectNode(__name) {
         ScalarNode("viewerCanMergeAsAdmin").also { doInit(it) }
     val viewerCanReact get() =
         ScalarNode("viewerCanReact").also { doInit(it) }
+    val viewerCanReopen get() =
+        ScalarNode("viewerCanReopen").also { doInit(it) }
     val viewerCanSubscribe get() =
         ScalarNode("viewerCanSubscribe").also { doInit(it) }
     val viewerCanUpdate get() =
         ScalarNode("viewerCanUpdate").also { doInit(it) }
+    val viewerCanUpdateBranch get() =
+        ScalarNode("viewerCanUpdateBranch").also { doInit(it) }
     val viewerCannotUpdateReasons get() =
         ScalarNode("viewerCannotUpdateReasons").also { doInit(it) }
     val viewerDidAuthor get() =
@@ -10083,6 +10754,19 @@ class PullRequestEdge(__name: String = "PullRequestEdge"): ObjectNode(__name) {
         PullRequest("node").also { doInit(it, init) }
 }
 
+class PullRequestParameters(__name: String = "PullRequestParameters"): ObjectNode(__name) {
+    val dismissStaleReviewsOnPush get() =
+        ScalarNode("dismissStaleReviewsOnPush").also { doInit(it) }
+    val requireCodeOwnerReview get() =
+        ScalarNode("requireCodeOwnerReview").also { doInit(it) }
+    val requireLastPushApproval get() =
+        ScalarNode("requireLastPushApproval").also { doInit(it) }
+    val requiredApprovingReviewCount get() =
+        ScalarNode("requiredApprovingReviewCount").also { doInit(it) }
+    val requiredReviewThreadResolution get() =
+        ScalarNode("requiredReviewThreadResolution").also { doInit(it) }
+}
+
 class PullRequestReview(__name: String = "PullRequestReview"): ObjectNode(__name) {
     fun author(init: Actor.() -> Unit) =
         Actor("author").also { doInit(it, init) }
@@ -10183,16 +10867,24 @@ class PullRequestReviewComment(__name: String = "PullRequestReviewComment"): Obj
         ScalarNode("isMinimized").also { doInit(it) }
     val lastEditedAt get() =
         ScalarNode("lastEditedAt").also { doInit(it) }
+    val line get() =
+        ScalarNode("line").also { doInit(it) }
     val minimizedReason get() =
         ScalarNode("minimizedReason").also { doInit(it) }
     fun originalCommit(init: Commit.() -> Unit) =
         Commit("originalCommit").also { doInit(it, init) }
+    val originalLine get() =
+        ScalarNode("originalLine").also { doInit(it) }
+    @Deprecated("We are phasing out diff-relative positioning for PR comments Removal on 2023-10-01 UTC.")
     val originalPosition get() =
         ScalarNode("originalPosition").also { doInit(it) }
+    val originalStartLine get() =
+        ScalarNode("originalStartLine").also { doInit(it) }
     val outdated get() =
         ScalarNode("outdated").also { doInit(it) }
     val path get() =
         ScalarNode("path").also { doInit(it) }
+    @Deprecated("We are phasing out diff-relative positioning for PR comments Use the `line` and `startLine` fields instead, which are file line numbers instead of diff line numbers Removal on 2023-10-01 UTC.")
     val position get() =
         ScalarNode("position").also { doInit(it) }
     val publishedAt get() =
@@ -10211,8 +10903,12 @@ class PullRequestReviewComment(__name: String = "PullRequestReviewComment"): Obj
         Repository("repository").also { doInit(it, init) }
     val resourcePath get() =
         ScalarNode("resourcePath").also { doInit(it) }
+    val startLine get() =
+        ScalarNode("startLine").also { doInit(it) }
     val state get() =
         ScalarNode("state").also { doInit(it) }
+    val subjectType get() =
+        ScalarNode("subjectType").also { doInit(it) }
     val updatedAt get() =
         ScalarNode("updatedAt").also { doInit(it) }
     val url get() =
@@ -10307,6 +11003,8 @@ class PullRequestReviewThread(__name: String = "PullRequestReviewThread"): Objec
         ScalarNode("startDiffSide").also { doInit(it) }
     val startLine get() =
         ScalarNode("startLine").also { doInit(it) }
+    val subjectType get() =
+        ScalarNode("subjectType").also { doInit(it) }
     val viewerCanReply get() =
         ScalarNode("viewerCanReply").also { doInit(it) }
     val viewerCanResolve get() =
@@ -10366,6 +11064,8 @@ class PullRequestThread(__name: String = "PullRequestThread"): ObjectNode(__name
         ScalarNode("isResolved").also { doInit(it) }
     val line get() =
         ScalarNode("line").also { doInit(it) }
+    val path get() =
+        ScalarNode("path").also { doInit(it) }
     fun pullRequest(init: PullRequest.() -> Unit) =
         PullRequest("pullRequest").also { doInit(it, init) }
     fun repository(init: Repository.() -> Unit) =
@@ -10376,6 +11076,8 @@ class PullRequestThread(__name: String = "PullRequestThread"): ObjectNode(__name
         ScalarNode("startDiffSide").also { doInit(it) }
     val startLine get() =
         ScalarNode("startLine").also { doInit(it) }
+    val subjectType get() =
+        ScalarNode("subjectType").also { doInit(it) }
     val viewerCanReply get() =
         ScalarNode("viewerCanReply").also { doInit(it) }
     val viewerCanResolve get() =
@@ -10687,6 +11389,13 @@ class RefEdge(__name: String = "RefEdge"): ObjectNode(__name) {
         Ref("node").also { doInit(it, init) }
 }
 
+class RefNameConditionTarget(__name: String = "RefNameConditionTarget"): ObjectNode(__name) {
+    val exclude get() =
+        ScalarNode("exclude").also { doInit(it) }
+    val include get() =
+        ScalarNode("include").also { doInit(it) }
+}
+
 class RefUpdateRule(__name: String = "RefUpdateRule"): ObjectNode(__name) {
     val allowsDeletions get() =
         ScalarNode("allowsDeletions").also { doInit(it) }
@@ -10963,6 +11672,25 @@ class RemoveUpvotePayload(__name: String = "RemoveUpvotePayload"): ObjectNode(__
         Votable("subject").also { doInit(it, init) }
 }
 
+class RemovedFromMergeQueueEvent(__name: String = "RemovedFromMergeQueueEvent"): ObjectNode(__name) {
+    fun actor(init: Actor.() -> Unit) =
+        Actor("actor").also { doInit(it, init) }
+    fun beforeCommit(init: Commit.() -> Unit) =
+        Commit("beforeCommit").also { doInit(it, init) }
+    val createdAt get() =
+        ScalarNode("createdAt").also { doInit(it) }
+    fun enqueuer(init: User.() -> Unit) =
+        User("enqueuer").also { doInit(it, init) }
+    val id get() =
+        ScalarNode("id").also { doInit(it) }
+    fun mergeQueue(init: MergeQueue.() -> Unit) =
+        MergeQueue("mergeQueue").also { doInit(it, init) }
+    fun pullRequest(init: PullRequest.() -> Unit) =
+        PullRequest("pullRequest").also { doInit(it, init) }
+    val reason get() =
+        ScalarNode("reason").also { doInit(it) }
+}
+
 class RemovedFromProjectEvent(__name: String = "RemovedFromProjectEvent"): ObjectNode(__name) {
     fun actor(init: Actor.() -> Unit) =
         Actor("actor").also { doInit(it, init) }
@@ -10991,6 +11719,13 @@ class RenamedTitleEvent(__name: String = "RenamedTitleEvent"): ObjectNode(__name
         ScalarNode("previousTitle").also { doInit(it) }
     fun subject(init: RenamedTitleSubject.() -> Unit) =
         RenamedTitleSubject("subject").also { doInit(it, init) }
+}
+
+class ReopenDiscussionPayload(__name: String = "ReopenDiscussionPayload"): ObjectNode(__name) {
+    val clientMutationId get() =
+        ScalarNode("clientMutationId").also { doInit(it) }
+    fun discussion(init: Discussion.() -> Unit) =
+        Discussion("discussion").also { doInit(it, init) }
 }
 
 class ReopenIssuePayload(__name: String = "ReopenIssuePayload"): ObjectNode(__name) {
@@ -11944,6 +12679,8 @@ class RepoRemoveTopicAuditEntry(__name: String = "RepoRemoveTopicAuditEntry"): O
 class Repository(__name: String = "Repository"): ObjectNode(__name) {
     val allowUpdateBranch get() =
         ScalarNode("allowUpdateBranch").also { doInit(it) }
+    val archivedAt get() =
+        ScalarNode("archivedAt").also { doInit(it) }
     fun assignableUsers(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, query: String? = null, init: UserConnection.() -> Unit) =
         UserConnection("assignableUsers").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("query", query) }.also { doInit(it, init) }
     val autoMergeAllowed get() =
@@ -11954,12 +12691,14 @@ class Repository(__name: String = "Repository"): ObjectNode(__name) {
         CodeOfConduct("codeOfConduct").also { doInit(it, init) }
     fun codeowners(refName: String? = null, init: RepositoryCodeowners.() -> Unit) =
         RepositoryCodeowners("codeowners").apply { addArgs("refName", refName) }.also { doInit(it, init) }
-    fun collaborators(affiliation: CollaboratorAffiliation? = null, after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, query: String? = null, init: RepositoryCollaboratorConnection.() -> Unit) =
-        RepositoryCollaboratorConnection("collaborators").apply { addArgs("affiliation", affiliation) }.apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("query", query) }.also { doInit(it, init) }
+    fun collaborators(affiliation: CollaboratorAffiliation? = null, after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, login: String? = null, query: String? = null, init: RepositoryCollaboratorConnection.() -> Unit) =
+        RepositoryCollaboratorConnection("collaborators").apply { addArgs("affiliation", affiliation) }.apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("login", login) }.apply { addArgs("query", query) }.also { doInit(it, init) }
     fun commitComments(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, init: CommitCommentConnection.() -> Unit) =
         CommitCommentConnection("commitComments").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.also { doInit(it, init) }
     fun contactLinks(init: RepositoryContactLink.() -> Unit) =
         RepositoryContactLink("contactLinks").also { doInit(it, init) }
+    fun contributingGuidelines(init: ContributingGuidelines.() -> Unit) =
+        ContributingGuidelines("contributingGuidelines").also { doInit(it, init) }
     val createdAt get() =
         ScalarNode("createdAt").also { doInit(it) }
     val databaseId get() =
@@ -11984,20 +12723,20 @@ class Repository(__name: String = "Repository"): ObjectNode(__name) {
         DiscussionCategoryConnection("discussionCategories").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("filterByAssignable", filterByAssignable) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.also { doInit(it, init) }
     fun discussionCategory(slug: String, init: DiscussionCategory.() -> Unit) =
         DiscussionCategory("discussionCategory").apply { addArgs("slug", slug) }.also { doInit(it, init) }
-    fun discussions(after: String? = null, before: String? = null, categoryId: ID? = null, first: Int? = null, last: Int? = null, orderBy: DiscussionOrder? = null, init: DiscussionConnection.() -> Unit) =
-        DiscussionConnection("discussions").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("categoryId", categoryId) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.also { doInit(it, init) }
+    fun discussions(after: String? = null, answered: Boolean? = null, before: String? = null, categoryId: ID? = null, first: Int? = null, last: Int? = null, orderBy: DiscussionOrder? = null, states: DiscussionState? = null, init: DiscussionConnection.() -> Unit) =
+        DiscussionConnection("discussions").apply { addArgs("after", after) }.apply { addArgs("answered", answered) }.apply { addArgs("before", before) }.apply { addArgs("categoryId", categoryId) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.apply { addArgs("states", states) }.also { doInit(it, init) }
     val diskUsage get() =
         ScalarNode("diskUsage").also { doInit(it) }
     fun environment(name: String, init: Environment.() -> Unit) =
         Environment("environment").apply { addArgs("name", name) }.also { doInit(it, init) }
-    fun environments(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, init: EnvironmentConnection.() -> Unit) =
-        EnvironmentConnection("environments").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.also { doInit(it, init) }
+    fun environments(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, orderBy: Environments? = null, init: EnvironmentConnection.() -> Unit) =
+        EnvironmentConnection("environments").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.also { doInit(it, init) }
     val forkCount get() =
         ScalarNode("forkCount").also { doInit(it) }
     val forkingAllowed get() =
         ScalarNode("forkingAllowed").also { doInit(it) }
-    fun forks(affiliations: RepositoryAffiliation? = null, after: String? = null, before: String? = null, first: Int? = null, isLocked: Boolean? = null, last: Int? = null, orderBy: RepositoryOrder? = null, ownerAffiliations: RepositoryAffiliation? = null, privacy: RepositoryPrivacy? = null, init: RepositoryConnection.() -> Unit) =
-        RepositoryConnection("forks").apply { addArgs("affiliations", affiliations) }.apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("isLocked", isLocked) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.apply { addArgs("ownerAffiliations", ownerAffiliations) }.apply { addArgs("privacy", privacy) }.also { doInit(it, init) }
+    fun forks(affiliations: RepositoryAffiliation? = null, after: String? = null, before: String? = null, first: Int? = null, hasIssuesEnabled: Boolean? = null, isLocked: Boolean? = null, last: Int? = null, orderBy: RepositoryOrder? = null, ownerAffiliations: RepositoryAffiliation? = null, privacy: RepositoryPrivacy? = null, init: RepositoryConnection.() -> Unit) =
+        RepositoryConnection("forks").apply { addArgs("affiliations", affiliations) }.apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("hasIssuesEnabled", hasIssuesEnabled) }.apply { addArgs("isLocked", isLocked) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.apply { addArgs("ownerAffiliations", ownerAffiliations) }.apply { addArgs("privacy", privacy) }.also { doInit(it, init) }
     fun fundingLinks(init: FundingLink.() -> Unit) =
         FundingLink("fundingLinks").also { doInit(it, init) }
     val hasDiscussionsEnabled get() =
@@ -12068,6 +12807,8 @@ class Repository(__name: String = "Repository"): ObjectNode(__name) {
         ScalarNode("mergeCommitMessage").also { doInit(it) }
     val mergeCommitTitle get() =
         ScalarNode("mergeCommitTitle").also { doInit(it) }
+    fun mergeQueue(branch: String? = null, init: MergeQueue.() -> Unit) =
+        MergeQueue("mergeQueue").apply { addArgs("branch", branch) }.also { doInit(it, init) }
     fun milestone(number: Int, init: Milestone.() -> Unit) =
         Milestone("milestone").apply { addArgs("number", number) }.also { doInit(it, init) }
     fun milestones(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, orderBy: MilestoneOrder? = null, query: String? = null, states: MilestoneState? = null, init: MilestoneConnection.() -> Unit) =
@@ -12130,6 +12871,10 @@ class Repository(__name: String = "Repository"): ObjectNode(__name) {
         RepositoryTopicConnection("repositoryTopics").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.also { doInit(it, init) }
     val resourcePath get() =
         ScalarNode("resourcePath").also { doInit(it) }
+    fun ruleset(databaseId: Int, includeParents: Boolean? = null, init: RepositoryRuleset.() -> Unit) =
+        RepositoryRuleset("ruleset").apply { addArgs("databaseId", databaseId) }.apply { addArgs("includeParents", includeParents) }.also { doInit(it, init) }
+    fun rulesets(after: String? = null, before: String? = null, first: Int? = null, includeParents: Boolean? = null, last: Int? = null, init: RepositoryRulesetConnection.() -> Unit) =
+        RepositoryRulesetConnection("rulesets").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("includeParents", includeParents) }.apply { addArgs("last", last) }.also { doInit(it, init) }
     val securityPolicyUrl get() =
         ScalarNode("securityPolicyUrl").also { doInit(it) }
     fun shortDescriptionHTML(limit: Int? = null) =
@@ -12185,6 +12930,8 @@ class Repository(__name: String = "Repository"): ObjectNode(__name) {
         ScalarNode("viewerSubscription").also { doInit(it) }
     val visibility get() =
         ScalarNode("visibility").also { doInit(it) }
+    fun vulnerabilityAlert(number: Int, init: RepositoryVulnerabilityAlert.() -> Unit) =
+        RepositoryVulnerabilityAlert("vulnerabilityAlert").apply { addArgs("number", number) }.also { doInit(it, init) }
     fun vulnerabilityAlerts(after: String? = null, before: String? = null, dependencyScopes: RepositoryVulnerabilityAlertDependencyScope? = null, first: Int? = null, last: Int? = null, states: RepositoryVulnerabilityAlertState? = null, init: RepositoryVulnerabilityAlertConnection.() -> Unit) =
         RepositoryVulnerabilityAlertConnection("vulnerabilityAlerts").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("dependencyScopes", dependencyScopes) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("states", states) }.also { doInit(it, init) }
     fun watchers(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, init: UserConnection.() -> Unit) =
@@ -12266,6 +13013,11 @@ class RepositoryEdge(__name: String = "RepositoryEdge"): ObjectNode(__name) {
         Repository("node").also { doInit(it, init) }
 }
 
+class RepositoryIdConditionTarget(__name: String = "RepositoryIdConditionTarget"): ObjectNode(__name) {
+    val repositoryIds get() =
+        ScalarNode("repositoryIds").also { doInit(it) }
+}
+
 class RepositoryInteractionAbility(__name: String = "RepositoryInteractionAbility"): ObjectNode(__name) {
     val expiresAt get() =
         ScalarNode("expiresAt").also { doInit(it) }
@@ -12331,6 +13083,8 @@ class RepositoryMigration(__name: String = "RepositoryMigration"): ObjectNode(__
         ScalarNode("sourceUrl").also { doInit(it) }
     val state get() =
         ScalarNode("state").also { doInit(it) }
+    val warningsCount get() =
+        ScalarNode("warningsCount").also { doInit(it) }
 }
 
 class RepositoryMigrationConnection(__name: String = "RepositoryMigrationConnection"): ObjectNode(__name) {
@@ -12349,6 +13103,131 @@ class RepositoryMigrationEdge(__name: String = "RepositoryMigrationEdge"): Objec
         ScalarNode("cursor").also { doInit(it) }
     fun node(init: RepositoryMigration.() -> Unit) =
         RepositoryMigration("node").also { doInit(it, init) }
+}
+
+class RepositoryNameConditionTarget(__name: String = "RepositoryNameConditionTarget"): ObjectNode(__name) {
+    val exclude get() =
+        ScalarNode("exclude").also { doInit(it) }
+    val include get() =
+        ScalarNode("include").also { doInit(it) }
+    val protected get() =
+        ScalarNode("protected").also { doInit(it) }
+}
+
+class RepositoryRule(__name: String = "RepositoryRule"): ObjectNode(__name) {
+    val id get() =
+        ScalarNode("id").also { doInit(it) }
+    fun parameters(init: RuleParameters.() -> Unit) =
+        RuleParameters("parameters").also { doInit(it, init) }
+    fun repositoryRuleset(init: RepositoryRuleset.() -> Unit) =
+        RepositoryRuleset("repositoryRuleset").also { doInit(it, init) }
+    val type get() =
+        ScalarNode("type").also { doInit(it) }
+}
+
+class RepositoryRuleConditions(__name: String = "RepositoryRuleConditions"): ObjectNode(__name) {
+    fun refName(init: RefNameConditionTarget.() -> Unit) =
+        RefNameConditionTarget("refName").also { doInit(it, init) }
+    fun repositoryId(init: RepositoryIdConditionTarget.() -> Unit) =
+        RepositoryIdConditionTarget("repositoryId").also { doInit(it, init) }
+    fun repositoryName(init: RepositoryNameConditionTarget.() -> Unit) =
+        RepositoryNameConditionTarget("repositoryName").also { doInit(it, init) }
+}
+
+class RepositoryRuleConnection(__name: String = "RepositoryRuleConnection"): ObjectNode(__name) {
+    fun edges(init: RepositoryRuleEdge.() -> Unit) =
+        RepositoryRuleEdge("edges").also { doInit(it, init) }
+    fun nodes(init: RepositoryRule.() -> Unit) =
+        RepositoryRule("nodes").also { doInit(it, init) }
+    fun pageInfo(init: PageInfo.() -> Unit) =
+        PageInfo("pageInfo").also { doInit(it, init) }
+    val totalCount get() =
+        ScalarNode("totalCount").also { doInit(it) }
+}
+
+class RepositoryRuleEdge(__name: String = "RepositoryRuleEdge"): ObjectNode(__name) {
+    val cursor get() =
+        ScalarNode("cursor").also { doInit(it) }
+    fun node(init: RepositoryRule.() -> Unit) =
+        RepositoryRule("node").also { doInit(it, init) }
+}
+
+class RepositoryRuleset(__name: String = "RepositoryRuleset"): ObjectNode(__name) {
+    fun bypassActors(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, init: RepositoryRulesetBypassActorConnection.() -> Unit) =
+        RepositoryRulesetBypassActorConnection("bypassActors").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.also { doInit(it, init) }
+    fun conditions(init: RepositoryRuleConditions.() -> Unit) =
+        RepositoryRuleConditions("conditions").also { doInit(it, init) }
+    val createdAt get() =
+        ScalarNode("createdAt").also { doInit(it) }
+    val databaseId get() =
+        ScalarNode("databaseId").also { doInit(it) }
+    val enforcement get() =
+        ScalarNode("enforcement").also { doInit(it) }
+    val id get() =
+        ScalarNode("id").also { doInit(it) }
+    val name get() =
+        ScalarNode("name").also { doInit(it) }
+    fun rules(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, type: RepositoryRuleType? = null, init: RepositoryRuleConnection.() -> Unit) =
+        RepositoryRuleConnection("rules").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("type", type) }.also { doInit(it, init) }
+    fun source(init: RuleSource.() -> Unit) =
+        RuleSource("source").also { doInit(it, init) }
+    val target get() =
+        ScalarNode("target").also { doInit(it) }
+    val updatedAt get() =
+        ScalarNode("updatedAt").also { doInit(it) }
+}
+
+class RepositoryRulesetBypassActor(__name: String = "RepositoryRulesetBypassActor"): ObjectNode(__name) {
+    fun actor(init: BypassActor.() -> Unit) =
+        BypassActor("actor").also { doInit(it, init) }
+    val bypassMode get() =
+        ScalarNode("bypassMode").also { doInit(it) }
+    val id get() =
+        ScalarNode("id").also { doInit(it) }
+    val organizationAdmin get() =
+        ScalarNode("organizationAdmin").also { doInit(it) }
+    val repositoryRoleDatabaseId get() =
+        ScalarNode("repositoryRoleDatabaseId").also { doInit(it) }
+    val repositoryRoleName get() =
+        ScalarNode("repositoryRoleName").also { doInit(it) }
+    fun repositoryRuleset(init: RepositoryRuleset.() -> Unit) =
+        RepositoryRuleset("repositoryRuleset").also { doInit(it, init) }
+}
+
+class RepositoryRulesetBypassActorConnection(__name: String = "RepositoryRulesetBypassActorConnection"): ObjectNode(__name) {
+    fun edges(init: RepositoryRulesetBypassActorEdge.() -> Unit) =
+        RepositoryRulesetBypassActorEdge("edges").also { doInit(it, init) }
+    fun nodes(init: RepositoryRulesetBypassActor.() -> Unit) =
+        RepositoryRulesetBypassActor("nodes").also { doInit(it, init) }
+    fun pageInfo(init: PageInfo.() -> Unit) =
+        PageInfo("pageInfo").also { doInit(it, init) }
+    val totalCount get() =
+        ScalarNode("totalCount").also { doInit(it) }
+}
+
+class RepositoryRulesetBypassActorEdge(__name: String = "RepositoryRulesetBypassActorEdge"): ObjectNode(__name) {
+    val cursor get() =
+        ScalarNode("cursor").also { doInit(it) }
+    fun node(init: RepositoryRulesetBypassActor.() -> Unit) =
+        RepositoryRulesetBypassActor("node").also { doInit(it, init) }
+}
+
+class RepositoryRulesetConnection(__name: String = "RepositoryRulesetConnection"): ObjectNode(__name) {
+    fun edges(init: RepositoryRulesetEdge.() -> Unit) =
+        RepositoryRulesetEdge("edges").also { doInit(it, init) }
+    fun nodes(init: RepositoryRuleset.() -> Unit) =
+        RepositoryRuleset("nodes").also { doInit(it, init) }
+    fun pageInfo(init: PageInfo.() -> Unit) =
+        PageInfo("pageInfo").also { doInit(it, init) }
+    val totalCount get() =
+        ScalarNode("totalCount").also { doInit(it) }
+}
+
+class RepositoryRulesetEdge(__name: String = "RepositoryRulesetEdge"): ObjectNode(__name) {
+    val cursor get() =
+        ScalarNode("cursor").also { doInit(it) }
+    fun node(init: RepositoryRuleset.() -> Unit) =
+        RepositoryRuleset("node").also { doInit(it, init) }
 }
 
 class RepositoryTopic(__name: String = "RepositoryTopic"): ObjectNode(__name) {
@@ -12471,6 +13350,8 @@ class RepositoryVisibilityChangeEnableAuditEntry(__name: String = "RepositoryVis
 }
 
 class RepositoryVulnerabilityAlert(__name: String = "RepositoryVulnerabilityAlert"): ObjectNode(__name) {
+    val autoDismissedAt get() =
+        ScalarNode("autoDismissedAt").also { doInit(it) }
     val createdAt get() =
         ScalarNode("createdAt").also { doInit(it) }
     fun dependabotUpdate(init: DependabotUpdate.() -> Unit) =
@@ -12485,9 +13366,6 @@ class RepositoryVulnerabilityAlert(__name: String = "RepositoryVulnerabilityAler
         ScalarNode("dismissedAt").also { doInit(it) }
     fun dismisser(init: User.() -> Unit) =
         User("dismisser").also { doInit(it, init) }
-    @Deprecated("The `fixReason` field is being removed. You can still use `fixedAt` and `dismissReason`. Removal on 2023-04-01 UTC.")
-    val fixReason get() =
-        ScalarNode("fixReason").also { doInit(it) }
     val fixedAt get() =
         ScalarNode("fixedAt").also { doInit(it) }
     val id get() =
@@ -12557,11 +13435,23 @@ class RequestedReviewerEdge(__name: String = "RequestedReviewerEdge"): ObjectNod
         RequestedReviewer("node").also { doInit(it, init) }
 }
 
+class RequiredDeploymentsParameters(__name: String = "RequiredDeploymentsParameters"): ObjectNode(__name) {
+    val requiredDeploymentEnvironments get() =
+        ScalarNode("requiredDeploymentEnvironments").also { doInit(it) }
+}
+
 class RequiredStatusCheckDescription(__name: String = "RequiredStatusCheckDescription"): ObjectNode(__name) {
     fun app(init: App.() -> Unit) =
         App("app").also { doInit(it, init) }
     val context get() =
         ScalarNode("context").also { doInit(it) }
+}
+
+class RequiredStatusChecksParameters(__name: String = "RequiredStatusChecksParameters"): ObjectNode(__name) {
+    fun requiredStatusChecks(init: StatusCheckConfiguration.() -> Unit) =
+        StatusCheckConfiguration("requiredStatusChecks").also { doInit(it, init) }
+    val strictRequiredStatusChecksPolicy get() =
+        ScalarNode("strictRequiredStatusChecksPolicy").also { doInit(it) }
 }
 
 class RerequestCheckSuitePayload(__name: String = "RerequestCheckSuitePayload"): ObjectNode(__name) {
@@ -12963,6 +13853,33 @@ class SmimeSignature(__name: String = "SmimeSignature"): ObjectNode(__name) {
         ScalarNode("wasSignedByGitHub").also { doInit(it) }
 }
 
+class SocialAccount(__name: String = "SocialAccount"): ObjectNode(__name) {
+    val displayName get() =
+        ScalarNode("displayName").also { doInit(it) }
+    val provider get() =
+        ScalarNode("provider").also { doInit(it) }
+    val url get() =
+        ScalarNode("url").also { doInit(it) }
+}
+
+class SocialAccountConnection(__name: String = "SocialAccountConnection"): ObjectNode(__name) {
+    fun edges(init: SocialAccountEdge.() -> Unit) =
+        SocialAccountEdge("edges").also { doInit(it, init) }
+    fun nodes(init: SocialAccount.() -> Unit) =
+        SocialAccount("nodes").also { doInit(it, init) }
+    fun pageInfo(init: PageInfo.() -> Unit) =
+        PageInfo("pageInfo").also { doInit(it, init) }
+    val totalCount get() =
+        ScalarNode("totalCount").also { doInit(it) }
+}
+
+class SocialAccountEdge(__name: String = "SocialAccountEdge"): ObjectNode(__name) {
+    val cursor get() =
+        ScalarNode("cursor").also { doInit(it) }
+    fun node(init: SocialAccount.() -> Unit) =
+        SocialAccount("node").also { doInit(it, init) }
+}
+
 class SponsorConnection(__name: String = "SponsorConnection"): ObjectNode(__name) {
     fun edges(init: SponsorEdge.() -> Unit) =
         SponsorEdge("edges").also { doInit(it, init) }
@@ -13002,6 +13919,8 @@ class SponsorableItemEdge(__name: String = "SponsorableItemEdge"): ObjectNode(__
 class SponsorsActivity(__name: String = "SponsorsActivity"): ObjectNode(__name) {
     val action get() =
         ScalarNode("action").also { doInit(it) }
+    val currentPrivacyLevel get() =
+        ScalarNode("currentPrivacyLevel").also { doInit(it) }
     val id get() =
         ScalarNode("id").also { doInit(it) }
     fun previousSponsorsTier(init: SponsorsTier.() -> Unit) =
@@ -13014,6 +13933,8 @@ class SponsorsActivity(__name: String = "SponsorsActivity"): ObjectNode(__name) 
         SponsorsTier("sponsorsTier").also { doInit(it, init) }
     val timestamp get() =
         ScalarNode("timestamp").also { doInit(it) }
+    val viaBulkSponsorship get() =
+        ScalarNode("viaBulkSponsorship").also { doInit(it) }
 }
 
 class SponsorsActivityConnection(__name: String = "SponsorsActivityConnection"): ObjectNode(__name) {
@@ -13347,6 +14268,13 @@ class Status(__name: String = "Status"): ObjectNode(__name) {
         ScalarNode("state").also { doInit(it) }
 }
 
+class StatusCheckConfiguration(__name: String = "StatusCheckConfiguration"): ObjectNode(__name) {
+    val context get() =
+        ScalarNode("context").also { doInit(it) }
+    val integrationId get() =
+        ScalarNode("integrationId").also { doInit(it) }
+}
+
 class StatusCheckRollup(__name: String = "StatusCheckRollup"): ObjectNode(__name) {
     fun commit(init: Commit.() -> Unit) =
         Commit("commit").also { doInit(it, init) }
@@ -13518,6 +14446,17 @@ class Tag(__name: String = "Tag"): ObjectNode(__name) {
         GitObject("target").also { doInit(it, init) }
 }
 
+class TagNamePatternParameters(__name: String = "TagNamePatternParameters"): ObjectNode(__name) {
+    val name get() =
+        ScalarNode("name").also { doInit(it) }
+    val negate get() =
+        ScalarNode("negate").also { doInit(it) }
+    val operator get() =
+        ScalarNode("operator").also { doInit(it) }
+    val pattern get() =
+        ScalarNode("pattern").also { doInit(it) }
+}
+
 class Team(__name: String = "Team"): ObjectNode(__name) {
     fun ancestors(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, init: TeamConnection.() -> Unit) =
         TeamConnection("ancestors").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.also { doInit(it, init) }
@@ -13565,6 +14504,8 @@ class Team(__name: String = "Team"): ObjectNode(__name) {
         ScalarNode("newTeamResourcePath").also { doInit(it) }
     val newTeamUrl get() =
         ScalarNode("newTeamUrl").also { doInit(it) }
+    val notificationSetting get() =
+        ScalarNode("notificationSetting").also { doInit(it) }
     fun organization(init: Organization.() -> Unit) =
         Organization("organization").also { doInit(it, init) }
     fun parentTeam(init: Team.() -> Unit) =
@@ -13794,6 +14735,7 @@ class TeamConnection(__name: String = "TeamConnection"): ObjectNode(__name) {
 class TeamDiscussion(__name: String = "TeamDiscussion"): ObjectNode(__name) {
     fun author(init: Actor.() -> Unit) =
         Actor("author").also { doInit(it, init) }
+    @Deprecated("The Team Discussions feature is deprecated in favor of Organization Discussions. Follow the guide at https://github.blog/changelog/2023-02-08-sunset-notice-team-discussions/ to find a suitable replacement. Removal on 2024-07-01 UTC.")
     val authorAssociation get() =
         ScalarNode("authorAssociation").also { doInit(it) }
     val body get() =
@@ -13802,12 +14744,16 @@ class TeamDiscussion(__name: String = "TeamDiscussion"): ObjectNode(__name) {
         ScalarNode("bodyHTML").also { doInit(it) }
     val bodyText get() =
         ScalarNode("bodyText").also { doInit(it) }
+    @Deprecated("The Team Discussions feature is deprecated in favor of Organization Discussions. Follow the guide at https://github.blog/changelog/2023-02-08-sunset-notice-team-discussions/ to find a suitable replacement. Removal on 2024-07-01 UTC.")
     val bodyVersion get() =
         ScalarNode("bodyVersion").also { doInit(it) }
+    @Deprecated("The Team Discussions feature is deprecated in favor of Organization Discussions. Follow the guide at https://github.blog/changelog/2023-02-08-sunset-notice-team-discussions/ to find a suitable replacement. Removal on 2024-07-01 UTC.")
     fun comments(after: String? = null, before: String? = null, first: Int? = null, fromComment: Int? = null, last: Int? = null, orderBy: TeamDiscussionCommentOrder? = null, init: TeamDiscussionCommentConnection.() -> Unit) =
         TeamDiscussionCommentConnection("comments").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("fromComment", fromComment) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.also { doInit(it, init) }
+    @Deprecated("The Team Discussions feature is deprecated in favor of Organization Discussions. Follow the guide at https://github.blog/changelog/2023-02-08-sunset-notice-team-discussions/ to find a suitable replacement. Removal on 2024-07-01 UTC.")
     val commentsResourcePath get() =
         ScalarNode("commentsResourcePath").also { doInit(it) }
+    @Deprecated("The Team Discussions feature is deprecated in favor of Organization Discussions. Follow the guide at https://github.blog/changelog/2023-02-08-sunset-notice-team-discussions/ to find a suitable replacement. Removal on 2024-07-01 UTC.")
     val commentsUrl get() =
         ScalarNode("commentsUrl").also { doInit(it) }
     val createdAt get() =
@@ -13822,12 +14768,15 @@ class TeamDiscussion(__name: String = "TeamDiscussion"): ObjectNode(__name) {
         ScalarNode("id").also { doInit(it) }
     val includesCreatedEdit get() =
         ScalarNode("includesCreatedEdit").also { doInit(it) }
+    @Deprecated("The Team Discussions feature is deprecated in favor of Organization Discussions. Follow the guide at https://github.blog/changelog/2023-02-08-sunset-notice-team-discussions/ to find a suitable replacement. Removal on 2024-07-01 UTC.")
     val isPinned get() =
         ScalarNode("isPinned").also { doInit(it) }
+    @Deprecated("The Team Discussions feature is deprecated in favor of Organization Discussions. Follow the guide at https://github.blog/changelog/2023-02-08-sunset-notice-team-discussions/ to find a suitable replacement. Removal on 2024-07-01 UTC.")
     val isPrivate get() =
         ScalarNode("isPrivate").also { doInit(it) }
     val lastEditedAt get() =
         ScalarNode("lastEditedAt").also { doInit(it) }
+    @Deprecated("The Team Discussions feature is deprecated in favor of Organization Discussions. Follow the guide at https://github.blog/changelog/2023-02-08-sunset-notice-team-discussions/ to find a suitable replacement. Removal on 2024-07-01 UTC.")
     val number get() =
         ScalarNode("number").also { doInit(it) }
     val publishedAt get() =
@@ -13836,20 +14785,25 @@ class TeamDiscussion(__name: String = "TeamDiscussion"): ObjectNode(__name) {
         ReactionGroup("reactionGroups").also { doInit(it, init) }
     fun reactions(after: String? = null, before: String? = null, content: ReactionContent? = null, first: Int? = null, last: Int? = null, orderBy: ReactionOrder? = null, init: ReactionConnection.() -> Unit) =
         ReactionConnection("reactions").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("content", content) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.also { doInit(it, init) }
+    @Deprecated("The Team Discussions feature is deprecated in favor of Organization Discussions. Follow the guide at https://github.blog/changelog/2023-02-08-sunset-notice-team-discussions/ to find a suitable replacement. Removal on 2024-07-01 UTC.")
     val resourcePath get() =
         ScalarNode("resourcePath").also { doInit(it) }
+    @Deprecated("The Team Discussions feature is deprecated in favor of Organization Discussions. Follow the guide at https://github.blog/changelog/2023-02-08-sunset-notice-team-discussions/ to find a suitable replacement. Removal on 2024-07-01 UTC.")
     fun team(init: Team.() -> Unit) =
         Team("team").also { doInit(it, init) }
+    @Deprecated("The Team Discussions feature is deprecated in favor of Organization Discussions. Follow the guide at https://github.blog/changelog/2023-02-08-sunset-notice-team-discussions/ to find a suitable replacement. Removal on 2024-07-01 UTC.")
     val title get() =
         ScalarNode("title").also { doInit(it) }
     val updatedAt get() =
         ScalarNode("updatedAt").also { doInit(it) }
+    @Deprecated("The Team Discussions feature is deprecated in favor of Organization Discussions. Follow the guide at https://github.blog/changelog/2023-02-08-sunset-notice-team-discussions/ to find a suitable replacement. Removal on 2024-07-01 UTC.")
     val url get() =
         ScalarNode("url").also { doInit(it) }
     fun userContentEdits(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, init: UserContentEditConnection.() -> Unit) =
         UserContentEditConnection("userContentEdits").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.also { doInit(it, init) }
     val viewerCanDelete get() =
         ScalarNode("viewerCanDelete").also { doInit(it) }
+    @Deprecated("The Team Discussions feature is deprecated in favor of Organization Discussions. Follow the guide at https://github.blog/changelog/2023-02-08-sunset-notice-team-discussions/ to find a suitable replacement. Removal on 2024-07-01 UTC.")
     val viewerCanPin get() =
         ScalarNode("viewerCanPin").also { doInit(it) }
     val viewerCanReact get() =
@@ -13869,6 +14823,7 @@ class TeamDiscussion(__name: String = "TeamDiscussion"): ObjectNode(__name) {
 class TeamDiscussionComment(__name: String = "TeamDiscussionComment"): ObjectNode(__name) {
     fun author(init: Actor.() -> Unit) =
         Actor("author").also { doInit(it, init) }
+    @Deprecated("The Team Discussions feature is deprecated in favor of Organization Discussions. Follow the guide at https://github.blog/changelog/2023-02-08-sunset-notice-team-discussions/ to find a suitable replacement. Removal on 2024-07-01 UTC.")
     val authorAssociation get() =
         ScalarNode("authorAssociation").also { doInit(it) }
     val body get() =
@@ -13877,6 +14832,7 @@ class TeamDiscussionComment(__name: String = "TeamDiscussionComment"): ObjectNod
         ScalarNode("bodyHTML").also { doInit(it) }
     val bodyText get() =
         ScalarNode("bodyText").also { doInit(it) }
+    @Deprecated("The Team Discussions feature is deprecated in favor of Organization Discussions. Follow the guide at https://github.blog/changelog/2023-02-08-sunset-notice-team-discussions/ to find a suitable replacement. Removal on 2024-07-01 UTC.")
     val bodyVersion get() =
         ScalarNode("bodyVersion").also { doInit(it) }
     val createdAt get() =
@@ -13885,6 +14841,7 @@ class TeamDiscussionComment(__name: String = "TeamDiscussionComment"): ObjectNod
         ScalarNode("createdViaEmail").also { doInit(it) }
     val databaseId get() =
         ScalarNode("databaseId").also { doInit(it) }
+    @Deprecated("The Team Discussions feature is deprecated in favor of Organization Discussions. Follow the guide at https://github.blog/changelog/2023-02-08-sunset-notice-team-discussions/ to find a suitable replacement. Removal on 2024-07-01 UTC.")
     fun discussion(init: TeamDiscussion.() -> Unit) =
         TeamDiscussion("discussion").also { doInit(it, init) }
     fun editor(init: Actor.() -> Unit) =
@@ -13895,6 +14852,7 @@ class TeamDiscussionComment(__name: String = "TeamDiscussionComment"): ObjectNod
         ScalarNode("includesCreatedEdit").also { doInit(it) }
     val lastEditedAt get() =
         ScalarNode("lastEditedAt").also { doInit(it) }
+    @Deprecated("The Team Discussions feature is deprecated in favor of Organization Discussions. Follow the guide at https://github.blog/changelog/2023-02-08-sunset-notice-team-discussions/ to find a suitable replacement. Removal on 2024-07-01 UTC.")
     val number get() =
         ScalarNode("number").also { doInit(it) }
     val publishedAt get() =
@@ -13903,10 +14861,12 @@ class TeamDiscussionComment(__name: String = "TeamDiscussionComment"): ObjectNod
         ReactionGroup("reactionGroups").also { doInit(it, init) }
     fun reactions(after: String? = null, before: String? = null, content: ReactionContent? = null, first: Int? = null, last: Int? = null, orderBy: ReactionOrder? = null, init: ReactionConnection.() -> Unit) =
         ReactionConnection("reactions").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("content", content) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.also { doInit(it, init) }
+    @Deprecated("The Team Discussions feature is deprecated in favor of Organization Discussions. Follow the guide at https://github.blog/changelog/2023-02-08-sunset-notice-team-discussions/ to find a suitable replacement. Removal on 2024-07-01 UTC.")
     val resourcePath get() =
         ScalarNode("resourcePath").also { doInit(it) }
     val updatedAt get() =
         ScalarNode("updatedAt").also { doInit(it) }
+    @Deprecated("The Team Discussions feature is deprecated in favor of Organization Discussions. Follow the guide at https://github.blog/changelog/2023-02-08-sunset-notice-team-discussions/ to find a suitable replacement. Removal on 2024-07-01 UTC.")
     val url get() =
         ScalarNode("url").also { doInit(it) }
     fun userContentEdits(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, init: UserContentEditConnection.() -> Unit) =
@@ -14141,8 +15101,8 @@ class Topic(__name: String = "Topic"): ObjectNode(__name) {
         ScalarNode("name").also { doInit(it) }
     fun relatedTopics(first: Int? = null, init: Topic.() -> Unit) =
         Topic("relatedTopics").apply { addArgs("first", first) }.also { doInit(it, init) }
-    fun repositories(affiliations: RepositoryAffiliation? = null, after: String? = null, before: String? = null, first: Int? = null, isLocked: Boolean? = null, last: Int? = null, orderBy: RepositoryOrder? = null, ownerAffiliations: RepositoryAffiliation? = null, privacy: RepositoryPrivacy? = null, sponsorableOnly: Boolean? = null, init: RepositoryConnection.() -> Unit) =
-        RepositoryConnection("repositories").apply { addArgs("affiliations", affiliations) }.apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("isLocked", isLocked) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.apply { addArgs("ownerAffiliations", ownerAffiliations) }.apply { addArgs("privacy", privacy) }.apply { addArgs("sponsorableOnly", sponsorableOnly) }.also { doInit(it, init) }
+    fun repositories(affiliations: RepositoryAffiliation? = null, after: String? = null, before: String? = null, first: Int? = null, hasIssuesEnabled: Boolean? = null, isLocked: Boolean? = null, last: Int? = null, orderBy: RepositoryOrder? = null, ownerAffiliations: RepositoryAffiliation? = null, privacy: RepositoryPrivacy? = null, sponsorableOnly: Boolean? = null, init: RepositoryConnection.() -> Unit) =
+        RepositoryConnection("repositories").apply { addArgs("affiliations", affiliations) }.apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("hasIssuesEnabled", hasIssuesEnabled) }.apply { addArgs("isLocked", isLocked) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.apply { addArgs("ownerAffiliations", ownerAffiliations) }.apply { addArgs("privacy", privacy) }.apply { addArgs("sponsorableOnly", sponsorableOnly) }.also { doInit(it, init) }
     val stargazerCount get() =
         ScalarNode("stargazerCount").also { doInit(it) }
     fun stargazers(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, orderBy: StarOrder? = null, init: StargazerConnection.() -> Unit) =
@@ -14364,6 +15324,13 @@ class UnmarkIssueAsDuplicatePayload(__name: String = "UnmarkIssueAsDuplicatePayl
         ScalarNode("clientMutationId").also { doInit(it) }
     fun duplicate(init: IssueOrPullRequest.() -> Unit) =
         IssueOrPullRequest("duplicate").also { doInit(it, init) }
+}
+
+class UnmarkProjectV2AsTemplatePayload(__name: String = "UnmarkProjectV2AsTemplatePayload"): ObjectNode(__name) {
+    val clientMutationId get() =
+        ScalarNode("clientMutationId").also { doInit(it) }
+    fun projectV2(init: ProjectV2.() -> Unit) =
+        ProjectV2("projectV2").also { doInit(it, init) }
 }
 
 class UnmarkedAsDuplicateEvent(__name: String = "UnmarkedAsDuplicateEvent"): ObjectNode(__name) {
@@ -14682,6 +15649,11 @@ class UpdateOrganizationWebCommitSignoffSettingPayload(__name: String = "UpdateO
         Organization("organization").also { doInit(it, init) }
 }
 
+class UpdateParameters(__name: String = "UpdateParameters"): ObjectNode(__name) {
+    val updateAllowsFetchAndMerge get() =
+        ScalarNode("updateAllowsFetchAndMerge").also { doInit(it) }
+}
+
 class UpdateProjectCardPayload(__name: String = "UpdateProjectCardPayload"): ObjectNode(__name) {
     val clientMutationId get() =
         ScalarNode("clientMutationId").also { doInit(it) }
@@ -14701,6 +15673,13 @@ class UpdateProjectPayload(__name: String = "UpdateProjectPayload"): ObjectNode(
         ScalarNode("clientMutationId").also { doInit(it) }
     fun project(init: Project.() -> Unit) =
         Project("project").also { doInit(it, init) }
+}
+
+class UpdateProjectV2CollaboratorsPayload(__name: String = "UpdateProjectV2CollaboratorsPayload"): ObjectNode(__name) {
+    val clientMutationId get() =
+        ScalarNode("clientMutationId").also { doInit(it) }
+    fun collaborators(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, init: ProjectV2ActorConnection.() -> Unit) =
+        ProjectV2ActorConnection("collaborators").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.also { doInit(it, init) }
 }
 
 class UpdateProjectV2DraftIssuePayload(__name: String = "UpdateProjectV2DraftIssuePayload"): ObjectNode(__name) {
@@ -14778,6 +15757,13 @@ class UpdateRepositoryPayload(__name: String = "UpdateRepositoryPayload"): Objec
         ScalarNode("clientMutationId").also { doInit(it) }
     fun repository(init: Repository.() -> Unit) =
         Repository("repository").also { doInit(it, init) }
+}
+
+class UpdateRepositoryRulesetPayload(__name: String = "UpdateRepositoryRulesetPayload"): ObjectNode(__name) {
+    val clientMutationId get() =
+        ScalarNode("clientMutationId").also { doInit(it) }
+    fun ruleset(init: RepositoryRuleset.() -> Unit) =
+        RepositoryRuleset("ruleset").also { doInit(it, init) }
 }
 
 class UpdateRepositoryWebCommitSignoffSettingPayload(__name: String = "UpdateRepositoryWebCommitSignoffSettingPayload"): ObjectNode(__name) {
@@ -14871,6 +15857,8 @@ class User(__name: String = "User"): ObjectNode(__name) {
         ScalarNode("databaseId").also { doInit(it) }
     val email get() =
         ScalarNode("email").also { doInit(it) }
+    fun enterprises(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, membershipType: EnterpriseMembershipType? = null, orderBy: EnterpriseOrder? = null, init: EnterpriseConnection.() -> Unit) =
+        EnterpriseConnection("enterprises").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("membershipType", membershipType) }.apply { addArgs("orderBy", orderBy) }.also { doInit(it, init) }
     val estimatedNextSponsorsPayoutInCents get() =
         ScalarNode("estimatedNextSponsorsPayoutInCents").also { doInit(it) }
     fun followers(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, init: FollowerConnection.() -> Unit) =
@@ -14953,32 +15941,36 @@ class User(__name: String = "User"): ObjectNode(__name) {
         ScalarNode("projectsUrl").also { doInit(it) }
     fun projectsV2(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, orderBy: ProjectV2Order? = null, query: String? = null, init: ProjectV2Connection.() -> Unit) =
         ProjectV2Connection("projectsV2").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.apply { addArgs("query", query) }.also { doInit(it, init) }
+    val pronouns get() =
+        ScalarNode("pronouns").also { doInit(it) }
     fun publicKeys(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, init: PublicKeyConnection.() -> Unit) =
         PublicKeyConnection("publicKeys").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.also { doInit(it, init) }
     fun pullRequests(after: String? = null, baseRefName: String? = null, before: String? = null, first: Int? = null, headRefName: String? = null, labels: String? = null, last: Int? = null, orderBy: IssueOrder? = null, states: PullRequestState? = null, init: PullRequestConnection.() -> Unit) =
         PullRequestConnection("pullRequests").apply { addArgs("after", after) }.apply { addArgs("baseRefName", baseRefName) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("headRefName", headRefName) }.apply { addArgs("labels", labels) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.apply { addArgs("states", states) }.also { doInit(it, init) }
     fun recentProjects(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, init: ProjectV2Connection.() -> Unit) =
         ProjectV2Connection("recentProjects").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.also { doInit(it, init) }
-    fun repositories(affiliations: RepositoryAffiliation? = null, after: String? = null, before: String? = null, first: Int? = null, isFork: Boolean? = null, isLocked: Boolean? = null, last: Int? = null, orderBy: RepositoryOrder? = null, ownerAffiliations: RepositoryAffiliation? = null, privacy: RepositoryPrivacy? = null, init: RepositoryConnection.() -> Unit) =
-        RepositoryConnection("repositories").apply { addArgs("affiliations", affiliations) }.apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("isFork", isFork) }.apply { addArgs("isLocked", isLocked) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.apply { addArgs("ownerAffiliations", ownerAffiliations) }.apply { addArgs("privacy", privacy) }.also { doInit(it, init) }
-    fun repositoriesContributedTo(after: String? = null, before: String? = null, contributionTypes: RepositoryContributionType? = null, first: Int? = null, includeUserRepositories: Boolean? = null, isLocked: Boolean? = null, last: Int? = null, orderBy: RepositoryOrder? = null, privacy: RepositoryPrivacy? = null, init: RepositoryConnection.() -> Unit) =
-        RepositoryConnection("repositoriesContributedTo").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("contributionTypes", contributionTypes) }.apply { addArgs("first", first) }.apply { addArgs("includeUserRepositories", includeUserRepositories) }.apply { addArgs("isLocked", isLocked) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.apply { addArgs("privacy", privacy) }.also { doInit(it, init) }
+    fun repositories(affiliations: RepositoryAffiliation? = null, after: String? = null, before: String? = null, first: Int? = null, hasIssuesEnabled: Boolean? = null, isArchived: Boolean? = null, isFork: Boolean? = null, isLocked: Boolean? = null, last: Int? = null, orderBy: RepositoryOrder? = null, ownerAffiliations: RepositoryAffiliation? = null, privacy: RepositoryPrivacy? = null, init: RepositoryConnection.() -> Unit) =
+        RepositoryConnection("repositories").apply { addArgs("affiliations", affiliations) }.apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("hasIssuesEnabled", hasIssuesEnabled) }.apply { addArgs("isArchived", isArchived) }.apply { addArgs("isFork", isFork) }.apply { addArgs("isLocked", isLocked) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.apply { addArgs("ownerAffiliations", ownerAffiliations) }.apply { addArgs("privacy", privacy) }.also { doInit(it, init) }
+    fun repositoriesContributedTo(after: String? = null, before: String? = null, contributionTypes: RepositoryContributionType? = null, first: Int? = null, hasIssues: Boolean? = null, includeUserRepositories: Boolean? = null, isLocked: Boolean? = null, last: Int? = null, orderBy: RepositoryOrder? = null, privacy: RepositoryPrivacy? = null, init: RepositoryConnection.() -> Unit) =
+        RepositoryConnection("repositoriesContributedTo").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("contributionTypes", contributionTypes) }.apply { addArgs("first", first) }.apply { addArgs("hasIssues", hasIssues) }.apply { addArgs("includeUserRepositories", includeUserRepositories) }.apply { addArgs("isLocked", isLocked) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.apply { addArgs("privacy", privacy) }.also { doInit(it, init) }
     fun repository(followRenames: Boolean? = null, name: String, init: Repository.() -> Unit) =
         Repository("repository").apply { addArgs("followRenames", followRenames) }.apply { addArgs("name", name) }.also { doInit(it, init) }
     fun repositoryDiscussionComments(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, onlyAnswers: Boolean? = null, repositoryId: ID? = null, init: DiscussionCommentConnection.() -> Unit) =
         DiscussionCommentConnection("repositoryDiscussionComments").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("onlyAnswers", onlyAnswers) }.apply { addArgs("repositoryId", repositoryId) }.also { doInit(it, init) }
-    fun repositoryDiscussions(after: String? = null, answered: Boolean? = null, before: String? = null, first: Int? = null, last: Int? = null, orderBy: DiscussionOrder? = null, repositoryId: ID? = null, init: DiscussionConnection.() -> Unit) =
-        DiscussionConnection("repositoryDiscussions").apply { addArgs("after", after) }.apply { addArgs("answered", answered) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.apply { addArgs("repositoryId", repositoryId) }.also { doInit(it, init) }
+    fun repositoryDiscussions(after: String? = null, answered: Boolean? = null, before: String? = null, first: Int? = null, last: Int? = null, orderBy: DiscussionOrder? = null, repositoryId: ID? = null, states: DiscussionState? = null, init: DiscussionConnection.() -> Unit) =
+        DiscussionConnection("repositoryDiscussions").apply { addArgs("after", after) }.apply { addArgs("answered", answered) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.apply { addArgs("repositoryId", repositoryId) }.apply { addArgs("states", states) }.also { doInit(it, init) }
     val resourcePath get() =
         ScalarNode("resourcePath").also { doInit(it) }
     fun savedReplies(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, orderBy: SavedReplyOrder? = null, init: SavedReplyConnection.() -> Unit) =
         SavedReplyConnection("savedReplies").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.also { doInit(it, init) }
+    fun socialAccounts(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, init: SocialAccountConnection.() -> Unit) =
+        SocialAccountConnection("socialAccounts").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.also { doInit(it, init) }
     fun sponsoring(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, orderBy: SponsorOrder? = null, init: SponsorConnection.() -> Unit) =
         SponsorConnection("sponsoring").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.also { doInit(it, init) }
     fun sponsors(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, orderBy: SponsorOrder? = null, tierId: ID? = null, init: SponsorConnection.() -> Unit) =
         SponsorConnection("sponsors").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.apply { addArgs("tierId", tierId) }.also { doInit(it, init) }
-    fun sponsorsActivities(actions: SponsorsActivityAction? = null, after: String? = null, before: String? = null, first: Int? = null, includeAsSponsor: Boolean? = null, last: Int? = null, orderBy: SponsorsActivityOrder? = null, period: SponsorsActivityPeriod? = null, since: DateTime? = null, until: DateTime? = null, init: SponsorsActivityConnection.() -> Unit) =
-        SponsorsActivityConnection("sponsorsActivities").apply { addArgs("actions", actions) }.apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("includeAsSponsor", includeAsSponsor) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.apply { addArgs("period", period) }.apply { addArgs("since", since) }.apply { addArgs("until", until) }.also { doInit(it, init) }
+    fun sponsorsActivities(actions: SponsorsActivityAction? = null, after: String? = null, before: String? = null, first: Int? = null, includeAsSponsor: Boolean? = null, includePrivate: Boolean? = null, last: Int? = null, orderBy: SponsorsActivityOrder? = null, period: SponsorsActivityPeriod? = null, since: DateTime? = null, until: DateTime? = null, init: SponsorsActivityConnection.() -> Unit) =
+        SponsorsActivityConnection("sponsorsActivities").apply { addArgs("actions", actions) }.apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("includeAsSponsor", includeAsSponsor) }.apply { addArgs("includePrivate", includePrivate) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.apply { addArgs("period", period) }.apply { addArgs("since", since) }.apply { addArgs("until", until) }.also { doInit(it, init) }
     fun sponsorsListing(init: SponsorsListing.() -> Unit) =
         SponsorsListing("sponsorsListing").also { doInit(it, init) }
     fun sponsorshipForViewerAsSponsor(activeOnly: Boolean? = null, init: Sponsorship.() -> Unit) =
@@ -15019,8 +16011,8 @@ class User(__name: String = "User"): ObjectNode(__name) {
         ScalarNode("viewerIsFollowing").also { doInit(it) }
     val viewerIsSponsoring get() =
         ScalarNode("viewerIsSponsoring").also { doInit(it) }
-    fun watching(affiliations: RepositoryAffiliation? = null, after: String? = null, before: String? = null, first: Int? = null, isLocked: Boolean? = null, last: Int? = null, orderBy: RepositoryOrder? = null, ownerAffiliations: RepositoryAffiliation? = null, privacy: RepositoryPrivacy? = null, init: RepositoryConnection.() -> Unit) =
-        RepositoryConnection("watching").apply { addArgs("affiliations", affiliations) }.apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("isLocked", isLocked) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.apply { addArgs("ownerAffiliations", ownerAffiliations) }.apply { addArgs("privacy", privacy) }.also { doInit(it, init) }
+    fun watching(affiliations: RepositoryAffiliation? = null, after: String? = null, before: String? = null, first: Int? = null, hasIssuesEnabled: Boolean? = null, isLocked: Boolean? = null, last: Int? = null, orderBy: RepositoryOrder? = null, ownerAffiliations: RepositoryAffiliation? = null, privacy: RepositoryPrivacy? = null, init: RepositoryConnection.() -> Unit) =
+        RepositoryConnection("watching").apply { addArgs("affiliations", affiliations) }.apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("hasIssuesEnabled", hasIssuesEnabled) }.apply { addArgs("isLocked", isLocked) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.apply { addArgs("ownerAffiliations", ownerAffiliations) }.apply { addArgs("privacy", privacy) }.also { doInit(it, init) }
     val websiteUrl get() =
         ScalarNode("websiteUrl").also { doInit(it) }
 }
@@ -15219,10 +16211,16 @@ class Workflow(__name: String = "Workflow"): ObjectNode(__name) {
         ScalarNode("id").also { doInit(it) }
     val name get() =
         ScalarNode("name").also { doInit(it) }
+    val resourcePath get() =
+        ScalarNode("resourcePath").also { doInit(it) }
     fun runs(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, orderBy: WorkflowRunOrder? = null, init: WorkflowRunConnection.() -> Unit) =
         WorkflowRunConnection("runs").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.also { doInit(it, init) }
+    val state get() =
+        ScalarNode("state").also { doInit(it) }
     val updatedAt get() =
         ScalarNode("updatedAt").also { doInit(it) }
+    val url get() =
+        ScalarNode("url").also { doInit(it) }
 }
 
 class WorkflowRun(__name: String = "WorkflowRun"): ObjectNode(__name) {
@@ -15234,6 +16232,10 @@ class WorkflowRun(__name: String = "WorkflowRun"): ObjectNode(__name) {
         ScalarNode("databaseId").also { doInit(it) }
     fun deploymentReviews(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, init: DeploymentReviewConnection.() -> Unit) =
         DeploymentReviewConnection("deploymentReviews").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.also { doInit(it, init) }
+    val event get() =
+        ScalarNode("event").also { doInit(it) }
+    fun file(init: WorkflowRunFile.() -> Unit) =
+        WorkflowRunFile("file").also { doInit(it, init) }
     val id get() =
         ScalarNode("id").also { doInit(it) }
     fun pendingDeploymentRequests(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, init: DeploymentRequestConnection.() -> Unit) =
@@ -15266,6 +16268,27 @@ class WorkflowRunEdge(__name: String = "WorkflowRunEdge"): ObjectNode(__name) {
         ScalarNode("cursor").also { doInit(it) }
     fun node(init: WorkflowRun.() -> Unit) =
         WorkflowRun("node").also { doInit(it, init) }
+}
+
+class WorkflowRunFile(__name: String = "WorkflowRunFile"): ObjectNode(__name) {
+    val id get() =
+        ScalarNode("id").also { doInit(it) }
+    val path get() =
+        ScalarNode("path").also { doInit(it) }
+    val repositoryFileUrl get() =
+        ScalarNode("repositoryFileUrl").also { doInit(it) }
+    val repositoryName get() =
+        ScalarNode("repositoryName").also { doInit(it) }
+    val resourcePath get() =
+        ScalarNode("resourcePath").also { doInit(it) }
+    fun run(init: WorkflowRun.() -> Unit) =
+        WorkflowRun("run").also { doInit(it, init) }
+    val url get() =
+        ScalarNode("url").also { doInit(it) }
+    val viewerCanPushRepository get() =
+        ScalarNode("viewerCanPushRepository").also { doInit(it) }
+    val viewerCanReadRepository get() =
+        ScalarNode("viewerCanReadRepository").also { doInit(it) }
 }
 
 class Actor(__name: String = "Actor"): ObjectNode(__name) {
@@ -15378,10 +16401,14 @@ class AuditEntry(__name: String = "AuditEntry"): ObjectNode(__name) {
         OrgInviteToBusinessAuditEntry("...on OrgInviteToBusinessAuditEntry").also { doInit(it, init) }
     fun `on OrgOauthAppAccessApprovedAuditEntry`(init: OrgOauthAppAccessApprovedAuditEntry.() -> Unit) =
         OrgOauthAppAccessApprovedAuditEntry("...on OrgOauthAppAccessApprovedAuditEntry").also { doInit(it, init) }
+    fun `on OrgOauthAppAccessBlockedAuditEntry`(init: OrgOauthAppAccessBlockedAuditEntry.() -> Unit) =
+        OrgOauthAppAccessBlockedAuditEntry("...on OrgOauthAppAccessBlockedAuditEntry").also { doInit(it, init) }
     fun `on OrgOauthAppAccessDeniedAuditEntry`(init: OrgOauthAppAccessDeniedAuditEntry.() -> Unit) =
         OrgOauthAppAccessDeniedAuditEntry("...on OrgOauthAppAccessDeniedAuditEntry").also { doInit(it, init) }
     fun `on OrgOauthAppAccessRequestedAuditEntry`(init: OrgOauthAppAccessRequestedAuditEntry.() -> Unit) =
         OrgOauthAppAccessRequestedAuditEntry("...on OrgOauthAppAccessRequestedAuditEntry").also { doInit(it, init) }
+    fun `on OrgOauthAppAccessUnblockedAuditEntry`(init: OrgOauthAppAccessUnblockedAuditEntry.() -> Unit) =
+        OrgOauthAppAccessUnblockedAuditEntry("...on OrgOauthAppAccessUnblockedAuditEntry").also { doInit(it, init) }
     fun `on OrgRemoveBillingManagerAuditEntry`(init: OrgRemoveBillingManagerAuditEntry.() -> Unit) =
         OrgRemoveBillingManagerAuditEntry("...on OrgRemoveBillingManagerAuditEntry").also { doInit(it, init) }
     fun `on OrgRemoveMemberAuditEntry`(init: OrgRemoveMemberAuditEntry.() -> Unit) =
@@ -15463,6 +16490,10 @@ class Closable(__name: String = "Closable"): ObjectNode(__name) {
         ScalarNode("closed").also { doInit(it) }
     val closedAt get() =
         ScalarNode("closedAt").also { doInit(it) }
+    val viewerCanClose get() =
+        ScalarNode("viewerCanClose").also { doInit(it) }
+    val viewerCanReopen get() =
+        ScalarNode("viewerCanReopen").also { doInit(it) }
     fun `on Discussion`(init: Discussion.() -> Unit) =
         Discussion("...on Discussion").also { doInit(it, init) }
     fun `on Issue`(init: Issue.() -> Unit) =
@@ -15570,6 +16601,8 @@ class Deletable(__name: String = "Deletable"): ObjectNode(__name) {
         DiscussionComment("...on DiscussionComment").also { doInit(it, init) }
     fun `on GistComment`(init: GistComment.() -> Unit) =
         GistComment("...on GistComment").also { doInit(it, init) }
+    fun `on Issue`(init: Issue.() -> Unit) =
+        Issue("...on Issue").also { doInit(it, init) }
     fun `on IssueComment`(init: IssueComment.() -> Unit) =
         IssueComment("...on IssueComment").also { doInit(it, init) }
     fun `on PullRequestReview`(init: PullRequestReview.() -> Unit) =
@@ -15726,6 +16759,8 @@ class Migration(__name: String = "Migration"): ObjectNode(__name) {
         ScalarNode("sourceUrl").also { doInit(it) }
     val state get() =
         ScalarNode("state").also { doInit(it) }
+    val warningsCount get() =
+        ScalarNode("warningsCount").also { doInit(it) }
     fun `on RepositoryMigration`(init: RepositoryMigration.() -> Unit) =
         RepositoryMigration("...on RepositoryMigration").also { doInit(it, init) }
 }
@@ -15752,6 +16787,8 @@ class Minimizable(__name: String = "Minimizable"): ObjectNode(__name) {
 class Node(__name: String = "Node"): ObjectNode(__name) {
     val id get() =
         ScalarNode("id").also { doInit(it) }
+    fun `on AddedToMergeQueueEvent`(init: AddedToMergeQueueEvent.() -> Unit) =
+        AddedToMergeQueueEvent("...on AddedToMergeQueueEvent").also { doInit(it, init) }
     fun `on AddedToProjectEvent`(init: AddedToProjectEvent.() -> Unit) =
         AddedToProjectEvent("...on AddedToProjectEvent").also { doInit(it, init) }
     fun `on App`(init: App.() -> Unit) =
@@ -15912,6 +16949,10 @@ class Node(__name: String = "Node"): ObjectNode(__name) {
         MembersCanDeleteReposEnableAuditEntry("...on MembersCanDeleteReposEnableAuditEntry").also { doInit(it, init) }
     fun `on MentionedEvent`(init: MentionedEvent.() -> Unit) =
         MentionedEvent("...on MentionedEvent").also { doInit(it, init) }
+    fun `on MergeQueue`(init: MergeQueue.() -> Unit) =
+        MergeQueue("...on MergeQueue").also { doInit(it, init) }
+    fun `on MergeQueueEntry`(init: MergeQueueEntry.() -> Unit) =
+        MergeQueueEntry("...on MergeQueueEntry").also { doInit(it, init) }
     fun `on MergedEvent`(init: MergedEvent.() -> Unit) =
         MergedEvent("...on MergedEvent").also { doInit(it, init) }
     fun `on MigrationSource`(init: MigrationSource.() -> Unit) =
@@ -15956,10 +16997,14 @@ class Node(__name: String = "Node"): ObjectNode(__name) {
         OrgInviteToBusinessAuditEntry("...on OrgInviteToBusinessAuditEntry").also { doInit(it, init) }
     fun `on OrgOauthAppAccessApprovedAuditEntry`(init: OrgOauthAppAccessApprovedAuditEntry.() -> Unit) =
         OrgOauthAppAccessApprovedAuditEntry("...on OrgOauthAppAccessApprovedAuditEntry").also { doInit(it, init) }
+    fun `on OrgOauthAppAccessBlockedAuditEntry`(init: OrgOauthAppAccessBlockedAuditEntry.() -> Unit) =
+        OrgOauthAppAccessBlockedAuditEntry("...on OrgOauthAppAccessBlockedAuditEntry").also { doInit(it, init) }
     fun `on OrgOauthAppAccessDeniedAuditEntry`(init: OrgOauthAppAccessDeniedAuditEntry.() -> Unit) =
         OrgOauthAppAccessDeniedAuditEntry("...on OrgOauthAppAccessDeniedAuditEntry").also { doInit(it, init) }
     fun `on OrgOauthAppAccessRequestedAuditEntry`(init: OrgOauthAppAccessRequestedAuditEntry.() -> Unit) =
         OrgOauthAppAccessRequestedAuditEntry("...on OrgOauthAppAccessRequestedAuditEntry").also { doInit(it, init) }
+    fun `on OrgOauthAppAccessUnblockedAuditEntry`(init: OrgOauthAppAccessUnblockedAuditEntry.() -> Unit) =
+        OrgOauthAppAccessUnblockedAuditEntry("...on OrgOauthAppAccessUnblockedAuditEntry").also { doInit(it, init) }
     fun `on OrgRemoveBillingManagerAuditEntry`(init: OrgRemoveBillingManagerAuditEntry.() -> Unit) =
         OrgRemoveBillingManagerAuditEntry("...on OrgRemoveBillingManagerAuditEntry").also { doInit(it, init) }
     fun `on OrgRemoveMemberAuditEntry`(init: OrgRemoveMemberAuditEntry.() -> Unit) =
@@ -16066,6 +17111,8 @@ class Node(__name: String = "Node"): ObjectNode(__name) {
         Release("...on Release").also { doInit(it, init) }
     fun `on ReleaseAsset`(init: ReleaseAsset.() -> Unit) =
         ReleaseAsset("...on ReleaseAsset").also { doInit(it, init) }
+    fun `on RemovedFromMergeQueueEvent`(init: RemovedFromMergeQueueEvent.() -> Unit) =
+        RemovedFromMergeQueueEvent("...on RemovedFromMergeQueueEvent").also { doInit(it, init) }
     fun `on RemovedFromProjectEvent`(init: RemovedFromProjectEvent.() -> Unit) =
         RemovedFromProjectEvent("...on RemovedFromProjectEvent").also { doInit(it, init) }
     fun `on RenamedTitleEvent`(init: RenamedTitleEvent.() -> Unit) =
@@ -16116,6 +17163,12 @@ class Node(__name: String = "Node"): ObjectNode(__name) {
         RepositoryInvitation("...on RepositoryInvitation").also { doInit(it, init) }
     fun `on RepositoryMigration`(init: RepositoryMigration.() -> Unit) =
         RepositoryMigration("...on RepositoryMigration").also { doInit(it, init) }
+    fun `on RepositoryRule`(init: RepositoryRule.() -> Unit) =
+        RepositoryRule("...on RepositoryRule").also { doInit(it, init) }
+    fun `on RepositoryRuleset`(init: RepositoryRuleset.() -> Unit) =
+        RepositoryRuleset("...on RepositoryRuleset").also { doInit(it, init) }
+    fun `on RepositoryRulesetBypassActor`(init: RepositoryRulesetBypassActor.() -> Unit) =
+        RepositoryRulesetBypassActor("...on RepositoryRulesetBypassActor").also { doInit(it, init) }
     fun `on RepositoryTopic`(init: RepositoryTopic.() -> Unit) =
         RepositoryTopic("...on RepositoryTopic").also { doInit(it, init) }
     fun `on RepositoryVisibilityChangeDisableAuditEntry`(init: RepositoryVisibilityChangeDisableAuditEntry.() -> Unit) =
@@ -16208,6 +17261,8 @@ class Node(__name: String = "Node"): ObjectNode(__name) {
         Workflow("...on Workflow").also { doInit(it, init) }
     fun `on WorkflowRun`(init: WorkflowRun.() -> Unit) =
         WorkflowRun("...on WorkflowRun").also { doInit(it, init) }
+    fun `on WorkflowRunFile`(init: WorkflowRunFile.() -> Unit) =
+        WorkflowRunFile("...on WorkflowRunFile").also { doInit(it, init) }
 }
 
 class OauthApplicationAuditEntryData(__name: String = "OauthApplicationAuditEntryData"): ObjectNode(__name) {
@@ -16221,10 +17276,14 @@ class OauthApplicationAuditEntryData(__name: String = "OauthApplicationAuditEntr
         OauthApplicationCreateAuditEntry("...on OauthApplicationCreateAuditEntry").also { doInit(it, init) }
     fun `on OrgOauthAppAccessApprovedAuditEntry`(init: OrgOauthAppAccessApprovedAuditEntry.() -> Unit) =
         OrgOauthAppAccessApprovedAuditEntry("...on OrgOauthAppAccessApprovedAuditEntry").also { doInit(it, init) }
+    fun `on OrgOauthAppAccessBlockedAuditEntry`(init: OrgOauthAppAccessBlockedAuditEntry.() -> Unit) =
+        OrgOauthAppAccessBlockedAuditEntry("...on OrgOauthAppAccessBlockedAuditEntry").also { doInit(it, init) }
     fun `on OrgOauthAppAccessDeniedAuditEntry`(init: OrgOauthAppAccessDeniedAuditEntry.() -> Unit) =
         OrgOauthAppAccessDeniedAuditEntry("...on OrgOauthAppAccessDeniedAuditEntry").also { doInit(it, init) }
     fun `on OrgOauthAppAccessRequestedAuditEntry`(init: OrgOauthAppAccessRequestedAuditEntry.() -> Unit) =
         OrgOauthAppAccessRequestedAuditEntry("...on OrgOauthAppAccessRequestedAuditEntry").also { doInit(it, init) }
+    fun `on OrgOauthAppAccessUnblockedAuditEntry`(init: OrgOauthAppAccessUnblockedAuditEntry.() -> Unit) =
+        OrgOauthAppAccessUnblockedAuditEntry("...on OrgOauthAppAccessUnblockedAuditEntry").also { doInit(it, init) }
 }
 
 class OrganizationAuditEntryData(__name: String = "OrganizationAuditEntryData"): ObjectNode(__name) {
@@ -16274,10 +17333,14 @@ class OrganizationAuditEntryData(__name: String = "OrganizationAuditEntryData"):
         OrgInviteToBusinessAuditEntry("...on OrgInviteToBusinessAuditEntry").also { doInit(it, init) }
     fun `on OrgOauthAppAccessApprovedAuditEntry`(init: OrgOauthAppAccessApprovedAuditEntry.() -> Unit) =
         OrgOauthAppAccessApprovedAuditEntry("...on OrgOauthAppAccessApprovedAuditEntry").also { doInit(it, init) }
+    fun `on OrgOauthAppAccessBlockedAuditEntry`(init: OrgOauthAppAccessBlockedAuditEntry.() -> Unit) =
+        OrgOauthAppAccessBlockedAuditEntry("...on OrgOauthAppAccessBlockedAuditEntry").also { doInit(it, init) }
     fun `on OrgOauthAppAccessDeniedAuditEntry`(init: OrgOauthAppAccessDeniedAuditEntry.() -> Unit) =
         OrgOauthAppAccessDeniedAuditEntry("...on OrgOauthAppAccessDeniedAuditEntry").also { doInit(it, init) }
     fun `on OrgOauthAppAccessRequestedAuditEntry`(init: OrgOauthAppAccessRequestedAuditEntry.() -> Unit) =
         OrgOauthAppAccessRequestedAuditEntry("...on OrgOauthAppAccessRequestedAuditEntry").also { doInit(it, init) }
+    fun `on OrgOauthAppAccessUnblockedAuditEntry`(init: OrgOauthAppAccessUnblockedAuditEntry.() -> Unit) =
+        OrgOauthAppAccessUnblockedAuditEntry("...on OrgOauthAppAccessUnblockedAuditEntry").also { doInit(it, init) }
     fun `on OrgRemoveBillingManagerAuditEntry`(init: OrgRemoveBillingManagerAuditEntry.() -> Unit) =
         OrgRemoveBillingManagerAuditEntry("...on OrgRemoveBillingManagerAuditEntry").also { doInit(it, init) }
     fun `on OrgRemoveMemberAuditEntry`(init: OrgRemoveMemberAuditEntry.() -> Unit) =
@@ -16596,8 +17659,8 @@ class RepositoryAuditEntryData(__name: String = "RepositoryAuditEntryData"): Obj
 }
 
 class RepositoryDiscussionAuthor(__name: String = "RepositoryDiscussionAuthor"): ObjectNode(__name) {
-    fun repositoryDiscussions(after: String? = null, answered: Boolean? = null, before: String? = null, first: Int? = null, last: Int? = null, orderBy: DiscussionOrder? = null, repositoryId: ID? = null, init: DiscussionConnection.() -> Unit) =
-        DiscussionConnection("repositoryDiscussions").apply { addArgs("after", after) }.apply { addArgs("answered", answered) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.apply { addArgs("repositoryId", repositoryId) }.also { doInit(it, init) }
+    fun repositoryDiscussions(after: String? = null, answered: Boolean? = null, before: String? = null, first: Int? = null, last: Int? = null, orderBy: DiscussionOrder? = null, repositoryId: ID? = null, states: DiscussionState? = null, init: DiscussionConnection.() -> Unit) =
+        DiscussionConnection("repositoryDiscussions").apply { addArgs("after", after) }.apply { addArgs("answered", answered) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.apply { addArgs("repositoryId", repositoryId) }.apply { addArgs("states", states) }.also { doInit(it, init) }
     fun `on Organization`(init: Organization.() -> Unit) =
         Organization("...on Organization").also { doInit(it, init) }
     fun `on User`(init: User.() -> Unit) =
@@ -16614,6 +17677,8 @@ class RepositoryDiscussionCommentAuthor(__name: String = "RepositoryDiscussionCo
 }
 
 class RepositoryInfo(__name: String = "RepositoryInfo"): ObjectNode(__name) {
+    val archivedAt get() =
+        ScalarNode("archivedAt").also { doInit(it) }
     val createdAt get() =
         ScalarNode("createdAt").also { doInit(it) }
     val description get() =
@@ -16720,8 +17785,8 @@ class RepositoryOwner(__name: String = "RepositoryOwner"): ObjectNode(__name) {
         ScalarNode("id").also { doInit(it) }
     val login get() =
         ScalarNode("login").also { doInit(it) }
-    fun repositories(affiliations: RepositoryAffiliation? = null, after: String? = null, before: String? = null, first: Int? = null, isFork: Boolean? = null, isLocked: Boolean? = null, last: Int? = null, orderBy: RepositoryOrder? = null, ownerAffiliations: RepositoryAffiliation? = null, privacy: RepositoryPrivacy? = null, init: RepositoryConnection.() -> Unit) =
-        RepositoryConnection("repositories").apply { addArgs("affiliations", affiliations) }.apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("isFork", isFork) }.apply { addArgs("isLocked", isLocked) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.apply { addArgs("ownerAffiliations", ownerAffiliations) }.apply { addArgs("privacy", privacy) }.also { doInit(it, init) }
+    fun repositories(affiliations: RepositoryAffiliation? = null, after: String? = null, before: String? = null, first: Int? = null, hasIssuesEnabled: Boolean? = null, isArchived: Boolean? = null, isFork: Boolean? = null, isLocked: Boolean? = null, last: Int? = null, orderBy: RepositoryOrder? = null, ownerAffiliations: RepositoryAffiliation? = null, privacy: RepositoryPrivacy? = null, init: RepositoryConnection.() -> Unit) =
+        RepositoryConnection("repositories").apply { addArgs("affiliations", affiliations) }.apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("hasIssuesEnabled", hasIssuesEnabled) }.apply { addArgs("isArchived", isArchived) }.apply { addArgs("isFork", isFork) }.apply { addArgs("isLocked", isLocked) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.apply { addArgs("ownerAffiliations", ownerAffiliations) }.apply { addArgs("privacy", privacy) }.also { doInit(it, init) }
     fun repository(followRenames: Boolean? = null, name: String, init: Repository.() -> Unit) =
         Repository("repository").apply { addArgs("followRenames", followRenames) }.apply { addArgs("name", name) }.also { doInit(it, init) }
     val resourcePath get() =
@@ -16760,8 +17825,8 @@ class Sponsorable(__name: String = "Sponsorable"): ObjectNode(__name) {
         SponsorConnection("sponsoring").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.also { doInit(it, init) }
     fun sponsors(after: String? = null, before: String? = null, first: Int? = null, last: Int? = null, orderBy: SponsorOrder? = null, tierId: ID? = null, init: SponsorConnection.() -> Unit) =
         SponsorConnection("sponsors").apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.apply { addArgs("tierId", tierId) }.also { doInit(it, init) }
-    fun sponsorsActivities(actions: SponsorsActivityAction? = null, after: String? = null, before: String? = null, first: Int? = null, includeAsSponsor: Boolean? = null, last: Int? = null, orderBy: SponsorsActivityOrder? = null, period: SponsorsActivityPeriod? = null, since: DateTime? = null, until: DateTime? = null, init: SponsorsActivityConnection.() -> Unit) =
-        SponsorsActivityConnection("sponsorsActivities").apply { addArgs("actions", actions) }.apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("includeAsSponsor", includeAsSponsor) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.apply { addArgs("period", period) }.apply { addArgs("since", since) }.apply { addArgs("until", until) }.also { doInit(it, init) }
+    fun sponsorsActivities(actions: SponsorsActivityAction? = null, after: String? = null, before: String? = null, first: Int? = null, includeAsSponsor: Boolean? = null, includePrivate: Boolean? = null, last: Int? = null, orderBy: SponsorsActivityOrder? = null, period: SponsorsActivityPeriod? = null, since: DateTime? = null, until: DateTime? = null, init: SponsorsActivityConnection.() -> Unit) =
+        SponsorsActivityConnection("sponsorsActivities").apply { addArgs("actions", actions) }.apply { addArgs("after", after) }.apply { addArgs("before", before) }.apply { addArgs("first", first) }.apply { addArgs("includeAsSponsor", includeAsSponsor) }.apply { addArgs("includePrivate", includePrivate) }.apply { addArgs("last", last) }.apply { addArgs("orderBy", orderBy) }.apply { addArgs("period", period) }.apply { addArgs("since", since) }.apply { addArgs("until", until) }.also { doInit(it, init) }
     fun sponsorsListing(init: SponsorsListing.() -> Unit) =
         SponsorsListing("sponsorsListing").also { doInit(it, init) }
     fun sponsorshipForViewerAsSponsor(activeOnly: Boolean? = null, init: Sponsorship.() -> Unit) =
@@ -16826,6 +17891,17 @@ class Subscribable(__name: String = "Subscribable"): ObjectNode(__name) {
         Team("...on Team").also { doInit(it, init) }
     fun `on TeamDiscussion`(init: TeamDiscussion.() -> Unit) =
         TeamDiscussion("...on TeamDiscussion").also { doInit(it, init) }
+}
+
+class SubscribableThread(__name: String = "SubscribableThread"): ObjectNode(__name) {
+    val id get() =
+        ScalarNode("id").also { doInit(it) }
+    val viewerThreadSubscriptionFormAction get() =
+        ScalarNode("viewerThreadSubscriptionFormAction").also { doInit(it) }
+    val viewerThreadSubscriptionStatus get() =
+        ScalarNode("viewerThreadSubscriptionStatus").also { doInit(it) }
+    fun `on Issue`(init: Issue.() -> Unit) =
+        Issue("...on Issue").also { doInit(it, init) }
 }
 
 class TeamAuditEntryData(__name: String = "TeamAuditEntryData"): ObjectNode(__name) {
@@ -16911,8 +17987,12 @@ class UniformResourceLocatable(__name: String = "UniformResourceLocatable"): Obj
         TeamDiscussionComment("...on TeamDiscussionComment").also { doInit(it, init) }
     fun `on User`(init: User.() -> Unit) =
         User("...on User").also { doInit(it, init) }
+    fun `on Workflow`(init: Workflow.() -> Unit) =
+        Workflow("...on Workflow").also { doInit(it, init) }
     fun `on WorkflowRun`(init: WorkflowRun.() -> Unit) =
         WorkflowRun("...on WorkflowRun").also { doInit(it, init) }
+    fun `on WorkflowRunFile`(init: WorkflowRunFile.() -> Unit) =
+        WorkflowRunFile("...on WorkflowRunFile").also { doInit(it, init) }
 }
 
 class Updatable(__name: String = "Updatable"): ObjectNode(__name) {
@@ -17011,6 +18091,13 @@ class BranchActorAllowanceActor(__name: String = "BranchActorAllowanceActor"): O
         Team("...on Team").also { doInit(it, init) }
     fun `on User`(init: User.() -> Unit) =
         User("...on User").also { doInit(it, init) }
+}
+
+class BypassActor(__name: String = "BypassActor"): ObjectNode(__name) {
+    fun `on App`(init: App.() -> Unit) =
+        App("...on App").also { doInit(it, init) }
+    fun `on Team`(init: Team.() -> Unit) =
+        Team("...on Team").also { doInit(it, init) }
 }
 
 class Claimable(__name: String = "Claimable"): ObjectNode(__name) {
@@ -17239,10 +18326,14 @@ class OrganizationAuditEntry(__name: String = "OrganizationAuditEntry"): ObjectN
         OrgInviteToBusinessAuditEntry("...on OrgInviteToBusinessAuditEntry").also { doInit(it, init) }
     fun `on OrgOauthAppAccessApprovedAuditEntry`(init: OrgOauthAppAccessApprovedAuditEntry.() -> Unit) =
         OrgOauthAppAccessApprovedAuditEntry("...on OrgOauthAppAccessApprovedAuditEntry").also { doInit(it, init) }
+    fun `on OrgOauthAppAccessBlockedAuditEntry`(init: OrgOauthAppAccessBlockedAuditEntry.() -> Unit) =
+        OrgOauthAppAccessBlockedAuditEntry("...on OrgOauthAppAccessBlockedAuditEntry").also { doInit(it, init) }
     fun `on OrgOauthAppAccessDeniedAuditEntry`(init: OrgOauthAppAccessDeniedAuditEntry.() -> Unit) =
         OrgOauthAppAccessDeniedAuditEntry("...on OrgOauthAppAccessDeniedAuditEntry").also { doInit(it, init) }
     fun `on OrgOauthAppAccessRequestedAuditEntry`(init: OrgOauthAppAccessRequestedAuditEntry.() -> Unit) =
         OrgOauthAppAccessRequestedAuditEntry("...on OrgOauthAppAccessRequestedAuditEntry").also { doInit(it, init) }
+    fun `on OrgOauthAppAccessUnblockedAuditEntry`(init: OrgOauthAppAccessUnblockedAuditEntry.() -> Unit) =
+        OrgOauthAppAccessUnblockedAuditEntry("...on OrgOauthAppAccessUnblockedAuditEntry").also { doInit(it, init) }
     fun `on OrgRemoveBillingManagerAuditEntry`(init: OrgRemoveBillingManagerAuditEntry.() -> Unit) =
         OrgRemoveBillingManagerAuditEntry("...on OrgRemoveBillingManagerAuditEntry").also { doInit(it, init) }
     fun `on OrgRemoveMemberAuditEntry`(init: OrgRemoveMemberAuditEntry.() -> Unit) =
@@ -17347,6 +18438,13 @@ class ProjectCardItem(__name: String = "ProjectCardItem"): ObjectNode(__name) {
         Issue("...on Issue").also { doInit(it, init) }
     fun `on PullRequest`(init: PullRequest.() -> Unit) =
         PullRequest("...on PullRequest").also { doInit(it, init) }
+}
+
+class ProjectV2Actor(__name: String = "ProjectV2Actor"): ObjectNode(__name) {
+    fun `on Team`(init: Team.() -> Unit) =
+        Team("...on Team").also { doInit(it, init) }
+    fun `on User`(init: User.() -> Unit) =
+        User("...on User").also { doInit(it, init) }
 }
 
 class ProjectV2FieldConfiguration(__name: String = "ProjectV2FieldConfiguration"): ObjectNode(__name) {
@@ -17462,6 +18560,8 @@ class PullRequestTimelineItem(__name: String = "PullRequestTimelineItem"): Objec
 }
 
 class PullRequestTimelineItems(__name: String = "PullRequestTimelineItems"): ObjectNode(__name) {
+    fun `on AddedToMergeQueueEvent`(init: AddedToMergeQueueEvent.() -> Unit) =
+        AddedToMergeQueueEvent("...on AddedToMergeQueueEvent").also { doInit(it, init) }
     fun `on AddedToProjectEvent`(init: AddedToProjectEvent.() -> Unit) =
         AddedToProjectEvent("...on AddedToProjectEvent").also { doInit(it, init) }
     fun `on AssignedEvent`(init: AssignedEvent.() -> Unit) =
@@ -17544,6 +18644,8 @@ class PullRequestTimelineItems(__name: String = "PullRequestTimelineItems"): Obj
         ReadyForReviewEvent("...on ReadyForReviewEvent").also { doInit(it, init) }
     fun `on ReferencedEvent`(init: ReferencedEvent.() -> Unit) =
         ReferencedEvent("...on ReferencedEvent").also { doInit(it, init) }
+    fun `on RemovedFromMergeQueueEvent`(init: RemovedFromMergeQueueEvent.() -> Unit) =
+        RemovedFromMergeQueueEvent("...on RemovedFromMergeQueueEvent").also { doInit(it, init) }
     fun `on RemovedFromProjectEvent`(init: RemovedFromProjectEvent.() -> Unit) =
         RemovedFromProjectEvent("...on RemovedFromProjectEvent").also { doInit(it, init) }
     fun `on RenamedTitleEvent`(init: RenamedTitleEvent.() -> Unit) =
@@ -17611,6 +18713,8 @@ class RenamedTitleSubject(__name: String = "RenamedTitleSubject"): ObjectNode(__
 }
 
 class RequestedReviewer(__name: String = "RequestedReviewer"): ObjectNode(__name) {
+    fun `on Bot`(init: Bot.() -> Unit) =
+        Bot("...on Bot").also { doInit(it, init) }
     fun `on Mannequin`(init: Mannequin.() -> Unit) =
         Mannequin("...on Mannequin").also { doInit(it, init) }
     fun `on Team`(init: Team.() -> Unit) =
@@ -17626,6 +18730,34 @@ class ReviewDismissalAllowanceActor(__name: String = "ReviewDismissalAllowanceAc
         Team("...on Team").also { doInit(it, init) }
     fun `on User`(init: User.() -> Unit) =
         User("...on User").also { doInit(it, init) }
+}
+
+class RuleParameters(__name: String = "RuleParameters"): ObjectNode(__name) {
+    fun `on BranchNamePatternParameters`(init: BranchNamePatternParameters.() -> Unit) =
+        BranchNamePatternParameters("...on BranchNamePatternParameters").also { doInit(it, init) }
+    fun `on CommitAuthorEmailPatternParameters`(init: CommitAuthorEmailPatternParameters.() -> Unit) =
+        CommitAuthorEmailPatternParameters("...on CommitAuthorEmailPatternParameters").also { doInit(it, init) }
+    fun `on CommitMessagePatternParameters`(init: CommitMessagePatternParameters.() -> Unit) =
+        CommitMessagePatternParameters("...on CommitMessagePatternParameters").also { doInit(it, init) }
+    fun `on CommitterEmailPatternParameters`(init: CommitterEmailPatternParameters.() -> Unit) =
+        CommitterEmailPatternParameters("...on CommitterEmailPatternParameters").also { doInit(it, init) }
+    fun `on PullRequestParameters`(init: PullRequestParameters.() -> Unit) =
+        PullRequestParameters("...on PullRequestParameters").also { doInit(it, init) }
+    fun `on RequiredDeploymentsParameters`(init: RequiredDeploymentsParameters.() -> Unit) =
+        RequiredDeploymentsParameters("...on RequiredDeploymentsParameters").also { doInit(it, init) }
+    fun `on RequiredStatusChecksParameters`(init: RequiredStatusChecksParameters.() -> Unit) =
+        RequiredStatusChecksParameters("...on RequiredStatusChecksParameters").also { doInit(it, init) }
+    fun `on TagNamePatternParameters`(init: TagNamePatternParameters.() -> Unit) =
+        TagNamePatternParameters("...on TagNamePatternParameters").also { doInit(it, init) }
+    fun `on UpdateParameters`(init: UpdateParameters.() -> Unit) =
+        UpdateParameters("...on UpdateParameters").also { doInit(it, init) }
+}
+
+class RuleSource(__name: String = "RuleSource"): ObjectNode(__name) {
+    fun `on Organization`(init: Organization.() -> Unit) =
+        Organization("...on Organization").also { doInit(it, init) }
+    fun `on Repository`(init: Repository.() -> Unit) =
+        Repository("...on Repository").also { doInit(it, init) }
 }
 
 class SearchResultItem(__name: String = "SearchResultItem"): ObjectNode(__name) {
@@ -17738,7 +18870,7 @@ class AddProjectV2ItemByIdInput(val clientMutationId: String? = null, val conten
     override fun toString() = "{ clientMutationId: \"$clientMutationId\", contentId: \"$contentId\", projectId: \"$projectId\" }"
 }
 
-class AddPullRequestReviewCommentInput(val body: String, val clientMutationId: String? = null, val commitOID: GitObjectID? = null, val inReplyTo: ID? = null, val path: String? = null, val position: Int? = null, val pullRequestId: ID? = null, val pullRequestReviewId: ID? = null) {
+class AddPullRequestReviewCommentInput(val body: String? = null, val clientMutationId: String? = null, val commitOID: GitObjectID? = null, val inReplyTo: ID? = null, val path: String? = null, val position: Int? = null, val pullRequestId: ID? = null, val pullRequestReviewId: ID? = null) {
     override fun toString() = "{ body: \"$body\", clientMutationId: \"$clientMutationId\", commitOID: \"$commitOID\", inReplyTo: \"$inReplyTo\", path: \"$path\", position: $position, pullRequestId: \"$pullRequestId\", pullRequestReviewId: \"$pullRequestReviewId\" }"
 }
 
@@ -17746,8 +18878,12 @@ class AddPullRequestReviewInput(val body: String? = null, val clientMutationId: 
     override fun toString() = "{ body: \"$body\", clientMutationId: \"$clientMutationId\", comments: $comments, commitOID: \"$commitOID\", event: $event, pullRequestId: \"$pullRequestId\", threads: $threads }"
 }
 
-class AddPullRequestReviewThreadInput(val body: String, val clientMutationId: String? = null, val line: Int, val path: String, val pullRequestId: ID? = null, val pullRequestReviewId: ID? = null, val side: DiffSide? = null, val startLine: Int? = null, val startSide: DiffSide? = null) {
-    override fun toString() = "{ body: \"$body\", clientMutationId: \"$clientMutationId\", line: $line, path: \"$path\", pullRequestId: \"$pullRequestId\", pullRequestReviewId: \"$pullRequestReviewId\", side: $side, startLine: $startLine, startSide: $startSide }"
+class AddPullRequestReviewThreadInput(val body: String, val clientMutationId: String? = null, val line: Int? = null, val path: String, val pullRequestId: ID? = null, val pullRequestReviewId: ID? = null, val side: DiffSide? = null, val startLine: Int? = null, val startSide: DiffSide? = null, val subjectType: PullRequestReviewThreadSubjectType? = null) {
+    override fun toString() = "{ body: \"$body\", clientMutationId: \"$clientMutationId\", line: $line, path: \"$path\", pullRequestId: \"$pullRequestId\", pullRequestReviewId: \"$pullRequestReviewId\", side: $side, startLine: $startLine, startSide: $startSide, subjectType: $subjectType }"
+}
+
+class AddPullRequestReviewThreadReplyInput(val body: String, val clientMutationId: String? = null, val pullRequestReviewId: ID? = null, val pullRequestReviewThreadId: ID) {
+    override fun toString() = "{ body: \"$body\", clientMutationId: \"$clientMutationId\", pullRequestReviewId: \"$pullRequestReviewId\", pullRequestReviewThreadId: \"$pullRequestReviewThreadId\" }"
 }
 
 class AddReactionInput(val clientMutationId: String? = null, val content: ReactionContent, val subjectId: ID) {
@@ -17784,6 +18920,14 @@ class ArchiveRepositoryInput(val clientMutationId: String? = null, val repositor
 
 class AuditLogOrder(val direction: OrderDirection? = null, val field: AuditLogOrderField? = null) {
     override fun toString() = "{ direction: $direction, field: $field }"
+}
+
+class BranchNamePatternParametersInput(val name: String? = null, val negate: Boolean? = null, val operator: String, val pattern: String) {
+    override fun toString() = "{ name: \"$name\", negate: $negate, operator: \"$operator\", pattern: \"$pattern\" }"
+}
+
+class BulkSponsorship(val amount: Int, val sponsorableId: ID? = null, val sponsorableLogin: String? = null) {
+    override fun toString() = "{ amount: $amount, sponsorableId: \"$sponsorableId\", sponsorableLogin: \"$sponsorableLogin\" }"
 }
 
 class CancelEnterpriseAdminInvitationInput(val clientMutationId: String? = null, val invitationId: ID) {
@@ -17846,6 +18990,10 @@ class CloneTemplateRepositoryInput(val clientMutationId: String? = null, val des
     override fun toString() = "{ clientMutationId: \"$clientMutationId\", description: \"$description\", includeAllBranches: $includeAllBranches, name: \"$name\", ownerId: \"$ownerId\", repositoryId: \"$repositoryId\", visibility: $visibility }"
 }
 
+class CloseDiscussionInput(val clientMutationId: String? = null, val discussionId: ID, val reason: DiscussionCloseReason? = null) {
+    override fun toString() = "{ clientMutationId: \"$clientMutationId\", discussionId: \"$discussionId\", reason: $reason }"
+}
+
 class CloseIssueInput(val clientMutationId: String? = null, val issueId: ID, val stateReason: IssueClosedStateReason? = null) {
     override fun toString() = "{ clientMutationId: \"$clientMutationId\", issueId: \"$issueId\", stateReason: $stateReason }"
 }
@@ -17858,6 +19006,10 @@ class CommitAuthor(val emails: String? = null, val id: ID? = null) {
     override fun toString() = "{ emails: \"$emails\", id: \"$id\" }"
 }
 
+class CommitAuthorEmailPatternParametersInput(val name: String? = null, val negate: Boolean? = null, val operator: String, val pattern: String) {
+    override fun toString() = "{ name: \"$name\", negate: $negate, operator: \"$operator\", pattern: \"$pattern\" }"
+}
+
 class CommitContributionOrder(val direction: OrderDirection, val field: CommitContributionOrderField) {
     override fun toString() = "{ direction: $direction, field: $field }"
 }
@@ -17866,8 +19018,16 @@ class CommitMessage(val body: String? = null, val headline: String) {
     override fun toString() = "{ body: \"$body\", headline: \"$headline\" }"
 }
 
+class CommitMessagePatternParametersInput(val name: String? = null, val negate: Boolean? = null, val operator: String, val pattern: String) {
+    override fun toString() = "{ name: \"$name\", negate: $negate, operator: \"$operator\", pattern: \"$pattern\" }"
+}
+
 class CommittableBranch(val branchName: String? = null, val id: ID? = null, val repositoryNameWithOwner: String? = null) {
     override fun toString() = "{ branchName: \"$branchName\", id: \"$id\", repositoryNameWithOwner: \"$repositoryNameWithOwner\" }"
+}
+
+class CommitterEmailPatternParametersInput(val name: String? = null, val negate: Boolean? = null, val operator: String, val pattern: String) {
+    override fun toString() = "{ name: \"$name\", negate: $negate, operator: \"$operator\", pattern: \"$pattern\" }"
 }
 
 class ContributionOrder(val direction: OrderDirection) {
@@ -17890,8 +19050,8 @@ class CreateAttributionInvitationInput(val clientMutationId: String? = null, val
     override fun toString() = "{ clientMutationId: \"$clientMutationId\", ownerId: \"$ownerId\", sourceId: \"$sourceId\", targetId: \"$targetId\" }"
 }
 
-class CreateBranchProtectionRuleInput(val allowsDeletions: Boolean? = null, val allowsForcePushes: Boolean? = null, val blocksCreations: Boolean? = null, val bypassForcePushActorIds: ID? = null, val bypassPullRequestActorIds: ID? = null, val clientMutationId: String? = null, val dismissesStaleReviews: Boolean? = null, val isAdminEnforced: Boolean? = null, val lockAllowsFetchAndMerge: Boolean? = null, val lockBranch: Boolean? = null, val pattern: String, val pushActorIds: ID? = null, val repositoryId: ID, val requireLastPushApproval: Boolean? = null, val requiredApprovingReviewCount: Int? = null, val requiredStatusCheckContexts: String? = null, val requiredStatusChecks: RequiredStatusCheckInput? = null, val requiresApprovingReviews: Boolean? = null, val requiresCodeOwnerReviews: Boolean? = null, val requiresCommitSignatures: Boolean? = null, val requiresConversationResolution: Boolean? = null, val requiresLinearHistory: Boolean? = null, val requiresStatusChecks: Boolean? = null, val requiresStrictStatusChecks: Boolean? = null, val restrictsPushes: Boolean? = null, val restrictsReviewDismissals: Boolean? = null, val reviewDismissalActorIds: ID? = null) {
-    override fun toString() = "{ allowsDeletions: $allowsDeletions, allowsForcePushes: $allowsForcePushes, blocksCreations: $blocksCreations, bypassForcePushActorIds: \"$bypassForcePushActorIds\", bypassPullRequestActorIds: \"$bypassPullRequestActorIds\", clientMutationId: \"$clientMutationId\", dismissesStaleReviews: $dismissesStaleReviews, isAdminEnforced: $isAdminEnforced, lockAllowsFetchAndMerge: $lockAllowsFetchAndMerge, lockBranch: $lockBranch, pattern: \"$pattern\", pushActorIds: \"$pushActorIds\", repositoryId: \"$repositoryId\", requireLastPushApproval: $requireLastPushApproval, requiredApprovingReviewCount: $requiredApprovingReviewCount, requiredStatusCheckContexts: \"$requiredStatusCheckContexts\", requiredStatusChecks: $requiredStatusChecks, requiresApprovingReviews: $requiresApprovingReviews, requiresCodeOwnerReviews: $requiresCodeOwnerReviews, requiresCommitSignatures: $requiresCommitSignatures, requiresConversationResolution: $requiresConversationResolution, requiresLinearHistory: $requiresLinearHistory, requiresStatusChecks: $requiresStatusChecks, requiresStrictStatusChecks: $requiresStrictStatusChecks, restrictsPushes: $restrictsPushes, restrictsReviewDismissals: $restrictsReviewDismissals, reviewDismissalActorIds: \"$reviewDismissalActorIds\" }"
+class CreateBranchProtectionRuleInput(val allowsDeletions: Boolean? = null, val allowsForcePushes: Boolean? = null, val blocksCreations: Boolean? = null, val bypassForcePushActorIds: ID? = null, val bypassPullRequestActorIds: ID? = null, val clientMutationId: String? = null, val dismissesStaleReviews: Boolean? = null, val isAdminEnforced: Boolean? = null, val lockAllowsFetchAndMerge: Boolean? = null, val lockBranch: Boolean? = null, val pattern: String, val pushActorIds: ID? = null, val repositoryId: ID, val requireLastPushApproval: Boolean? = null, val requiredApprovingReviewCount: Int? = null, val requiredDeploymentEnvironments: String? = null, val requiredStatusCheckContexts: String? = null, val requiredStatusChecks: RequiredStatusCheckInput? = null, val requiresApprovingReviews: Boolean? = null, val requiresCodeOwnerReviews: Boolean? = null, val requiresCommitSignatures: Boolean? = null, val requiresConversationResolution: Boolean? = null, val requiresDeployments: Boolean? = null, val requiresLinearHistory: Boolean? = null, val requiresStatusChecks: Boolean? = null, val requiresStrictStatusChecks: Boolean? = null, val restrictsPushes: Boolean? = null, val restrictsReviewDismissals: Boolean? = null, val reviewDismissalActorIds: ID? = null) {
+    override fun toString() = "{ allowsDeletions: $allowsDeletions, allowsForcePushes: $allowsForcePushes, blocksCreations: $blocksCreations, bypassForcePushActorIds: \"$bypassForcePushActorIds\", bypassPullRequestActorIds: \"$bypassPullRequestActorIds\", clientMutationId: \"$clientMutationId\", dismissesStaleReviews: $dismissesStaleReviews, isAdminEnforced: $isAdminEnforced, lockAllowsFetchAndMerge: $lockAllowsFetchAndMerge, lockBranch: $lockBranch, pattern: \"$pattern\", pushActorIds: \"$pushActorIds\", repositoryId: \"$repositoryId\", requireLastPushApproval: $requireLastPushApproval, requiredApprovingReviewCount: $requiredApprovingReviewCount, requiredDeploymentEnvironments: \"$requiredDeploymentEnvironments\", requiredStatusCheckContexts: \"$requiredStatusCheckContexts\", requiredStatusChecks: $requiredStatusChecks, requiresApprovingReviews: $requiresApprovingReviews, requiresCodeOwnerReviews: $requiresCodeOwnerReviews, requiresCommitSignatures: $requiresCommitSignatures, requiresConversationResolution: $requiresConversationResolution, requiresDeployments: $requiresDeployments, requiresLinearHistory: $requiresLinearHistory, requiresStatusChecks: $requiresStatusChecks, requiresStrictStatusChecks: $requiresStrictStatusChecks, restrictsPushes: $restrictsPushes, restrictsReviewDismissals: $restrictsReviewDismissals, reviewDismissalActorIds: \"$reviewDismissalActorIds\" }"
 }
 
 class CreateCheckRunInput(val actions: CheckRunAction? = null, val clientMutationId: String? = null, val completedAt: DateTime? = null, val conclusion: CheckConclusionState? = null, val detailsUrl: URI? = null, val externalId: String? = null, val headSha: GitObjectID, val name: String, val output: CheckRunOutput? = null, val repositoryId: ID, val startedAt: DateTime? = null, val status: RequestableCheckStatusState? = null) {
@@ -17942,12 +19102,16 @@ class CreateLinkedBranchInput(val clientMutationId: String? = null, val issueId:
     override fun toString() = "{ clientMutationId: \"$clientMutationId\", issueId: \"$issueId\", name: \"$name\", oid: \"$oid\", repositoryId: \"$repositoryId\" }"
 }
 
-class CreateMigrationSourceInput(val accessToken: String? = null, val clientMutationId: String? = null, val githubPat: String? = null, val name: String, val ownerId: ID, val type: MigrationSourceType, val url: String) {
+class CreateMigrationSourceInput(val accessToken: String? = null, val clientMutationId: String? = null, val githubPat: String? = null, val name: String, val ownerId: ID, val type: MigrationSourceType, val url: String? = null) {
     override fun toString() = "{ accessToken: \"$accessToken\", clientMutationId: \"$clientMutationId\", githubPat: \"$githubPat\", name: \"$name\", ownerId: \"$ownerId\", type: $type, url: \"$url\" }"
 }
 
 class CreateProjectInput(val body: String? = null, val clientMutationId: String? = null, val name: String, val ownerId: ID, val repositoryIds: ID? = null, val template: ProjectTemplate? = null) {
     override fun toString() = "{ body: \"$body\", clientMutationId: \"$clientMutationId\", name: \"$name\", ownerId: \"$ownerId\", repositoryIds: \"$repositoryIds\", template: $template }"
+}
+
+class CreateProjectV2FieldInput(val clientMutationId: String? = null, val dataType: ProjectV2CustomFieldType, val name: String, val projectId: ID, val singleSelectOptions: ProjectV2SingleSelectFieldOptionInput? = null) {
+    override fun toString() = "{ clientMutationId: \"$clientMutationId\", dataType: $dataType, name: \"$name\", projectId: \"$projectId\", singleSelectOptions: $singleSelectOptions }"
 }
 
 class CreateProjectV2Input(val clientMutationId: String? = null, val ownerId: ID, val repositoryId: ID? = null, val teamId: ID? = null, val title: String) {
@@ -17966,6 +19130,10 @@ class CreateRepositoryInput(val clientMutationId: String? = null, val descriptio
     override fun toString() = "{ clientMutationId: \"$clientMutationId\", description: \"$description\", hasIssuesEnabled: $hasIssuesEnabled, hasWikiEnabled: $hasWikiEnabled, homepageUrl: \"$homepageUrl\", name: \"$name\", ownerId: \"$ownerId\", teamId: \"$teamId\", template: $template, visibility: $visibility }"
 }
 
+class CreateRepositoryRulesetInput(val bypassActors: RepositoryRulesetBypassActorInput? = null, val clientMutationId: String? = null, val conditions: RepositoryRuleConditionsInput, val enforcement: RuleEnforcement, val name: String, val rules: RepositoryRuleInput? = null, val sourceId: ID, val target: RepositoryRulesetTarget? = null) {
+    override fun toString() = "{ bypassActors: $bypassActors, clientMutationId: \"$clientMutationId\", conditions: $conditions, enforcement: $enforcement, name: \"$name\", rules: $rules, sourceId: \"$sourceId\", target: $target }"
+}
+
 class CreateSponsorsListingInput(val billingCountryOrRegionCode: SponsorsCountryOrRegionCode? = null, val clientMutationId: String? = null, val contactEmail: String? = null, val fiscalHostLogin: String? = null, val fiscallyHostedProjectProfileUrl: String? = null, val fullDescription: String? = null, val residenceCountryOrRegionCode: SponsorsCountryOrRegionCode? = null, val sponsorableLogin: String? = null) {
     override fun toString() = "{ billingCountryOrRegionCode: $billingCountryOrRegionCode, clientMutationId: \"$clientMutationId\", contactEmail: \"$contactEmail\", fiscalHostLogin: \"$fiscalHostLogin\", fiscallyHostedProjectProfileUrl: \"$fiscallyHostedProjectProfileUrl\", fullDescription: \"$fullDescription\", residenceCountryOrRegionCode: $residenceCountryOrRegionCode, sponsorableLogin: \"$sponsorableLogin\" }"
 }
@@ -17978,11 +19146,15 @@ class CreateSponsorshipInput(val amount: Int? = null, val clientMutationId: Stri
     override fun toString() = "{ amount: $amount, clientMutationId: \"$clientMutationId\", isRecurring: $isRecurring, privacyLevel: $privacyLevel, receiveEmails: $receiveEmails, sponsorId: \"$sponsorId\", sponsorLogin: \"$sponsorLogin\", sponsorableId: \"$sponsorableId\", sponsorableLogin: \"$sponsorableLogin\", tierId: \"$tierId\" }"
 }
 
-class CreateTeamDiscussionCommentInput(val body: String, val clientMutationId: String? = null, val discussionId: ID) {
+class CreateSponsorshipsInput(val clientMutationId: String? = null, val privacyLevel: SponsorshipPrivacy? = null, val receiveEmails: Boolean? = null, val sponsorLogin: String, val sponsorships: BulkSponsorship) {
+    override fun toString() = "{ clientMutationId: \"$clientMutationId\", privacyLevel: $privacyLevel, receiveEmails: $receiveEmails, sponsorLogin: \"$sponsorLogin\", sponsorships: $sponsorships }"
+}
+
+class CreateTeamDiscussionCommentInput(val body: String? = null, val clientMutationId: String? = null, val discussionId: ID? = null) {
     override fun toString() = "{ body: \"$body\", clientMutationId: \"$clientMutationId\", discussionId: \"$discussionId\" }"
 }
 
-class CreateTeamDiscussionInput(val body: String, val clientMutationId: String? = null, val private: Boolean? = null, val teamId: ID, val title: String) {
+class CreateTeamDiscussionInput(val body: String? = null, val clientMutationId: String? = null, val private: Boolean? = null, val teamId: ID? = null, val title: String? = null) {
     override fun toString() = "{ body: \"$body\", clientMutationId: \"$clientMutationId\", private: $private, teamId: \"$teamId\", title: \"$title\" }"
 }
 
@@ -18046,12 +19218,20 @@ class DeleteProjectInput(val clientMutationId: String? = null, val projectId: ID
     override fun toString() = "{ clientMutationId: \"$clientMutationId\", projectId: \"$projectId\" }"
 }
 
+class DeleteProjectV2FieldInput(val clientMutationId: String? = null, val fieldId: ID) {
+    override fun toString() = "{ clientMutationId: \"$clientMutationId\", fieldId: \"$fieldId\" }"
+}
+
 class DeleteProjectV2Input(val clientMutationId: String? = null, val projectId: ID) {
     override fun toString() = "{ clientMutationId: \"$clientMutationId\", projectId: \"$projectId\" }"
 }
 
 class DeleteProjectV2ItemInput(val clientMutationId: String? = null, val itemId: ID, val projectId: ID) {
     override fun toString() = "{ clientMutationId: \"$clientMutationId\", itemId: \"$itemId\", projectId: \"$projectId\" }"
+}
+
+class DeleteProjectV2WorkflowInput(val clientMutationId: String? = null, val workflowId: ID) {
+    override fun toString() = "{ clientMutationId: \"$clientMutationId\", workflowId: \"$workflowId\" }"
 }
 
 class DeletePullRequestReviewCommentInput(val clientMutationId: String? = null, val id: ID) {
@@ -18064,6 +19244,10 @@ class DeletePullRequestReviewInput(val clientMutationId: String? = null, val pul
 
 class DeleteRefInput(val clientMutationId: String? = null, val refId: ID) {
     override fun toString() = "{ clientMutationId: \"$clientMutationId\", refId: \"$refId\" }"
+}
+
+class DeleteRepositoryRulesetInput(val clientMutationId: String? = null, val repositoryRulesetId: ID) {
+    override fun toString() = "{ clientMutationId: \"$clientMutationId\", repositoryRulesetId: \"$repositoryRulesetId\" }"
 }
 
 class DeleteTeamDiscussionCommentInput(val clientMutationId: String? = null, val id: ID) {
@@ -18080,6 +19264,10 @@ class DeleteVerifiableDomainInput(val clientMutationId: String? = null, val id: 
 
 class DeploymentOrder(val direction: OrderDirection, val field: DeploymentOrderField) {
     override fun toString() = "{ direction: $direction, field: $field }"
+}
+
+class DequeuePullRequestInput(val clientMutationId: String? = null, val id: ID) {
+    override fun toString() = "{ clientMutationId: \"$clientMutationId\", id: \"$id\" }"
 }
 
 class DisablePullRequestAutoMergeInput(val clientMutationId: String? = null, val pullRequestId: ID) {
@@ -18110,8 +19298,12 @@ class DraftPullRequestReviewThread(val body: String, val line: Int, val path: St
     override fun toString() = "{ body: \"$body\", line: $line, path: \"$path\", side: $side, startLine: $startLine, startSide: $startSide }"
 }
 
-class EnablePullRequestAutoMergeInput(val authorEmail: String? = null, val clientMutationId: String? = null, val commitBody: String? = null, val commitHeadline: String? = null, val mergeMethod: PullRequestMergeMethod? = null, val pullRequestId: ID) {
-    override fun toString() = "{ authorEmail: \"$authorEmail\", clientMutationId: \"$clientMutationId\", commitBody: \"$commitBody\", commitHeadline: \"$commitHeadline\", mergeMethod: $mergeMethod, pullRequestId: \"$pullRequestId\" }"
+class EnablePullRequestAutoMergeInput(val authorEmail: String? = null, val clientMutationId: String? = null, val commitBody: String? = null, val commitHeadline: String? = null, val expectedHeadOid: GitObjectID? = null, val mergeMethod: PullRequestMergeMethod? = null, val pullRequestId: ID) {
+    override fun toString() = "{ authorEmail: \"$authorEmail\", clientMutationId: \"$clientMutationId\", commitBody: \"$commitBody\", commitHeadline: \"$commitHeadline\", expectedHeadOid: \"$expectedHeadOid\", mergeMethod: $mergeMethod, pullRequestId: \"$pullRequestId\" }"
+}
+
+class EnqueuePullRequestInput(val clientMutationId: String? = null, val expectedHeadOid: GitObjectID? = null, val jump: Boolean? = null, val pullRequestId: ID) {
+    override fun toString() = "{ clientMutationId: \"$clientMutationId\", expectedHeadOid: \"$expectedHeadOid\", jump: $jump, pullRequestId: \"$pullRequestId\" }"
 }
 
 class EnterpriseAdministratorInvitationOrder(val direction: OrderDirection, val field: EnterpriseAdministratorInvitationOrderField) {
@@ -18119,6 +19311,10 @@ class EnterpriseAdministratorInvitationOrder(val direction: OrderDirection, val 
 }
 
 class EnterpriseMemberOrder(val direction: OrderDirection, val field: EnterpriseMemberOrderField) {
+    override fun toString() = "{ direction: $direction, field: $field }"
+}
+
+class EnterpriseOrder(val direction: OrderDirection, val field: EnterpriseOrderField) {
     override fun toString() = "{ direction: $direction, field: $field }"
 }
 
@@ -18135,6 +19331,10 @@ class EnterpriseServerUserAccountOrder(val direction: OrderDirection, val field:
 }
 
 class EnterpriseServerUserAccountsUploadOrder(val direction: OrderDirection, val field: EnterpriseServerUserAccountsUploadOrderField) {
+    override fun toString() = "{ direction: $direction, field: $field }"
+}
+
+class Environments(val direction: OrderDirection, val field: EnvironmentOrderField) {
     override fun toString() = "{ direction: $direction, field: $field }"
 }
 
@@ -18230,6 +19430,10 @@ class MarkFileAsViewedInput(val clientMutationId: String? = null, val path: Stri
     override fun toString() = "{ clientMutationId: \"$clientMutationId\", path: \"$path\", pullRequestId: \"$pullRequestId\" }"
 }
 
+class MarkProjectV2AsTemplateInput(val clientMutationId: String? = null, val projectId: ID) {
+    override fun toString() = "{ clientMutationId: \"$clientMutationId\", projectId: \"$projectId\" }"
+}
+
 class MarkPullRequestReadyForReviewInput(val clientMutationId: String? = null, val pullRequestId: ID) {
     override fun toString() = "{ clientMutationId: \"$clientMutationId\", pullRequestId: \"$pullRequestId\" }"
 }
@@ -18294,6 +19498,10 @@ class ProjectOrder(val direction: OrderDirection, val field: ProjectOrderField) 
     override fun toString() = "{ direction: $direction, field: $field }"
 }
 
+class ProjectV2Collaborator(val role: ProjectV2Roles, val teamId: ID? = null, val userId: ID? = null) {
+    override fun toString() = "{ role: $role, teamId: \"$teamId\", userId: \"$userId\" }"
+}
+
 class ProjectV2FieldOrder(val direction: OrderDirection, val field: ProjectV2FieldOrderField) {
     override fun toString() = "{ direction: $direction, field: $field }"
 }
@@ -18318,6 +19526,10 @@ class ProjectV2Order(val direction: OrderDirection, val field: ProjectV2OrderFie
     override fun toString() = "{ direction: $direction, field: $field }"
 }
 
+class ProjectV2SingleSelectFieldOptionInput(val color: ProjectV2SingleSelectFieldOptionColor, val description: String, val name: String) {
+    override fun toString() = "{ color: $color, description: \"$description\", name: \"$name\" }"
+}
+
 class ProjectV2ViewOrder(val direction: OrderDirection, val field: ProjectV2ViewOrderField) {
     override fun toString() = "{ direction: $direction, field: $field }"
 }
@@ -18334,8 +19546,16 @@ class PullRequestOrder(val direction: OrderDirection, val field: PullRequestOrde
     override fun toString() = "{ direction: $direction, field: $field }"
 }
 
+class PullRequestParametersInput(val dismissStaleReviewsOnPush: Boolean, val requireCodeOwnerReview: Boolean, val requireLastPushApproval: Boolean, val requiredApprovingReviewCount: Int, val requiredReviewThreadResolution: Boolean) {
+    override fun toString() = "{ dismissStaleReviewsOnPush: $dismissStaleReviewsOnPush, requireCodeOwnerReview: $requireCodeOwnerReview, requireLastPushApproval: $requireLastPushApproval, requiredApprovingReviewCount: $requiredApprovingReviewCount, requiredReviewThreadResolution: $requiredReviewThreadResolution }"
+}
+
 class ReactionOrder(val direction: OrderDirection, val field: ReactionOrderField) {
     override fun toString() = "{ direction: $direction, field: $field }"
+}
+
+class RefNameConditionTargetInput(val exclude: String, val include: String) {
+    override fun toString() = "{ exclude: \"$exclude\", include: \"$include\" }"
 }
 
 class RefOrder(val direction: OrderDirection, val field: RefOrderField) {
@@ -18406,12 +19626,20 @@ class RemoveUpvoteInput(val clientMutationId: String? = null, val subjectId: ID)
     override fun toString() = "{ clientMutationId: \"$clientMutationId\", subjectId: \"$subjectId\" }"
 }
 
+class ReopenDiscussionInput(val clientMutationId: String? = null, val discussionId: ID) {
+    override fun toString() = "{ clientMutationId: \"$clientMutationId\", discussionId: \"$discussionId\" }"
+}
+
 class ReopenIssueInput(val clientMutationId: String? = null, val issueId: ID) {
     override fun toString() = "{ clientMutationId: \"$clientMutationId\", issueId: \"$issueId\" }"
 }
 
 class ReopenPullRequestInput(val clientMutationId: String? = null, val pullRequestId: ID) {
     override fun toString() = "{ clientMutationId: \"$clientMutationId\", pullRequestId: \"$pullRequestId\" }"
+}
+
+class RepositoryIdConditionTargetInput(val repositoryIds: ID) {
+    override fun toString() = "{ repositoryIds: \"$repositoryIds\" }"
 }
 
 class RepositoryInvitationOrder(val direction: OrderDirection, val field: RepositoryInvitationOrderField) {
@@ -18422,16 +19650,40 @@ class RepositoryMigrationOrder(val direction: RepositoryMigrationOrderDirection,
     override fun toString() = "{ direction: $direction, field: $field }"
 }
 
+class RepositoryNameConditionTargetInput(val exclude: String, val include: String, val protected: Boolean? = null) {
+    override fun toString() = "{ exclude: \"$exclude\", include: \"$include\", protected: $protected }"
+}
+
 class RepositoryOrder(val direction: OrderDirection, val field: RepositoryOrderField) {
     override fun toString() = "{ direction: $direction, field: $field }"
+}
+
+class RepositoryRuleConditionsInput(val refName: RefNameConditionTargetInput? = null, val repositoryId: RepositoryIdConditionTargetInput? = null, val repositoryName: RepositoryNameConditionTargetInput? = null) {
+    override fun toString() = "{ refName: $refName, repositoryId: $repositoryId, repositoryName: $repositoryName }"
+}
+
+class RepositoryRuleInput(val id: ID? = null, val parameters: RuleParametersInput? = null, val type: RepositoryRuleType) {
+    override fun toString() = "{ id: \"$id\", parameters: $parameters, type: $type }"
+}
+
+class RepositoryRulesetBypassActorInput(val actorId: ID? = null, val bypassMode: RepositoryRulesetBypassActorBypassMode, val organizationAdmin: Boolean? = null, val repositoryRoleDatabaseId: Int? = null) {
+    override fun toString() = "{ actorId: \"$actorId\", bypassMode: $bypassMode, organizationAdmin: $organizationAdmin, repositoryRoleDatabaseId: $repositoryRoleDatabaseId }"
 }
 
 class RequestReviewsInput(val clientMutationId: String? = null, val pullRequestId: ID, val teamIds: ID? = null, val union: Boolean? = null, val userIds: ID? = null) {
     override fun toString() = "{ clientMutationId: \"$clientMutationId\", pullRequestId: \"$pullRequestId\", teamIds: \"$teamIds\", union: $union, userIds: \"$userIds\" }"
 }
 
+class RequiredDeploymentsParametersInput(val requiredDeploymentEnvironments: String) {
+    override fun toString() = "{ requiredDeploymentEnvironments: \"$requiredDeploymentEnvironments\" }"
+}
+
 class RequiredStatusCheckInput(val appId: ID? = null, val context: String) {
     override fun toString() = "{ appId: \"$appId\", context: \"$context\" }"
+}
+
+class RequiredStatusChecksParametersInput(val requiredStatusChecks: StatusCheckConfigurationInput, val strictRequiredStatusChecksPolicy: Boolean) {
+    override fun toString() = "{ requiredStatusChecks: $requiredStatusChecks, strictRequiredStatusChecksPolicy: $strictRequiredStatusChecksPolicy }"
 }
 
 class RerequestCheckSuiteInput(val checkSuiteId: ID, val clientMutationId: String? = null, val repositoryId: ID) {
@@ -18456,6 +19708,10 @@ class RevokeEnterpriseOrganizationsMigratorRoleInput(val clientMutationId: Strin
 
 class RevokeMigratorRoleInput(val actor: String, val actorType: ActorType, val clientMutationId: String? = null, val organizationId: ID) {
     override fun toString() = "{ actor: \"$actor\", actorType: $actorType, clientMutationId: \"$clientMutationId\", organizationId: \"$organizationId\" }"
+}
+
+class RuleParametersInput(val branchNamePattern: BranchNamePatternParametersInput? = null, val commitAuthorEmailPattern: CommitAuthorEmailPatternParametersInput? = null, val commitMessagePattern: CommitMessagePatternParametersInput? = null, val committerEmailPattern: CommitterEmailPatternParametersInput? = null, val pullRequest: PullRequestParametersInput? = null, val requiredDeployments: RequiredDeploymentsParametersInput? = null, val requiredStatusChecks: RequiredStatusChecksParametersInput? = null, val tagNamePattern: TagNamePatternParametersInput? = null, val update: UpdateParametersInput? = null) {
+    override fun toString() = "{ branchNamePattern: $branchNamePattern, commitAuthorEmailPattern: $commitAuthorEmailPattern, commitMessagePattern: $commitMessagePattern, committerEmailPattern: $committerEmailPattern, pullRequest: $pullRequest, requiredDeployments: $requiredDeployments, requiredStatusChecks: $requiredStatusChecks, tagNamePattern: $tagNamePattern, update: $update }"
 }
 
 class SavedReplyOrder(val direction: OrderDirection, val field: SavedReplyOrderField) {
@@ -18522,12 +19778,20 @@ class StartOrganizationMigrationInput(val clientMutationId: String? = null, val 
     override fun toString() = "{ clientMutationId: \"$clientMutationId\", sourceAccessToken: \"$sourceAccessToken\", sourceOrgUrl: \"$sourceOrgUrl\", targetEnterpriseId: \"$targetEnterpriseId\", targetOrgName: \"$targetOrgName\" }"
 }
 
-class StartRepositoryMigrationInput(val accessToken: String, val clientMutationId: String? = null, val continueOnError: Boolean? = null, val gitArchiveUrl: String? = null, val githubPat: String? = null, val lockSource: Boolean? = null, val metadataArchiveUrl: String? = null, val ownerId: ID, val repositoryName: String, val skipReleases: Boolean? = null, val sourceId: ID, val sourceRepositoryUrl: URI, val targetRepoVisibility: String? = null) {
+class StartRepositoryMigrationInput(val accessToken: String? = null, val clientMutationId: String? = null, val continueOnError: Boolean? = null, val gitArchiveUrl: String? = null, val githubPat: String? = null, val lockSource: Boolean? = null, val metadataArchiveUrl: String? = null, val ownerId: ID, val repositoryName: String, val skipReleases: Boolean? = null, val sourceId: ID, val sourceRepositoryUrl: URI? = null, val targetRepoVisibility: String? = null) {
     override fun toString() = "{ accessToken: \"$accessToken\", clientMutationId: \"$clientMutationId\", continueOnError: $continueOnError, gitArchiveUrl: \"$gitArchiveUrl\", githubPat: \"$githubPat\", lockSource: $lockSource, metadataArchiveUrl: \"$metadataArchiveUrl\", ownerId: \"$ownerId\", repositoryName: \"$repositoryName\", skipReleases: $skipReleases, sourceId: \"$sourceId\", sourceRepositoryUrl: \"$sourceRepositoryUrl\", targetRepoVisibility: \"$targetRepoVisibility\" }"
+}
+
+class StatusCheckConfigurationInput(val context: String, val integrationId: Int? = null) {
+    override fun toString() = "{ context: \"$context\", integrationId: $integrationId }"
 }
 
 class SubmitPullRequestReviewInput(val body: String? = null, val clientMutationId: String? = null, val event: PullRequestReviewEvent, val pullRequestId: ID? = null, val pullRequestReviewId: ID? = null) {
     override fun toString() = "{ body: \"$body\", clientMutationId: \"$clientMutationId\", event: $event, pullRequestId: \"$pullRequestId\", pullRequestReviewId: \"$pullRequestReviewId\" }"
+}
+
+class TagNamePatternParametersInput(val name: String? = null, val negate: Boolean? = null, val operator: String, val pattern: String) {
+    override fun toString() = "{ name: \"$name\", negate: $negate, operator: \"$operator\", pattern: \"$pattern\" }"
 }
 
 class TeamDiscussionCommentOrder(val direction: OrderDirection, val field: TeamDiscussionCommentOrderField) {
@@ -18602,6 +19866,10 @@ class UnmarkIssueAsDuplicateInput(val canonicalId: ID, val clientMutationId: Str
     override fun toString() = "{ canonicalId: \"$canonicalId\", clientMutationId: \"$clientMutationId\", duplicateId: \"$duplicateId\" }"
 }
 
+class UnmarkProjectV2AsTemplateInput(val clientMutationId: String? = null, val projectId: ID) {
+    override fun toString() = "{ clientMutationId: \"$clientMutationId\", projectId: \"$projectId\" }"
+}
+
 class UnminimizeCommentInput(val clientMutationId: String? = null, val subjectId: ID) {
     override fun toString() = "{ clientMutationId: \"$clientMutationId\", subjectId: \"$subjectId\" }"
 }
@@ -18614,8 +19882,8 @@ class UnresolveReviewThreadInput(val clientMutationId: String? = null, val threa
     override fun toString() = "{ clientMutationId: \"$clientMutationId\", threadId: \"$threadId\" }"
 }
 
-class UpdateBranchProtectionRuleInput(val allowsDeletions: Boolean? = null, val allowsForcePushes: Boolean? = null, val blocksCreations: Boolean? = null, val branchProtectionRuleId: ID, val bypassForcePushActorIds: ID? = null, val bypassPullRequestActorIds: ID? = null, val clientMutationId: String? = null, val dismissesStaleReviews: Boolean? = null, val isAdminEnforced: Boolean? = null, val lockAllowsFetchAndMerge: Boolean? = null, val lockBranch: Boolean? = null, val pattern: String? = null, val pushActorIds: ID? = null, val requireLastPushApproval: Boolean? = null, val requiredApprovingReviewCount: Int? = null, val requiredStatusCheckContexts: String? = null, val requiredStatusChecks: RequiredStatusCheckInput? = null, val requiresApprovingReviews: Boolean? = null, val requiresCodeOwnerReviews: Boolean? = null, val requiresCommitSignatures: Boolean? = null, val requiresConversationResolution: Boolean? = null, val requiresLinearHistory: Boolean? = null, val requiresStatusChecks: Boolean? = null, val requiresStrictStatusChecks: Boolean? = null, val restrictsPushes: Boolean? = null, val restrictsReviewDismissals: Boolean? = null, val reviewDismissalActorIds: ID? = null) {
-    override fun toString() = "{ allowsDeletions: $allowsDeletions, allowsForcePushes: $allowsForcePushes, blocksCreations: $blocksCreations, branchProtectionRuleId: \"$branchProtectionRuleId\", bypassForcePushActorIds: \"$bypassForcePushActorIds\", bypassPullRequestActorIds: \"$bypassPullRequestActorIds\", clientMutationId: \"$clientMutationId\", dismissesStaleReviews: $dismissesStaleReviews, isAdminEnforced: $isAdminEnforced, lockAllowsFetchAndMerge: $lockAllowsFetchAndMerge, lockBranch: $lockBranch, pattern: \"$pattern\", pushActorIds: \"$pushActorIds\", requireLastPushApproval: $requireLastPushApproval, requiredApprovingReviewCount: $requiredApprovingReviewCount, requiredStatusCheckContexts: \"$requiredStatusCheckContexts\", requiredStatusChecks: $requiredStatusChecks, requiresApprovingReviews: $requiresApprovingReviews, requiresCodeOwnerReviews: $requiresCodeOwnerReviews, requiresCommitSignatures: $requiresCommitSignatures, requiresConversationResolution: $requiresConversationResolution, requiresLinearHistory: $requiresLinearHistory, requiresStatusChecks: $requiresStatusChecks, requiresStrictStatusChecks: $requiresStrictStatusChecks, restrictsPushes: $restrictsPushes, restrictsReviewDismissals: $restrictsReviewDismissals, reviewDismissalActorIds: \"$reviewDismissalActorIds\" }"
+class UpdateBranchProtectionRuleInput(val allowsDeletions: Boolean? = null, val allowsForcePushes: Boolean? = null, val blocksCreations: Boolean? = null, val branchProtectionRuleId: ID, val bypassForcePushActorIds: ID? = null, val bypassPullRequestActorIds: ID? = null, val clientMutationId: String? = null, val dismissesStaleReviews: Boolean? = null, val isAdminEnforced: Boolean? = null, val lockAllowsFetchAndMerge: Boolean? = null, val lockBranch: Boolean? = null, val pattern: String? = null, val pushActorIds: ID? = null, val requireLastPushApproval: Boolean? = null, val requiredApprovingReviewCount: Int? = null, val requiredDeploymentEnvironments: String? = null, val requiredStatusCheckContexts: String? = null, val requiredStatusChecks: RequiredStatusCheckInput? = null, val requiresApprovingReviews: Boolean? = null, val requiresCodeOwnerReviews: Boolean? = null, val requiresCommitSignatures: Boolean? = null, val requiresConversationResolution: Boolean? = null, val requiresDeployments: Boolean? = null, val requiresLinearHistory: Boolean? = null, val requiresStatusChecks: Boolean? = null, val requiresStrictStatusChecks: Boolean? = null, val restrictsPushes: Boolean? = null, val restrictsReviewDismissals: Boolean? = null, val reviewDismissalActorIds: ID? = null) {
+    override fun toString() = "{ allowsDeletions: $allowsDeletions, allowsForcePushes: $allowsForcePushes, blocksCreations: $blocksCreations, branchProtectionRuleId: \"$branchProtectionRuleId\", bypassForcePushActorIds: \"$bypassForcePushActorIds\", bypassPullRequestActorIds: \"$bypassPullRequestActorIds\", clientMutationId: \"$clientMutationId\", dismissesStaleReviews: $dismissesStaleReviews, isAdminEnforced: $isAdminEnforced, lockAllowsFetchAndMerge: $lockAllowsFetchAndMerge, lockBranch: $lockBranch, pattern: \"$pattern\", pushActorIds: \"$pushActorIds\", requireLastPushApproval: $requireLastPushApproval, requiredApprovingReviewCount: $requiredApprovingReviewCount, requiredDeploymentEnvironments: \"$requiredDeploymentEnvironments\", requiredStatusCheckContexts: \"$requiredStatusCheckContexts\", requiredStatusChecks: $requiredStatusChecks, requiresApprovingReviews: $requiresApprovingReviews, requiresCodeOwnerReviews: $requiresCodeOwnerReviews, requiresCommitSignatures: $requiresCommitSignatures, requiresConversationResolution: $requiresConversationResolution, requiresDeployments: $requiresDeployments, requiresLinearHistory: $requiresLinearHistory, requiresStatusChecks: $requiresStatusChecks, requiresStrictStatusChecks: $requiresStrictStatusChecks, restrictsPushes: $restrictsPushes, restrictsReviewDismissals: $restrictsReviewDismissals, reviewDismissalActorIds: \"$reviewDismissalActorIds\" }"
 }
 
 class UpdateCheckRunInput(val actions: CheckRunAction? = null, val checkRunId: ID, val clientMutationId: String? = null, val completedAt: DateTime? = null, val conclusion: CheckConclusionState? = null, val detailsUrl: URI? = null, val externalId: String? = null, val name: String? = null, val output: CheckRunOutput? = null, val repositoryId: ID, val startedAt: DateTime? = null, val status: RequestableCheckStatusState? = null) {
@@ -18702,8 +19970,8 @@ class UpdateEnterpriseTwoFactorAuthenticationRequiredSettingInput(val clientMuta
     override fun toString() = "{ clientMutationId: \"$clientMutationId\", enterpriseId: \"$enterpriseId\", settingValue: $settingValue }"
 }
 
-class UpdateEnvironmentInput(val clientMutationId: String? = null, val environmentId: ID, val reviewers: ID? = null, val waitTimer: Int? = null) {
-    override fun toString() = "{ clientMutationId: \"$clientMutationId\", environmentId: \"$environmentId\", reviewers: \"$reviewers\", waitTimer: $waitTimer }"
+class UpdateEnvironmentInput(val clientMutationId: String? = null, val environmentId: ID, val preventSelfReview: Boolean? = null, val reviewers: ID? = null, val waitTimer: Int? = null) {
+    override fun toString() = "{ clientMutationId: \"$clientMutationId\", environmentId: \"$environmentId\", preventSelfReview: $preventSelfReview, reviewers: \"$reviewers\", waitTimer: $waitTimer }"
 }
 
 class UpdateIpAllowListEnabledSettingInput(val clientMutationId: String? = null, val ownerId: ID, val settingValue: IpAllowListEnabledSettingValue) {
@@ -18742,6 +20010,10 @@ class UpdateOrganizationWebCommitSignoffSettingInput(val clientMutationId: Strin
     override fun toString() = "{ clientMutationId: \"$clientMutationId\", organizationId: \"$organizationId\", webCommitSignoffRequired: $webCommitSignoffRequired }"
 }
 
+class UpdateParametersInput(val updateAllowsFetchAndMerge: Boolean) {
+    override fun toString() = "{ updateAllowsFetchAndMerge: $updateAllowsFetchAndMerge }"
+}
+
 class UpdateProjectCardInput(val clientMutationId: String? = null, val isArchived: Boolean? = null, val note: String? = null, val projectCardId: ID) {
     override fun toString() = "{ clientMutationId: \"$clientMutationId\", isArchived: $isArchived, note: \"$note\", projectCardId: \"$projectCardId\" }"
 }
@@ -18752,6 +20024,10 @@ class UpdateProjectColumnInput(val clientMutationId: String? = null, val name: S
 
 class UpdateProjectInput(val body: String? = null, val clientMutationId: String? = null, val name: String? = null, val projectId: ID, val public: Boolean? = null, val state: ProjectState? = null) {
     override fun toString() = "{ body: \"$body\", clientMutationId: \"$clientMutationId\", name: \"$name\", projectId: \"$projectId\", public: $public, state: $state }"
+}
+
+class UpdateProjectV2CollaboratorsInput(val clientMutationId: String? = null, val collaborators: ProjectV2Collaborator, val projectId: ID) {
+    override fun toString() = "{ clientMutationId: \"$clientMutationId\", collaborators: $collaborators, projectId: \"$projectId\" }"
 }
 
 class UpdateProjectV2DraftIssueInput(val assigneeIds: ID? = null, val body: String? = null, val clientMutationId: String? = null, val draftIssueId: ID, val title: String? = null) {
@@ -18770,8 +20046,8 @@ class UpdateProjectV2ItemPositionInput(val afterId: ID? = null, val clientMutati
     override fun toString() = "{ afterId: \"$afterId\", clientMutationId: \"$clientMutationId\", itemId: \"$itemId\", projectId: \"$projectId\" }"
 }
 
-class UpdatePullRequestBranchInput(val clientMutationId: String? = null, val expectedHeadOid: GitObjectID? = null, val pullRequestId: ID) {
-    override fun toString() = "{ clientMutationId: \"$clientMutationId\", expectedHeadOid: \"$expectedHeadOid\", pullRequestId: \"$pullRequestId\" }"
+class UpdatePullRequestBranchInput(val clientMutationId: String? = null, val expectedHeadOid: GitObjectID? = null, val pullRequestId: ID, val updateMethod: PullRequestBranchUpdateMethod? = null) {
+    override fun toString() = "{ clientMutationId: \"$clientMutationId\", expectedHeadOid: \"$expectedHeadOid\", pullRequestId: \"$pullRequestId\", updateMethod: $updateMethod }"
 }
 
 class UpdatePullRequestInput(val assigneeIds: ID? = null, val baseRefName: String? = null, val body: String? = null, val clientMutationId: String? = null, val labelIds: ID? = null, val maintainerCanModify: Boolean? = null, val milestoneId: ID? = null, val projectIds: ID? = null, val pullRequestId: ID, val state: PullRequestUpdateState? = null, val title: String? = null) {
@@ -18796,6 +20072,10 @@ class UpdateRefsInput(val clientMutationId: String? = null, val refUpdates: RefU
 
 class UpdateRepositoryInput(val clientMutationId: String? = null, val description: String? = null, val hasDiscussionsEnabled: Boolean? = null, val hasIssuesEnabled: Boolean? = null, val hasProjectsEnabled: Boolean? = null, val hasWikiEnabled: Boolean? = null, val homepageUrl: URI? = null, val name: String? = null, val repositoryId: ID, val template: Boolean? = null) {
     override fun toString() = "{ clientMutationId: \"$clientMutationId\", description: \"$description\", hasDiscussionsEnabled: $hasDiscussionsEnabled, hasIssuesEnabled: $hasIssuesEnabled, hasProjectsEnabled: $hasProjectsEnabled, hasWikiEnabled: $hasWikiEnabled, homepageUrl: \"$homepageUrl\", name: \"$name\", repositoryId: \"$repositoryId\", template: $template }"
+}
+
+class UpdateRepositoryRulesetInput(val bypassActors: RepositoryRulesetBypassActorInput? = null, val clientMutationId: String? = null, val conditions: RepositoryRuleConditionsInput? = null, val enforcement: RuleEnforcement? = null, val name: String? = null, val repositoryRulesetId: ID, val rules: RepositoryRuleInput? = null, val target: RepositoryRulesetTarget? = null) {
+    override fun toString() = "{ bypassActors: $bypassActors, clientMutationId: \"$clientMutationId\", conditions: $conditions, enforcement: $enforcement, name: \"$name\", repositoryRulesetId: \"$repositoryRulesetId\", rules: $rules, target: $target }"
 }
 
 class UpdateRepositoryWebCommitSignoffSettingInput(val clientMutationId: String? = null, val repositoryId: ID, val webCommitSignoffRequired: Boolean) {
