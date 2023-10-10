@@ -9,7 +9,7 @@ Current version: based on the [schema 2023-02-11](https://docs.github.com/en/fre
 
 ## About
 
-With the power of Kotlin DSL, you can easily write type-safe queries for the GitHub GraphQL API.
+With the power of Kotlin DSL, you can effortlessly build queries for the GitHub GraphQL API while ensuring type correctness.
 
 ![image](./image.gif)
 
